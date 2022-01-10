@@ -19,6 +19,7 @@ const momSayings = [
   "I made you some inDinner , dear. Can't have my littl'in going hungry.",
   "Hope you like inDinner ! Ms. inPeople from tuesday's Bridge gave me her late Aunty Ovil's recipe, and I've just been dyin' to treat you kiddos with it",
   "Honey pies, momma's going out and lettin her hair down tonight. Wouldn't leave your little cauldrons empty. No siree, not in a million years, so you'll find some inDinner warm in the oven. kiss kiss, and don't stay up too late",
+  "Honey, We have inItems at home, now put that down.",
 ];
 const clothing = [
   "shoes",
@@ -28,26 +29,54 @@ const clothing = [
   "hat",
   "underwear",
   "gloves",
+  "dress",
+  "skirt",
+  "jeans",
+  "sweater",
 ];
-const foods = ["ice pops", "meatloaf", "chicken", "soup", ""];
+const foods = [
+  "ice pops",
+  "meatloaf",
+  "chicken",
+  "soup",
+  "skinny chicken salad",
+  "salad-stuffed avacado",
+  "crab salad",
+  "watermelon",
+  "bruschetta",
+  "eggs and bacon",
+];
 const dinner = [
   "meatloaf",
   "chicken dumplings",
   "baby back ribs",
   "beef stroganoff",
+  "chili",
+  "pancakes",
+  "hummus",
+  "muffins",
+  "bread",
 ];
 const games = ["Halo", "New Horizon"];
-const tvshows = ["Lifetime", "The walking dead"];
-const people = ["Charlet", "Cheryl"];
+const tvshows = ["Lifetime", "The walking dead", "The Rookie", "Dexter"];
+const people = ["Charlet", "Cheryl", "Ava", "Sophia", "Mia", "Isabella"];
 const items = [
   "ACTION FIGURES",
-  "SEX TOYS",
+  "TOYS",
   "WEED",
   "YU-GH-IO CARDS",
-  "POKEMON CARDS",
+  "POKEMAN CARDS",
+  "Puzzles",
 ];
 
-const botStatus = ["with all your data", "leave me alone", "go to your room"];
+const botStatus = [
+  "with all your data",
+  "leave me alone",
+  "go to your room",
+  "candy crush saga",
+  "your dad now go to sleep",
+];
+
 exports.momSayings = momSayings;
 exports.clothing = clothing;
 exports.foods = foods;

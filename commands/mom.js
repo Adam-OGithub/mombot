@@ -10,9 +10,7 @@ const {
 } = require("../custom_nodemods/sayings.js");
 const { randomWord } = require("../custom_nodemods/utils.js");
 
-exports.run = async (client, message, args, discord) => {
-  const select = randomWord(momSayings);
-  const sArr = select.split(" ");
+const loopVars = (sArr) => {
   sArr.forEach((word, i) => {
     if (word === "inGame") {
       sArr[i] = randomWord(games);
@@ -32,6 +30,30 @@ exports.run = async (client, message, args, discord) => {
       //do nothing
     }
   });
+  return sArr.join(" ");
+};
 
-  message.channel.send(sArr.join(" "));
+let sentArr = [];
+exports.run = async (client, message, args, discord) => {
+  let loop = true;
+  let i = 0;
+  let str = ``;
+  while (loop) {
+    let select = randomWord(momSayings);
+    let sArr = select.split(" ");
+    str = loopVars(sArr);
+    if (sentArr.includes(str)) {
+      //increase i
+      i++;
+    } else if (i > 30) {
+      //tried 20 times just send it
+      loop = false;
+      sentArr = [];
+    } else {
+      //not in list
+      sentArr.push(str);
+      loop = false;
+    }
+  }
+  message.channel.send(str);
 };
