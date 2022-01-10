@@ -66,7 +66,7 @@ const items = [
   "WEED",
   "YU-GH-IO CARDS",
   "POKEMAN CARDS",
-  "Puzzles",
+  "PUZZLES",
 ];
 
 const botStatus = [

@@ -45,7 +45,7 @@ exports.run = async (client, message, args, discord) => {
     if (sentArr.includes(str)) {
       //increase i
       i++;
-    } else if (i > 30) {
+    } else if (i > 75) {
       //tried 20 times just send it
       loop = false;
       sentArr = [];
