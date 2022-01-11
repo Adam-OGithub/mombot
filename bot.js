@@ -49,12 +49,13 @@ client.on("ready", () => {
 
 client.on("message", (message) => {
   if (message.content.indexOf(config.prefix) !== 0) return;
+  const fullArgs = message.content;
   const args = message.content.slice(config.prefix.length).trim().split(" ");
   const command = args.shift().toLowerCase();
   try {
     console.log(`\x1b[32m`, `${message.author.tag} executed '${command}'`);
     let runCommand = require(`./commands/${command}.js`);
-    runCommand.run(client, message, args, Discord);
+    runCommand.run(client, message, args, Discord, fullArgs);
   } catch (e) {
     console.error(`\x1b[32m`, `[ERROR]: ${e.message}`);
   }

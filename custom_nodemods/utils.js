@@ -31,7 +31,39 @@ const markovMe = (input) => {
 
 const capFirst = (str) => str[0].toUpperCase() + str.slice(1);
 
+const emotes = [
+  "🐶",
+  "🐺",
+  "🐷",
+  "🐱",
+  "🦁",
+  "🐯",
+  "🦒",
+  "🦊",
+  "🦝",
+  "🐮",
+  "🐗",
+  "🐭",
+  "🐹",
+  "🐰",
+  "🐻",
+  "🐨",
+  "🐼",
+  "🐸",
+  "🦓",
+  "🐴",
+  "🦄",
+  "🐔",
+  "🐲",
+  "🦍",
+  "🐖",
+  "🦨",
+  "🐳",
+  "🐠",
+  "🐟",
+];
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
 exports.capFirst = capFirst;
+exports.emotes = emotes;
