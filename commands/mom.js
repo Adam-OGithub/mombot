@@ -8,7 +8,11 @@ const {
   items,
   people,
 } = require("../custom_nodemods/sayings.js");
-const { randomWord } = require("../custom_nodemods/utils.js");
+const {
+  randomWord,
+  markovChain,
+  capFirst,
+} = require("../custom_nodemods/utils.js");
 
 const loopVars = (sArr) => {
   sArr.forEach((word, i) => {
@@ -47,13 +51,17 @@ exports.run = async (client, message, args, discord) => {
       i++;
     } else if (i > 75) {
       //tried 20 times just send it
-      loop = false;
+      const mark = markovChain(sentArr.join(" "));
+      const ran = randomWord(mark.split(".").join("").split("!"));
+      const str = `${capFirst(ran)}.`;
+      message.channel.send(str);
       sentArr = [];
+      loop = false;
     } else {
       //not in list
       sentArr.push(str);
+      message.channel.send(str);
       loop = false;
     }
   }
-  message.channel.send(str);
 };

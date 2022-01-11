@@ -3,7 +3,7 @@ const randomWord = (arr) => arr[Math.trunc(Math.random() * arr.length)];
 
 const round = (myInt) => Math.trunc(myInt);
 
-function markovMe(input) {
+const markovMe = (input) => {
   const markovChain = {};
   const textArr = input.split(" ");
   for (let i = 0; i < textArr.length; i++) {
@@ -27,8 +27,11 @@ function markovMe(input) {
       word = words[Math.floor(Math.random() * words.length)];
   }
   return result;
-}
+};
+
+const capFirst = (str) => str[0].toUpperCase() + str.slice(1);
 
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
+exports.capFirst = capFirst;
