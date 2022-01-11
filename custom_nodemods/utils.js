@@ -29,7 +29,10 @@ const markovMe = (input) => {
   return result;
 };
 
-const capFirst = (str) => str[0].toUpperCase() + str.slice(1);
+const capFirst = (str) =>
+  str !== undefined
+    ? str[0].toUpperCase() + str.slice(1)
+    : `Mom still loves you honey, even though you were born an error`;
 
 const emotes = [
   "🐶",

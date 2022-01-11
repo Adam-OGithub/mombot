@@ -5,7 +5,13 @@ const config = require("./config.json");
 const client = new Discord.Client();
 const app = express();
 const { botStatus } = require("./custom_nodemods/sayings.js");
-const { randomWord, markovChain } = require("./custom_nodemods/utils.js");
+const {
+  randomWord,
+  markovChain,
+  sMsg,
+  capFirst,
+} = require("./custom_nodemods/utils.js");
+const { use } = require("express/lib/application");
 const minutes = 5;
 const seconds = minutes * 60;
 const time = seconds * 1000;
@@ -47,17 +53,64 @@ client.on("ready", () => {
   changeAc();
 });
 
+const getUserFromMention = (mention) => {
+  if (!mention) return;
+
+  if (mention.startsWith("<@") && mention.endsWith(">")) {
+    mention = mention.slice(2, -1);
+
+    if (mention.startsWith("!")) {
+      mention = mention.slice(1);
+    }
+
+    if (client.users.cache.get(mention) === undefined) {
+      //returns bot object
+      return client.user;
+    } else {
+      //returns user object
+      return client.users.cache.get(mention);
+    }
+  }
+};
+
 client.on("message", (message) => {
-  if (message.content.indexOf(config.prefix) !== 0) return;
-  const fullArgs = message.content;
-  const args = message.content.slice(config.prefix.length).trim().split(" ");
-  const command = args.shift().toLowerCase();
-  try {
-    console.log(`\x1b[32m`, `${message.author.tag} executed '${command}'`);
-    let runCommand = require(`./commands/${command}.js`);
-    runCommand.run(client, message, args, Discord, fullArgs);
-  } catch (e) {
-    console.error(`\x1b[32m`, `[ERROR]: ${e.message}`);
+  //console.log(message);
+  const userMention = getUserFromMention(message.content);
+  const channelID = message.channel.id;
+  if (message.content.indexOf(config.prefix) === 0) {
+    const fullArgs = message.content;
+    const args = message.content.slice(config.prefix.length).trim().split(" ");
+    const command = args.shift().toLowerCase();
+    try {
+      console.log(`\x1b[32m`, `${message.author.tag} executed '${command}'`);
+      let runCommand = require(`./commands/${command}.js`);
+      runCommand.run(client, message, args, Discord, fullArgs);
+    } catch (e) {
+      console.error(`\x1b[32m`, `[ERROR]: ${e.message}`);
+    }
+  } else if (
+    userMention?.bot &&
+    userMention.username === "MOM" &&
+    userMention.discriminator === "2763"
+  ) {
+    const channelCache = client.channels.cache.get(channelID);
+    const msgCache = channelCache.messages.cache;
+    let str = ``;
+    for (const [key, value] of msgCache) {
+      let val = value.content;
+      if (val.startsWith("<@") && val.endsWith(">")) {
+        let user = getUserFromMention(val);
+        if (user.username !== "MOM") {
+          str += ` @${user.username}#${user.discriminator} `;
+        }
+      } else {
+        str += `${val}`;
+      }
+    }
+    const sentence = markovChain(str);
+    console.log(sentence);
+    const pick = sentence.split("\n");
+    sMsg(message, `${capFirst(randomWord(pick))}.`);
   }
 });
 client.login(config.token);

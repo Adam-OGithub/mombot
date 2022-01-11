@@ -34,7 +34,10 @@ exports.run = async (client, msg, args, discord, fullArgs) => {
   if (command === "create" && text1 !== undefined && text2 !== undefined) {
     let str = ``;
     if (check(text1)) {
-      sMsg(msg, `Poll with that name already exists please try another name.`);
+      sMsg(
+        msg,
+        `Poll with that name already exists please try another name hun.`
+      );
     } else {
       for (let i = 2; i < args.length; i++) {
         str += `${args[i]} `;
@@ -46,9 +49,12 @@ exports.run = async (client, msg, args, discord, fullArgs) => {
       pollMap.set(text1, { question: `${capFirst(str)}${hasQ}` });
 
       if (check(text1)) {
-        sMsg(msg, `Poll ${text1} has been created!`);
+        sMsg(msg, `Poll ${text1} has been created just for you sweety!`);
       } else {
-        sMsg(msg, `Poll ${text1} failed to be created`);
+        sMsg(
+          msg,
+          `Poll ${text1} failed to be created, but you can do it next time hun.`
+        );
       }
     }
   } else if (command === "add" && text1 !== undefined && text2 !== undefined) {
@@ -65,12 +71,18 @@ exports.run = async (client, msg, args, discord, fullArgs) => {
       }
       myObj.choices = arr;
       if (myObj.choices.length > 0) {
-        sMsg(msg, `Questions added!`);
+        sMsg(msg, `Questions added, just for my sweet baby!`);
       } else {
-        sMsg(msg, `Questions failed to be created`);
+        sMsg(
+          msg,
+          `Questions failed to be created, just like mom failed to get her wine glass today..`
+        );
       }
     } else {
-      sMsg(msg, `Looks like that poll does not exist.`);
+      sMsg(
+        msg,
+        `Looks like that poll does not exist sweety better luck next time.`
+      );
     }
     //
   } else if (command === "start" && text1 != undefined) {
@@ -89,7 +101,10 @@ exports.run = async (client, msg, args, discord, fullArgs) => {
         .setDescription(`${str}`);
       sMsg(msg, embed, true, newEmoteArr);
     } else {
-      sMsg(msg, `Looks like that poll does not exist.`);
+      sMsg(
+        msg,
+        `Looks like that poll does not exist sweety better luck next time.`
+      );
     }
   } else {
     sMsg(msg, `${config.prefix}help`);
