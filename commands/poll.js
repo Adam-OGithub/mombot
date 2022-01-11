@@ -1,7 +1,7 @@
 "use strict";
 const Discord = require("discord.js");
 const config = require("../config.json");
-const { emotes, capFirst } = require("../custom_nodemods/utils.js");
+const { emotes, capFirst, sMsg } = require("../custom_nodemods/utils.js");
 const pollMap = new Map();
 
 const check = (text, map) => {
@@ -18,17 +18,6 @@ const check = (text, map) => {
       return false;
     }
   }
-};
-
-const sMsg = (el, arg, arr) => {
-  // el.channel.send(arg);
-  el.channel.send(arg).then((sent) => {
-    if (arr !== undefined) {
-      arr.forEach((entry) => {
-        sent.react(`${entry}`);
-      });
-    }
-  });
 };
 
 const setLower = (input) => {
@@ -89,7 +78,6 @@ exports.run = async (client, msg, args, discord, fullArgs) => {
     if (check(text1)) {
       const myObj = pollMap.get(text1);
       let str = ``;
-      console.log(myObj);
       const newEmoteArr = [];
       myObj.choices.forEach((obj, i) => {
         newEmoteArr.push(emotes[i]);
@@ -99,7 +87,7 @@ exports.run = async (client, msg, args, discord, fullArgs) => {
         .setTitle(`${myObj.question}`)
         .setColor(config.color)
         .setDescription(`${str}`);
-      sMsg(msg, embed, newEmoteArr);
+      sMsg(msg, embed, true, newEmoteArr);
     } else {
       sMsg(msg, `Looks like that poll does not exist.`);
     }

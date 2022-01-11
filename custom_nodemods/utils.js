@@ -62,8 +62,37 @@ const emotes = [
   "🐠",
   "🐟",
 ];
+
+const sMsg = (
+  mainObj,
+  mainMsg,
+  react = false,
+  arr,
+  reply = false,
+  bot = false,
+  msg
+) => {
+  // el.channel.send(arg);
+  mainObj.channel.send(mainMsg).then((sent) => {
+    if (react) {
+      if (arr !== undefined) {
+        arr.forEach((entry) => {
+          sent.react(`${entry}`);
+        });
+      }
+    } else if (reply && msg !== undefined) {
+      if (bot) {
+        sent.reply(msg);
+      } else {
+        mainObj.reply(msg);
+      }
+    }
+  });
+};
+
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
 exports.capFirst = capFirst;
 exports.emotes = emotes;
+exports.sMsg = sMsg;
