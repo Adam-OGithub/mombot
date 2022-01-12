@@ -2,7 +2,7 @@
 const Discord = require("discord.js");
 const weather = require("../node_modules/openweather-apis");
 const config = require("../config.json");
-const { round } = require("../custom_nodemods/utils.js");
+const { round, sMsg } = require("../custom_nodemods/utils.js");
 weather.setLang("en");
 weather.setUnits("imperial");
 weather.setAPPID(config.weatherToken);
@@ -52,7 +52,7 @@ exports.run = async (client, message, args, discord) => {
             visibility
           )} Miles`
         );
-      message.channel.send(embed);
+      sMsg(message, embed);
     });
   } catch (e) {
     console.log(`Weather error: ${e}`);

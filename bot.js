@@ -73,7 +73,7 @@ const getUserFromMention = (mention) => {
     }
   }
 };
-let i = 0;
+
 client.on("message", (message) => {
   const userMention = getUserFromMention(message.content);
   if (message.content.indexOf(config.prefix) === 0) {
