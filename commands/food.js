@@ -2,6 +2,7 @@
 const axios = require("../node_modules/axios");
 const config = require("../config.json");
 const Discord = require("discord.js");
+const { sMsg } = require("../custom_nodemods/utils");
 exports.run = async (client, message, args, discord) => {
   axios
     .get("https://www.themealdb.com/api/json/v1/1/random.php")
@@ -44,6 +45,6 @@ exports.run = async (client, message, args, discord) => {
           `${mealObj.strInstructions} \n\n__Ingredients__\n ${str}`
         );
 
-      message.channel.send(embed);
+      sMsg(message, embed);
     });
 };

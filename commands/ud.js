@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const config = require("../config.json");
 const ud = require("relevant-urban");
+const { sMsg, emotes } = require("../custom_nodemods/utils");
 exports.run = async (client, message, args, discord) => {
   let worder = args[0];
   if (!worder) return message.channel.send("Specify a word");
@@ -15,5 +16,5 @@ exports.run = async (client, message, args, discord) => {
     //.addField("Example", defin.example)
     //.addField("Author", defin.author)
     .setColor(config.color);
-  message.channel.send(embed);
+  sMsg(message, embed);
 };

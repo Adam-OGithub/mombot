@@ -1,6 +1,7 @@
 "use strict";
 const Discord = require("discord.js");
 const config = require("../config.json");
+const { sMsg } = require("../custom_nodemods/utils");
 exports.run = async (client, message, args, discord) => {
   let embed = new Discord.MessageEmbed()
     .setTitle(`Help me Mom`)
@@ -20,5 +21,5 @@ exports.run = async (client, message, args, discord) => {
       "create <pollname> <question> - creates poll\n add <pollname> <q1,q2,q3,q4> - addes questions\nstart <pollname> -starts poll"
     )
     .addField("{help}", "Get this message.");
-  message.channel.send(embed);
+  sMsg(message.embed);
 };

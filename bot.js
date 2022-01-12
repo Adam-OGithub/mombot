@@ -106,7 +106,6 @@ client.on("message", (message) => {
       }
     }
     const sentence = markovChain(str);
-    console.log(sentence);
     const pick = sentence.split("\n").join(" %%%% ").split("%%%%");
     sMsg(message, `${capFirst(randomWord(pick))}.`);
   }
