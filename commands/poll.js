@@ -24,9 +24,9 @@ const setLower = (input) => {
   const newInput = input.map((arg) => arg.toLowerCase());
   return newInput;
 };
-exports.run = async (client, msg, args, discord, fullArgs) => {
+exports.run = async (client, msg, args, discord, infoObj) => {
   setLower(args);
-  const fArgs = setLower(fullArgs.split(" "));
+  const fArgs = setLower(infoObj.msg.split(" "));
   const command = args[0];
   const text1 = args[1];
   const text2 = args[2];

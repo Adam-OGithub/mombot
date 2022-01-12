@@ -93,9 +93,38 @@ const sMsg = (
   });
 };
 
+const genInfo = (msg, client) => {
+  const myObj = {};
+  myObj.channelId = msg.channel.id;
+  myObj.channelName = msg.channel.name;
+  myObj.nsfw = msg.channel.nsfw;
+  myObj.lastMsg = msg.channel.lastMessageID;
+  myObj.guildID = msg.guild.id;
+  myObj.guildName = msg.guild.name;
+  myObj.afkId = msg.guild.afkChannelID;
+  myObj.msg = msg.content;
+  myObj.msgId = msg.id;
+  myObj.userName = msg.author.username;
+  myObj.userId = msg.author.id;
+  myObj.userUid = msg.author.discriminator;
+  myObj.isBot = msg.author.bot;
+  if (client !== undefined) {
+    myObj.currentGuild = client.guilds.cache.get(myObj.guildID);
+    myObj.guildMemCount = myObj.currentGuild.memberCount;
+    myObj.guildOwner = myObj.currentGuild.ownerID;
+    myObj.guildRoles = myObj.currentGuild.roles.cache;
+    myObj.guildChannels = myObj.currentGuild.channels.cache;
+    myObj.guildMembers = myObj.currentGuild.members.cache;
+    myObj.guildPres = myObj.currentGuild.presences.cache;
+    myObj.guildvoice = myObj.currentGuild.voiceStates.cache;
+  }
+
+  return myObj;
+};
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
 exports.capFirst = capFirst;
 exports.emotes = emotes;
 exports.sMsg = sMsg;
+exports.genInfo = genInfo;

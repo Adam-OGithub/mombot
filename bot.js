@@ -10,6 +10,7 @@ const {
   markovChain,
   sMsg,
   capFirst,
+  genInfo,
 } = require("./custom_nodemods/utils.js");
 const { use } = require("express/lib/application");
 const minutes = 5;
@@ -72,28 +73,25 @@ const getUserFromMention = (mention) => {
     }
   }
 };
-
+let i = 0;
 client.on("message", (message) => {
-  //console.log(message);
   const userMention = getUserFromMention(message.content);
-  const channelID = message.channel.id;
   if (message.content.indexOf(config.prefix) === 0) {
-    const fullArgs = message.content;
     const args = message.content.slice(config.prefix.length).trim().split(" ");
     const command = args.shift().toLowerCase();
     try {
       console.log(`\x1b[32m`, `${message.author.tag} executed '${command}'`);
       let runCommand = require(`./commands/${command}.js`);
-      runCommand.run(client, message, args, Discord, fullArgs);
+      runCommand.run(client, message, args, Discord, genInfo(message, client));
     } catch (e) {
       console.error(`\x1b[32m`, `[ERROR]: ${e.message}`);
     }
   } else if (
     userMention?.bot &&
-    userMention.username === "MOM" &&
-    userMention.discriminator === "2763"
+    userMention?.username === "MOM" &&
+    userMention?.discriminator === "2763"
   ) {
-    const channelCache = client.channels.cache.get(channelID);
+    const channelCache = client.channels.cache.get(genInfo(message).channelId);
     const msgCache = channelCache.messages.cache;
     let str = ``;
     for (const [key, value] of msgCache) {
@@ -109,7 +107,7 @@ client.on("message", (message) => {
     }
     const sentence = markovChain(str);
     console.log(sentence);
-    const pick = sentence.split("\n");
+    const pick = sentence.split("\n").join(" %%%% ").split("%%%%");
     sMsg(message, `${capFirst(randomWord(pick))}.`);
   }
 });
