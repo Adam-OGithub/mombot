@@ -1,22 +1,43 @@
 "use strict";
-const weather = require("../node_modules/openweather-apis");
 const config = require("../config.json");
+const axios = require("../node_modules/axios");
 const { round, sMsg, makeEmbed } = require("../custom_nodemods/utils.js");
-weather.setLang("en");
-weather.setUnits("imperial");
-weather.setAPPID(config.weatherToken);
+
+const convertKToF = (K) => (K !== undefined ? ((+K - 273.15) * 9) / 5 + 32 : K);
 
 exports.run = async (client, message, args, discord) => {
   //prevents weather from crashing
+  console.log(args);
+  let type = ``;
+  let zipcode = ``;
+  let cc = ``;
+  let city = ``;
+  let url = ``;
   if (args[0] !== undefined) {
     const isNum = args[0].match(/^[0-9]+$/);
     if (isNum === null) {
-      weather.setCity(args[0]);
+      city = args[0];
+      type = `city`;
     } else if (args[0].length <= 5) {
-      weather.setZipCode(+args[0]);
+      zipcode = args[0];
+      type = `zip`;
     }
 
-    weather.getAllWeather(function (err, loc) {
+    if (args[1 !== undefined]) {
+      cc = args[1];
+    } else {
+      cc = `us`;
+    }
+
+    if (type === `zip`) {
+      url = `https://api.openweathermap.org/data/2.5/weather?zip=${zipcode},${cc}&appid=${config.weatherToken}`;
+    } else {
+      url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${config.weatherToken}`;
+    }
+
+    axios.get(`${url}`).then((res) => {
+      console.log(res.data);
+      const loc = res.data;
       const weatherDes = loc?.weather[0]?.description;
       const m = loc?.main;
       const temp = m?.temp;
@@ -26,24 +47,28 @@ exports.run = async (client, message, args, discord) => {
       const humidity = m?.humidity;
       const visibility = loc?.visibility / 1000;
       const city = loc?.name;
+      const tempF = convertKToF(temp);
+      const feelsLikeF = convertKToF(feelsLike);
+      const minTempF = convertKToF(minTemp);
+      const maxTempF = convertKToF(maxTemp);
       let emote = ``;
-      if (temp <= 40) {
+      if (tempF <= 40) {
         emote = `cold_face`;
-      } else if (temp > 40 <= 55) {
+      } else if (tempF > 40 <= 55) {
         emote = `cold_sweat`;
-      } else if (temp > 55 && temp <= 75) {
+      } else if (tempF > 55 && tempF <= 75) {
         emote = `smiley`;
-      } else if (temp > 75 && temp <= 85) {
+      } else if (tempF > 75 && tempF <= 85) {
         emote = `upside_down`;
-      } else if (temp > 85) {
+      } else if (tempF > 85) {
         emote = `hot_face`;
       } else {
         emote = `face_with_monocle`;
       }
-      const inner = `Temperature is ${round(temp)}ºF and feels like ${round(
-        feelsLike
-      )}ºF\n Min temp ${round(minTemp)}ºF, Max Temp ${round(
-        maxTemp
+      const inner = `Temperature is ${round(tempF)}ºF and feels like ${round(
+        feelsLikeF
+      )}ºF\n Min temp ${round(minTempF)}ºF, Max Temp ${round(
+        maxTempF
       )}ºF \n Humidity is ${round(humidity)} with visibility at ${round(
         visibility
       )} Miles`;
