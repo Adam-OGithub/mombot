@@ -1,25 +1,46 @@
 "use strict";
-const Discord = require("discord.js");
-const config = require("../config.json");
-const { sMsg } = require("../custom_nodemods/utils");
+const { sMsg, makeEmbed } = require("../custom_nodemods/utils");
 exports.run = async (client, message, args, discord) => {
-  let embed = new Discord.MessageEmbed()
-    .setTitle(`Help me Mom`)
-    .setColor(config.color)
-    .setDescription(
-      `Awww, momma always here to help you, sweetie. What'cha need?`
-    )
-    .addField(
-      "{ud} <word or phrase> ",
-      "Gets the urban dictionary definition of the word or phrase."
-    )
-    .addField("{mom}", "Momma pep talk.")
-    .addField("{food}", "Momma gonna make you some food.")
-    .addField("{weather}", "Gets weather from https://openweathermap.org/api")
-    .addField(
-      "{poll}",
-      "create <pollname> <question> - creates poll\n add <pollname> <q1,q2,q3,q4> - addes questions\nstart <pollname> -starts poll"
-    )
-    .addField("{help}", "Get this message.");
-  sMsg(message.embed);
+  const help = [
+    {
+      label: "{help}",
+      val: "Get this message.",
+    },
+  ];
+
+  const commands = [
+    {
+      label: "{ud} <word or phrase> ",
+      val: "Gets the urban dictionary definition of the word or phrase.",
+    },
+    {
+      label: "{mom}",
+      val: "Momma pep talk.",
+    },
+    {
+      label: "{food}",
+      val: "Momma gonna make you some food.",
+    },
+    {
+      label: "{weather}",
+      val: "Gets weather from https://openweathermap.org/api",
+    },
+    {
+      label: "{poll}",
+      val: "create <pollname> <question> - Creates poll\n add <pollname> <q1,q2,q3,q4> - Adds questions\nstart <pollname> - Starts poll",
+    },
+    {
+      label: "{roll}",
+      val: "d <1000> - Let momma roll you some dice!",
+    },
+  ];
+
+  const add = [...commands, ...help];
+  const embed = makeEmbed(
+    `Help me Mom`,
+    `Awww, momma always here to help you, sweetie. What'cha need?`,
+    add
+  );
+
+  sMsg(message, embed);
 };

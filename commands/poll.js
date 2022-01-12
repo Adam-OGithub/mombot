@@ -1,7 +1,12 @@
 "use strict";
-const Discord = require("discord.js");
 const config = require("../config.json");
-const { emotes, capFirst, sMsg } = require("../custom_nodemods/utils.js");
+const {
+  emotes,
+  capFirst,
+  sMsg,
+  makeEmbed,
+  getHelp,
+} = require("../custom_nodemods/utils.js");
 const pollMap = new Map();
 
 const check = (text, map) => {
@@ -95,10 +100,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         newEmoteArr.push(emotes[i]);
         str += `${emotes[i]} - ${capFirst(obj.choice)}\n\n`;
       });
-      let embed = new Discord.MessageEmbed()
-        .setTitle(`${myObj.question}`)
-        .setColor(config.color)
-        .setDescription(`${str}`);
+      const embed = makeEmbed(`${myObj.question}`, `${str}`);
       sMsg(msg, embed, true, newEmoteArr);
     } else {
       sMsg(
@@ -107,6 +109,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       );
     }
   } else {
-    sMsg(msg, `${config.prefix}help`);
+    getHelp(msg);
   }
 };

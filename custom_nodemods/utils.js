@@ -1,4 +1,6 @@
 "use strict";
+const Discord = require("discord.js");
+const config = require("../config.json");
 const randomWord = (arr) => arr[Math.trunc(Math.random() * arr.length)];
 
 const round = (myInt) => Math.trunc(myInt);
@@ -121,6 +123,35 @@ const genInfo = (msg, client) => {
 
   return myObj;
 };
+
+const randomInt = (min, max) =>
+  Math.floor(Math.trunc(Math.random() * (max - min) + 1) + min);
+
+const makeEmbed = (title, description, fields, url, image) => {
+  let embed = new Discord.MessageEmbed()
+    .setTitle(title)
+    .setColor(config.color)
+    .setDescription(description);
+
+  if (fields !== undefined) {
+    fields.forEach((field) => {
+      embed.addField(field.label, field.val);
+    });
+  }
+
+  if (url !== undefined) {
+    embed.setURL(url);
+  }
+
+  if (image !== undefined) {
+    embed.setImage(image);
+  }
+  return embed;
+};
+
+const getHelp = (msg) => {
+  sMsg(msg, `${config.prefix}help`);
+};
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
@@ -128,3 +159,6 @@ exports.capFirst = capFirst;
 exports.emotes = emotes;
 exports.sMsg = sMsg;
 exports.genInfo = genInfo;
+exports.randomInt = randomInt;
+exports.makeEmbed = makeEmbed;
+exports.getHelp = getHelp;

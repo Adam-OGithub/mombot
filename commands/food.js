@@ -1,8 +1,6 @@
 "use strict";
 const axios = require("../node_modules/axios");
-const config = require("../config.json");
-const Discord = require("discord.js");
-const { sMsg } = require("../custom_nodemods/utils");
+const { sMsg, makeEmbed } = require("../custom_nodemods/utils");
 exports.run = async (client, message, args, discord) => {
   axios
     .get("https://www.themealdb.com/api/json/v1/1/random.php")
@@ -34,17 +32,14 @@ exports.run = async (client, message, args, discord) => {
       for (let i = 0; i < ingredients.length; i++) {
         str += `${ingredients[i]}: ${amount[i]}\n`;
       }
-      let embed = new Discord.MessageEmbed()
-        .setTitle(
-          `${mealObj.strMeal} - ${mealObj.strArea} - ${mealObj.strCategory}`
-        )
-        .setURL(mealObj.strSource)
-        .setImage(mealObj.strMealThumb)
-        .setColor(config.color)
-        .setDescription(
-          `${mealObj.strInstructions} \n\n__Ingredients__\n ${str}`
-        );
 
+      let embed = makeEmbed(
+        `${mealObj.strMeal} - ${mealObj.strArea} - ${mealObj.strCategory}`,
+        `${mealObj.strInstructions} \n\n__Ingredients__\n ${str}`,
+        undefined,
+        mealObj.strSource,
+        mealObj.strMealThumb
+      );
       sMsg(message, embed);
     });
 };

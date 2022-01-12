@@ -2,7 +2,7 @@
 const Discord = require("discord.js");
 const weather = require("../node_modules/openweather-apis");
 const config = require("../config.json");
-const { round, sMsg } = require("../custom_nodemods/utils.js");
+const { round, sMsg, makeEmbed } = require("../custom_nodemods/utils.js");
 weather.setLang("en");
 weather.setUnits("imperial");
 weather.setAPPID(config.weatherToken);
@@ -40,18 +40,18 @@ exports.run = async (client, message, args, discord) => {
       } else {
         emote = `face_with_monocle`;
       }
-      let embed = new Discord.MessageEmbed()
-        .setTitle(`Weather for ${loc.name} - ${weatherDes} :${emote}:`)
-        .setColor(config.color)
-        .setDescription(
-          `Temperature is ${round(temp)}ºF and feels like ${round(
-            feelsLike
-          )}ºF\n Min temp ${round(minTemp)}ºF, Max Temp ${round(
-            maxTemp
-          )}ºF \n Humidity is ${round(humidity)} with visibility at ${round(
-            visibility
-          )} Miles`
-        );
+      const inner = `Temperature is ${round(temp)}ºF and feels like ${round(
+        feelsLike
+      )}ºF\n Min temp ${round(minTemp)}ºF, Max Temp ${round(
+        maxTemp
+      )}ºF \n Humidity is ${round(humidity)} with visibility at ${round(
+        visibility
+      )} Miles`;
+      const embed = makeEmbed(
+        `Weather for ${loc.name} - ${weatherDes} :${emote}:`,
+        inner
+      );
+
       sMsg(message, embed);
     });
   } catch (e) {
