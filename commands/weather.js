@@ -23,7 +23,7 @@ exports.run = async (client, message, args, discord) => {
       type = `zip`;
     }
 
-    if (args[1 !== undefined]) {
+    if (args[1] !== undefined) {
       cc = args[1];
     } else {
       cc = `us`;
