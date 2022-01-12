@@ -12,7 +12,6 @@ const {
   capFirst,
   genInfo,
 } = require("./custom_nodemods/utils.js");
-const { use } = require("express/lib/application");
 const minutes = 5;
 const seconds = minutes * 60;
 const time = seconds * 1000;

@@ -57,7 +57,16 @@ const dinner = [
   "muffins",
   "bread",
 ];
-const games = ["Halo", "New Horizon"];
+const games = [
+  "Halo",
+  "New Horizon",
+  "DOOM!",
+  "7 Days to Die",
+  "Among Us",
+  "ASTRONEER",
+  "Borderlands 3",
+  "Space Engineers",
+];
 const tvshows = ["Lifetime", "The walking dead", "The Rookie", "Dexter"];
 const people = ["Charlet", "Cheryl", "Ava", "Sophia", "Mia", "Isabella"];
 const items = [
@@ -70,11 +79,11 @@ const items = [
 ];
 
 const botStatus = [
-  "with all your data",
-  "leave me alone",
-  "go to your room",
-  "candy crush saga",
-  "your dad now go to sleep",
+  "With all your data",
+  "Leave me alone",
+  "Go to your room",
+  "Candy Crush Saga",
+  ...games,
 ];
 
 exports.momSayings = momSayings;
