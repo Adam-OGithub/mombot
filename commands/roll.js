@@ -1,11 +1,17 @@
 "use strict";
-const { sMsg, randomInt, getHelp } = require("../custom_nodemods/utils.js");
+const {
+  sMsg,
+  randomInt,
+  getHelp,
+  makeEmbed,
+} = require("../custom_nodemods/utils.js");
 exports.run = async (client, msg, args, discord, infoObj) => {
   if (args[0] !== undefined) {
     const lower = infoObj.msg.toLowerCase().split(" ").join("").split("d");
     const die = Number.parseInt(lower[1], 10);
     if (typeof die === "number" && die <= 90071992547409) {
-      sMsg(msg, `${randomInt(0, die)}`);
+      const embed = makeEmbed(`Dice Roll!`, `${randomInt(0, die)}`);
+      sMsg(msg, embed);
     } else if (die > 90071992547409) {
       sMsg(
         msg,
