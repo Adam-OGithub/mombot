@@ -41,5 +41,8 @@ exports.run = async (client, message, args, discord) => {
         mealObj.strMealThumb
       );
       sMsg(message, embed);
+    })
+    .catch((e) => {
+      console.log(e);
     });
 };
