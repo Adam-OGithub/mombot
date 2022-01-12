@@ -1,6 +1,5 @@
 "use strict";
 const { sMsg, randomInt, getHelp } = require("../custom_nodemods/utils.js");
-const config = require("../config.json");
 exports.run = async (client, msg, args, discord, infoObj) => {
   if (args[0] !== undefined) {
     const lower = infoObj.msg.toLowerCase().split(" ").join("").split("d");

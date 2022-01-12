@@ -1,5 +1,4 @@
 "use strict";
-const Discord = require("discord.js");
 const weather = require("../node_modules/openweather-apis");
 const config = require("../config.json");
 const { round, sMsg, makeEmbed } = require("../custom_nodemods/utils.js");
