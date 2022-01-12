@@ -24,6 +24,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       );
     }
   } else {
-    getHelp(msg);
+    const embed = makeEmbed(`Dice Roll!`, `${randomInt(0, 100)}`);
+    sMsg(msg, embed);
   }
 };
