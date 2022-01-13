@@ -14,7 +14,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     if (typeof die === "number" && die <= 90071992547409) {
       let str = ``;
       if (+multi > 0) {
-        for (let i = 0; i <= +multi; i++) {
+        for (let i = 0; i < +multi; i++) {
           str += `Rolled ${randomInt(0, die)} \n`;
         }
       } else {
