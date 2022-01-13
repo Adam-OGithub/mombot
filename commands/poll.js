@@ -26,8 +26,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       .split("^^A^^");
     const question = fArgs[1];
     const options = fArgs[3].split(",");
-    console.log(`Questions=${question}`);
-    console.log(`Options=${options}`);
     let str = ``;
     const newEmoteArr = [];
     options.forEach((obj, i) => {
@@ -35,8 +33,8 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       str += `${emotes[i]} - ${capFirst(obj)}\n\n`;
     });
     const embed = makeEmbed(`${question}`, `${str}`);
-    sMsg(msg, embed, true, newEmoteArr);
+    sMsg(msg.channel, embed, true, newEmoteArr);
   } else {
-    getHelp(msg);
+    getHelp(msg.channel);
   }
 };

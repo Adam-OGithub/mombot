@@ -11,20 +11,20 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     const die = Number.parseInt(lower[1], 10);
     if (typeof die === "number" && die <= 90071992547409) {
       const embed = makeEmbed(`Dice Roll!`, `${randomInt(0, die)}`);
-      sMsg(msg, embed);
+      sMsg(msg.channel, embed);
     } else if (die > 90071992547409) {
       sMsg(
-        msg,
+        msg.channel,
         `Wow there honey slow down your roll, that is to big of a number.`
       );
     } else {
       sMsg(
-        msg,
+        msg.channel,
         `It has to be a number sweety, Does momma need to teach you how to count? https://youtu.be/_Qz68dtBiO4`
       );
     }
   } else {
     const embed = makeEmbed(`Dice Roll!`, `${randomInt(0, 100)}`);
-    sMsg(msg, embed);
+    sMsg(msg.channel, embed);
   }
 };

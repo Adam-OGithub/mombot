@@ -1,6 +1,6 @@
 "use strict";
 const { sMsg, makeEmbed } = require("../custom_nodemods/utils");
-exports.run = async (client, message, args, discord) => {
+exports.run = async (client, msg, args, discord) => {
   const help = [
     {
       label: "{help}",
@@ -42,5 +42,5 @@ exports.run = async (client, message, args, discord) => {
     add
   );
 
-  sMsg(message, embed);
+  sMsg(msg.channel, embed);
 };

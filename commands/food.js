@@ -1,7 +1,7 @@
 "use strict";
 const axios = require("../node_modules/axios");
 const { sMsg, makeEmbed } = require("../custom_nodemods/utils");
-exports.run = async (client, message, args, discord) => {
+exports.run = async (client, msg, args, discord) => {
   axios
     .get("https://www.themealdb.com/api/json/v1/1/random.php")
     .then((response) => {
@@ -40,7 +40,7 @@ exports.run = async (client, message, args, discord) => {
         mealObj.strSource,
         mealObj.strMealThumb
       );
-      sMsg(message, embed);
+      sMsg(msg.channel, embed);
     })
     .catch((e) => {
       console.log(e);

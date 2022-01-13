@@ -1,20 +1,21 @@
 const Discord = require("discord.js");
 const config = require("../config.json");
 const ud = require("relevant-urban");
-const { sMsg } = require("../custom_nodemods/utils");
-exports.run = async (client, message, args, discord) => {
+const { sMsg, makeEmbed } = require("../custom_nodemods/utils");
+exports.run = async (client, msg, args, discord) => {
   let worder = args[0];
-  if (!worder) return message.channel.send("Specify a word");
+  if (!worder) return sMsg(msg.channel, `Specify a Word`);
   let defin = await ud(args.join(" ")).catch((e) => {
-    message.channel.send("Word not found");
+    sMsg(msg.channel, `Word not found`);
     return;
   });
-  let embed = new Discord.MessageEmbed()
-    .setTitle(defin.word)
-    .setURL(defin.urbanURL)
-    .setDescription(defin.definition)
-    //.addField("Example", defin.example)
-    //.addField("Author", defin.author)
-    .setColor(config.color);
-  sMsg(message, embed);
+
+  let embed = makeEmbed(
+    defin.word,
+    defin.definition,
+    undefined,
+    defin.urbanURL
+  );
+
+  sMsg(msg.channel, embed);
 };

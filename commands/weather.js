@@ -6,7 +6,7 @@ const { response } = require("express");
 
 const convertKToF = (K) => (K !== undefined ? ((+K - 273.15) * 9) / 5 + 32 : K);
 
-exports.run = async (client, message, args, discord) => {
+exports.run = async (client, msg, args, discord) => {
   //prevents weather from crashing
   console.log(args);
   let type = ``;
@@ -80,10 +80,10 @@ exports.run = async (client, message, args, discord) => {
         );
 
         if (city !== undefined && m !== undefined) {
-          sMsg(message, embed);
+          sMsg(msg.channel, embed);
         } else {
           sMsg(
-            message,
+            msg.channel,
             `Momma is going to have to find you a new home,because ${args[0]} can not be found.`
           );
         }
@@ -91,7 +91,7 @@ exports.run = async (client, message, args, discord) => {
       .catch((e) => {
         if (e?.response?.data?.message === "city not found") {
           sMsg(
-            message,
+            msg.channel,
             `Momma is going to have to find you a new home,because ${args[0]} can not be found.`
           );
         }

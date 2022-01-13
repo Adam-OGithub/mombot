@@ -78,21 +78,26 @@ const sMsg = (
   msg
 ) => {
   // el.channel.send(arg);
-  mainObj.channel.send(mainMsg).then((sent) => {
-    if (react) {
-      if (arr !== undefined) {
-        arr.forEach((entry) => {
-          sent.react(`${entry}`);
-        });
+  mainObj
+    .send(mainMsg)
+    .then((sent) => {
+      if (react) {
+        if (arr !== undefined) {
+          arr.forEach((entry) => {
+            sent.react(`${entry}`);
+          });
+        }
+      } else if (reply && msg !== undefined) {
+        if (bot) {
+          sent.reply(msg);
+        } else {
+          mainObj.reply(msg);
+        }
       }
-    } else if (reply && msg !== undefined) {
-      if (bot) {
-        sent.reply(msg);
-      } else {
-        mainObj.reply(msg);
-      }
-    }
-  });
+    })
+    .catch((e) => {
+      console.log(e);
+    });
 };
 
 const genInfo = (msg, client) => {
@@ -152,6 +157,24 @@ const makeEmbed = (title, description, fields, url, image) => {
 const getHelp = (msg) => {
   sMsg(msg, `${config.prefix}help`);
 };
+
+const dateInfo = {
+  full: () => new Date(),
+  year: () => new Date().getFullYear(),
+  month: () => new Date().getMonth(),
+  day: () => new Date().getDay(),
+  hour: () => new Date().getHours(),
+  minute: () => new Date().getMinutes(),
+  second: () => new Date().getSeconds(),
+  milsecond: () => new Date().getMilliseconds(),
+  epocSecs: () => Math.floor(new Date() / 1000),
+};
+
+const getChannel = (channelId, infoObj) =>
+  infoObj.currentGuild.channels.cache.get(channelId);
+
+const getUser = (userId, client) => client.users.cache.get(userId);
+
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
@@ -162,3 +185,6 @@ exports.genInfo = genInfo;
 exports.randomInt = randomInt;
 exports.makeEmbed = makeEmbed;
 exports.getHelp = getHelp;
+exports.dates = dateInfo;
+exports.getChannel = getChannel;
+exports.getUser = getUser;

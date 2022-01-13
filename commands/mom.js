@@ -12,6 +12,7 @@ const {
   randomWord,
   markovChain,
   capFirst,
+  sMsg,
 } = require("../custom_nodemods/utils.js");
 
 const loopVars = (sArr) => {
@@ -46,7 +47,7 @@ const loopVars = (sArr) => {
 };
 
 let sentArr = [];
-exports.run = async (client, message, args, discord) => {
+exports.run = async (client, msg, args, discord) => {
   let loop = true;
   let i = 0;
   let str = ``;
@@ -62,13 +63,13 @@ exports.run = async (client, message, args, discord) => {
       const mark = markovChain(sentArr.join(" "));
       const ran = randomWord(mark.split(".").join("").split("!"));
       const str = `${capFirst(ran)}.`;
-      message.channel.send(str);
+      sMsg(msg.channel, str);
       sentArr = [];
       loop = false;
     } else {
       //not in list
       sentArr.push(str);
-      message.channel.send(str);
+      sMsg(msg.channel, str);
       loop = false;
     }
   }
