@@ -13,4 +13,6 @@ Version 16.13.1 is recommendee
 "token": "discord bot token",
 "color": "RANDOM",
 "weatherToken": "weatherapi token"
+"prison": "channelId",
+"prisonGuild": "guildid"
 }
