@@ -5,12 +5,25 @@ const {
   getHelp,
   makeEmbed,
 } = require("../custom_nodemods/utils.js");
+const config = require("../config.json");
 exports.run = async (client, msg, args, discord, infoObj) => {
   if (args[0] !== undefined) {
     const lower = infoObj.msg.toLowerCase().split(" ").join("").split("d");
+    const multi = lower[0].split(`${config.prefix}roll`)[1];
+    console.log(multi);
     const die = Number.parseInt(lower[1], 10);
+    console.log(lower);
     if (typeof die === "number" && die <= 90071992547409) {
-      const embed = makeEmbed(`Dice Roll!`, `${randomInt(0, die)}`);
+      let str = ``;
+      if (+multi > 0) {
+        for (let i = 0; i <= +multi; i++) {
+          str += `Rolled ${randomInt(0, die)} \n`;
+        }
+      } else {
+        str = ` ${randomInt(0, die)} `;
+      }
+      console.log(str);
+      const embed = makeEmbed(`Dice Roll!`, str);
       sMsg(msg.channel, embed);
     } else if (die > 90071992547409) {
       sMsg(
