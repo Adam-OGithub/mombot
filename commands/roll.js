@@ -37,7 +37,11 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     const multi = lower[0].split(`${config.prefix}roll`)[1];
     const die = Number.parseInt(lower[1], 10);
     const multiDie = Number.parseInt(multi, 10);
-    if (typeof die === "number" && die <= 90071992547409) {
+    if (
+      typeof die === "number" &&
+      die <= 90071992547409 &&
+      multiDie <= 90071992547409
+    ) {
       let str = ``;
       if (multiDie > 0 && multiDie <= 10) {
         str = cycleRoll(die, multi, true);
@@ -50,6 +54,11 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       const embed = makeEmbed(`Dice Roll${t(multi)}`, str);
       sMsg(msg.channel, embed);
     } else if (die > 90071992547409) {
+      sMsg(
+        msg.channel,
+        `Wow there honey slow down your roll, that is to big of a number.`
+      );
+    } else if (multiDie > 9000) {
       sMsg(
         msg.channel,
         `Wow there honey slow down your roll, that is to big of a number.`
