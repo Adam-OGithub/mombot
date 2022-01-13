@@ -56,12 +56,12 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     } else if (die > 90071992547409) {
       sMsg(
         msg.channel,
-        `Wow there honey slow down your roll, that is to big of a number.`
+        `Wow there honey slow down your roll, that is too big of a number.`
       );
     } else if (multiDie > 9000000) {
       sMsg(
         msg.channel,
-        `Wow there honey slow down your roll, that is to big of a number.`
+        `Wow there honey slow down your roll, that is too big of a number.`
       );
     } else {
       sMsg(
