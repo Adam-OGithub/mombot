@@ -49,8 +49,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       .map((letter) => (letter === `"` ? `^^A^^` : letter))
       .join("")
       .split("^^A^^");
-    console.log(fArgs);
-    reminder.time = fArgs[1];
+    reminder.timetemp = fArgs[1];
     reminder.msg = fArgs[3];
   }
 
@@ -62,6 +61,33 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     });
     reminder.channels = channelArr;
 
+    const time = reminder.timetemp
+      .split("/")
+      .join("^")
+      .split(" ")
+      .join("^")
+      .split(":")
+      .join("^")
+      .split("^");
+    console.log(+`20${time[2]}`, +time[0], +time[1], +time[3], +time[4], 0);
+    const timeSet = Math.floor(
+      new Date(+`20${time[2]}`, +time[0], +time[1], +time[3], +time[4], 0)
+    );
+    console.log(new Date(2022, 4, 29 - 1, 22, 0, 0, 0));
+    console.log(
+      new Date(
+        +`20${time[2]}`,
+        +time[0] - 1,
+        +time[1] - 1,
+        +time[3],
+        +time[4],
+        0
+      )
+    );
+    const newTime = dates.epocSecs() - timeSet;
+    console.log(newTime);
+
+    reminder.time = newTime;
     reminder.fullmsg = `${reminder.msg} ${reminder.users}`;
     delay(reminder);
   } else {
