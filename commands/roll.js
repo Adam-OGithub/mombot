@@ -10,9 +10,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
   if (args[0] !== undefined) {
     const lower = infoObj.msg.toLowerCase().split(" ").join("").split("d");
     const multi = lower[0].split(`${config.prefix}roll`)[1];
-    console.log(multi);
     const die = Number.parseInt(lower[1], 10);
-    console.log(lower);
     if (typeof die === "number" && die <= 90071992547409) {
       let str = ``;
       if (+multi > 0) {
@@ -22,7 +20,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       } else {
         str = ` ${randomInt(0, die)} `;
       }
-      console.log(str);
       const embed = makeEmbed(`Dice Roll!`, str);
       sMsg(msg.channel, embed);
     } else if (die > 90071992547409) {
