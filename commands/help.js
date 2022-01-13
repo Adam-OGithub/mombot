@@ -31,7 +31,7 @@ exports.run = async (client, msg, args, discord) => {
     },
     {
       label: "{roll}",
-      val: "d <1000> - Let momma roll you some dice!",
+      val: "d <dice number> or <total dice> d <dice number> - Let momma roll you some dice!",
     },
   ];
 
