@@ -22,7 +22,7 @@ const cycleRoll = (die, multi, notSingle = false, overTen) => {
       diceCount.push(dRoll);
     }
     if (overTen) {
-      str += `Added other dice to total ...`;
+      str += `Added other dice to total ...\n`;
     }
     str += `\nTotal: ${total(diceCount)}`;
   } else {
