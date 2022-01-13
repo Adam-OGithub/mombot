@@ -27,7 +27,7 @@ exports.run = async (client, message, args, discord) => {
     },
     {
       label: "{poll}",
-      val: "create <pollname> <question> - Creates poll\n add <pollname> <q1,q2,q3,q4> - Adds questions\nstart <pollname> - Starts poll",
+      val: `"question" "option 1,option 2,option 3, option 4"`,
     },
     {
       label: "{roll}",

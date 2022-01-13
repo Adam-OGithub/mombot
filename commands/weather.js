@@ -89,7 +89,6 @@ exports.run = async (client, message, args, discord) => {
         }
       })
       .catch((e) => {
-        console.log(e.response.data);
         if (e?.response?.data?.message === "city not found") {
           sMsg(
             message,
