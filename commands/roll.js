@@ -40,7 +40,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     if (
       typeof die === "number" &&
       die <= 90071992547409 &&
-      multiDie <= 90071992547409
+      multiDie <= 9000000
     ) {
       let str = ``;
       if (multiDie > 0 && multiDie <= 10) {
@@ -58,7 +58,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         msg.channel,
         `Wow there honey slow down your roll, that is to big of a number.`
       );
-    } else if (multiDie > 9000) {
+    } else if (multiDie > 9000000) {
       sMsg(
         msg.channel,
         `Wow there honey slow down your roll, that is to big of a number.`
