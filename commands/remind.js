@@ -1,5 +1,4 @@
 "use strict";
-const config = require("../config.json");
 const {
   sMsg,
   makeEmbed,
@@ -7,6 +6,7 @@ const {
   dates,
   getChannel,
   getUser,
+  getPre,
 } = require("../custom_nodemods/utils.js");
 
 const delay = async (reminder) => {
@@ -44,7 +44,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
 
   if (count === 4) {
     const fArgs = infoObj.msg
-      .split(`${config.prefix}remind`)[1]
+      .split(`${getPre()}remind`)[1]
       .split("")
       .map((letter) => (letter === `"` ? `^^A^^` : letter))
       .join("")

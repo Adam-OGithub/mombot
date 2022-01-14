@@ -1,6 +1,16 @@
 "use strict";
 const Discord = require("discord.js");
 const config = require("../config.json");
+
+const getPre = () => {
+  let prefix;
+  if (config.testing.usedev) {
+    prefix = config.testing.prefix;
+  } else {
+    prefix = config.prefix;
+  }
+  return prefix;
+};
 const randomWord = (arr) => arr[Math.trunc(Math.random() * arr.length)];
 
 const round = (myInt) => Math.trunc(myInt);
@@ -188,3 +198,4 @@ exports.getHelp = getHelp;
 exports.dates = dateInfo;
 exports.getChannel = getChannel;
 exports.getUser = getUser;
+exports.getPre = getPre;

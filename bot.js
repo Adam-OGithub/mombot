@@ -13,6 +13,7 @@ const {
   genInfo,
   dates,
   getChannel,
+  getPre,
 } = require("./custom_nodemods/utils.js");
 const minutes = 5;
 const seconds = minutes * 60;
@@ -83,8 +84,8 @@ if (config.testing.usedev) {
 
 client.on("message", (message) => {
   // const userMention = getUserFromMention(message.content);
-  if (message.content.indexOf(config.prefix) === 0) {
-    const args = message.content.slice(config.prefix.length).trim().split(" ");
+  if (message.content.indexOf(getPre()) === 0) {
+    const args = message.content.slice(getPre().length).trim().split(" ");
     const command = args.shift().toLowerCase();
     try {
       console.log(`\x1b[32m`, `${message.author.tag} executed '${command}'`);

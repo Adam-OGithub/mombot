@@ -14,7 +14,8 @@ Version 16.13.1 is recommendee
 "prison": "channelid",
 "prisonGuild": "guildid",
 "testing": {
-"usedev": true
+"usedev": true,
+"prefix": "$$"
 },
 "tokens": {
 "dev": "botdevtoken",

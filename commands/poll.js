@@ -1,11 +1,11 @@
 "use strict";
-const config = require("../config.json");
 const {
   emotes,
   capFirst,
   sMsg,
   makeEmbed,
   getHelp,
+  getPre,
 } = require("../custom_nodemods/utils.js");
 
 exports.run = async (client, msg, args, discord, infoObj) => {
@@ -19,7 +19,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
 
   if (count === 4) {
     const fArgs = infoObj.msg
-      .split(`${config.prefix}poll`)[1]
+      .split(`${getPre()}poll`)[1]
       .split("")
       .map((letter) => (letter === `"` ? `^^A^^` : letter))
       .join("")
