@@ -1,6 +1,8 @@
+"use strict";
 const Discord = require("discord.js");
+const mysql = require("mysql");
 const express = require("express");
-const axios = require("axios");
+const bodyParser = require("body-parser");
 const config = require("./config.json");
 const client = new Discord.Client();
 const app = express();
@@ -13,20 +15,26 @@ const {
   genInfo,
   dates,
   getChannel,
+  getPre,
 } = require("./custom_nodemods/utils.js");
 const minutes = 5;
 const seconds = minutes * 60;
 const time = seconds * 1000;
 
-const keepAlive = async () => {
-  const myReq = {};
-  myReq.myrequest = "Am I alive?";
-  setInterval(() => {
-    axios.post("http://127.0.0.1:8000/", myReq).then((response) => {
-      console.log(response.data);
-    });
-  }, time);
-};
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+app.use(bodyParser.json());
+
+const con = mysql.createConnection({
+  host: config.sql.host,
+  user: config.sql.username,
+  password: config.sql.password,
+  database: config.sql.database,
+  timeout: config.sql.timeout,
+});
 
 const changeAc = async () => {
   //sets activity for bot first
@@ -37,16 +45,21 @@ const changeAc = async () => {
   }, time);
 };
 
-//Starts web server
-//Sets route to use for keepalive
-app.all("/", (req, res) => {
-  res.send("I am alive!");
+app.post(config.web.url, async (req, res) => {
+  const reqB = req.body;
+  con.connect(function (err) {
+    if (err) throw err;
+    con.query(reqB.query, function (err, result) {
+      if (err) throw err;
+      res.json(result);
+      con.end();
+    });
+  });
 });
 
 //sets server app to listen
-app.listen(8000, () => {
+app.listen(config.web.port, () => {
   console.log("Server is Ready!");
-  keepAlive();
 });
 
 //Start Bot log
@@ -83,8 +96,8 @@ if (config.testing.usedev) {
 
 client.on("message", (message) => {
   // const userMention = getUserFromMention(message.content);
-  if (message.content.indexOf(config.prefix) === 0) {
-    const args = message.content.slice(config.prefix.length).trim().split(" ");
+  if (message.content.indexOf(getPre()) === 0) {
+    const args = message.content.slice(getPre().length).trim().split(" ");
     const command = args.shift().toLowerCase();
     try {
       console.log(`\x1b[32m`, `${message.author.tag} executed '${command}'`);

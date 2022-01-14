@@ -26,5 +26,10 @@ Version 16.13.1 is recommendee
 "username": "username",
 "password": "password",
 "database": "database"
+},
+"web": {
+"url": "url",
+"port": portnum,
+"dburl": "dburl/url"
 }
 }
