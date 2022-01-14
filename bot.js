@@ -74,6 +74,12 @@ const getUserFromMention = (mention) => {
     }
   }
 };
+const myConf = {};
+if (config.testing.usedev) {
+  myConf.token = config.tokens.dev;
+} else {
+  myConf.token = config.tokens.prod;
+}
 
 client.on("message", (message) => {
   // const userMention = getUserFromMention(message.content);
@@ -130,4 +136,4 @@ client.on("message", (message) => {
   //   sMsg(message, `${capFirst(randomWord(pick))}.`);
   // }
 });
-client.login(config.token);
+client.login(myConf.token);

@@ -31,9 +31,9 @@ exports.run = async (client, msg, args, discord) => {
     }
 
     if (type === `zip`) {
-      url = `https://api.openweathermap.org/data/2.5/weather?zip=${zipcode},${cc}&appid=${config.weatherToken}`;
+      url = `https://api.openweathermap.org/data/2.5/weather?zip=${zipcode},${cc}&appid=${config.tokens.weather}`;
     } else {
-      url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${config.weatherToken}`;
+      url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${config.tokens.weather}`;
     }
 
     axios
