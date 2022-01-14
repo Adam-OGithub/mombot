@@ -4,8 +4,8 @@ const {
   randomInt,
   getHelp,
   makeEmbed,
+  getPre,
 } = require("../custom_nodemods/utils.js");
-const config = require("../config.json");
 
 const roll = (die) => randomInt(0, die);
 const addVals = (pre, cur) => BigInt(pre) + BigInt(cur);
@@ -87,7 +87,7 @@ const cycleRoll = (die, multi, notSingle = false, overTen) => {
 exports.run = async (client, msg, args, discord, infoObj) => {
   if (args[0] !== undefined) {
     const lower = infoObj.msg.toLowerCase().split(" ").join("").split("d");
-    const multi = lower[0].split(`${config.prefix}roll`)[1];
+    const multi = lower[0].split(`${getPre()}roll`)[1];
     const die = Number.parseInt(lower[1], 10);
     const multiDie = Number.parseInt(multi, 10);
     if (typeof die === "number" && die <= 90071992547409) {
