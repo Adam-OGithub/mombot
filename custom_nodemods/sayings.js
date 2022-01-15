@@ -86,6 +86,16 @@ const botStatus = [
   ...games,
 ];
 
+const weatherWords = {
+  cold: `Momma suggest you wear a heavy coat.`,
+  kindaCold: `Momma suggest a light coat.`,
+  normal: `Go out an play honey momma loves this temp.`,
+  kindaHot: `Momma is sweating a little, but still feeling good.`,
+  hot: `Momma sweating her buttock off.`,
+  reallyhot: `Holy hot balls of fire momma is staying in today. We need some water in here.`,
+  windy: `I don't think we are in Kansas anymore.`,
+};
+
 exports.momSayings = momSayings;
 exports.clothing = clothing;
 exports.foods = foods;
@@ -95,3 +105,4 @@ exports.tvshows = tvshows;
 exports.people = people;
 exports.items = items;
 exports.botStatus = botStatus;
+exports.weatherWords = weatherWords;

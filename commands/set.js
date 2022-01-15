@@ -20,7 +20,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         console.log(res.data);
       })
       .catch((e) => {
-        console.log(`error=${e}`);
+        console.log(`${e}`);
       });
   } else {
     getHelp(msg.channel);
