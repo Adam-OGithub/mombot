@@ -1,5 +1,3 @@
-const Discord = require("discord.js");
-const config = require("../config.json");
 const ud = require("relevant-urban");
 const { sMsg, makeEmbed } = require("../custom_nodemods/utils");
 exports.run = async (client, msg, args, discord) => {
