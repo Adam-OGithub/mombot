@@ -39,6 +39,11 @@ exports.run = async (client, msg, args, discord) => {
           if (oz !== "NaN") {
             amount[i] = `${amount[i]} - (${oz} oz)`;
           }
+        } else if (toStr.endsWith("kg") || toStr.endsWith("kg ")) {
+          const lb = kiloToLb(Number.parseInt(amount[i])).toFixed(2);
+          if (lb !== "NaN") {
+            amount[i] = `${amount[i]}  - (${lb} lb)`;
+          }
         } else if (
           toStr.endsWith("g") ||
           toStr.endsWith("Grams") ||
@@ -47,11 +52,6 @@ exports.run = async (client, msg, args, discord) => {
           const oz = gramToOz(Number.parseInt(amount[i])).toFixed(2);
           if (oz !== "NaN") {
             amount[i] = `${amount[i]} - (${oz} oz)`;
-          }
-        } else if (toStr.endsWith("kg") || toStr.endsWith("kg ")) {
-          const lb = kiloToLb(Number.parseInt(amount[i])).toFixed(2);
-          if (lb !== "NaN") {
-            amount[i] = `${amount[i]}  - (${lb} lb)`;
           }
         }
         str += `${ingredients[i]}: ${amount[i]}\n`;
