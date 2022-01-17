@@ -34,22 +34,25 @@ exports.run = async (client, msg, args, discord) => {
       let str = ``;
       for (let i = 0; i < ingredients.length; i++) {
         let toStr = amount[i].toString();
-        console.log(`Raw "${amount[i]}"`);
-        if (toStr.endsWith("ml")) {
-          const oz = millToOz(Number.parseInt(amount[i])).toFixed(0);
-          amount[i] = `${amount[i]} - "${oz} oz"`;
+        if (toStr.endsWith("ml") || toStr.endsWith("ml ")) {
+          const oz = millToOz(Number.parseInt(amount[i])).toFixed(2);
+          if (oz !== "NaN") {
+            amount[i] = `${amount[i]} - (${oz} oz)`;
+          }
         } else if (
           toStr.endsWith("g") ||
           toStr.endsWith("Grams") ||
           toStr.endsWith("g ")
         ) {
-          const oz = gramToOz(Number.parseInt(amount[i])).toFixed(0);
+          const oz = gramToOz(Number.parseInt(amount[i])).toFixed(2);
           if (oz !== "NaN") {
-            amount[i] = `${amount[i]} - "${oz} oz"`;
+            amount[i] = `${amount[i]} - (${oz} oz)`;
           }
-        } else if (toStr.endsWith("kg")) {
-          const lb = kiloToLb(Number.parseInt(amount[i])).toFixed(0);
-          amount[i] = `${amount[i]}  - "${lb} lb"`;
+        } else if (toStr.endsWith("kg") || toStr.endsWith("kg ")) {
+          const lb = kiloToLb(Number.parseInt(amount[i])).toFixed(2);
+          if (lb !== "NaN") {
+            amount[i] = `${amount[i]}  - (${lb} lb)`;
+          }
         }
         str += `${ingredients[i]}: ${amount[i]}\n`;
       }
