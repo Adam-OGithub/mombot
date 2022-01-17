@@ -16,6 +16,8 @@ const {
   dates,
   getChannel,
   getPre,
+  parseUsrChan,
+  getUser,
 } = require("./custom_nodemods/utils.js");
 const minutes = 5;
 const seconds = minutes * 60;
@@ -68,25 +70,6 @@ client.on("ready", () => {
   changeAc();
 });
 
-const getUserFromMention = (mention) => {
-  if (!mention) return;
-
-  if (mention.startsWith("<@") && mention.endsWith(">")) {
-    mention = mention.slice(2, -1);
-
-    if (mention.startsWith("!")) {
-      mention = mention.slice(1);
-    }
-
-    if (client.users.cache.get(mention) === undefined) {
-      //returns bot object
-      return client.user;
-    } else {
-      //returns user object
-      return client.users.cache.get(mention);
-    }
-  }
-};
 const myConf = {};
 if (config.testing.usedev) {
   myConf.token = config.tokens.dev;
@@ -95,7 +78,17 @@ if (config.testing.usedev) {
 }
 
 client.on("message", (message) => {
-  // const userMention = getUserFromMention(message.content);
+  //Gets channels and users in message
+  const [channels, users, usersF] = parseUsrChan(message.content);
+  let isMom = false;
+  //looks for mom to see if mentioned
+  users.forEach((userid) => {
+    let userObj = getUser(userid, client);
+    if (userObj.username === "MOM" && userObj.bot) {
+      isMom = true;
+    }
+  });
+
   if (message.content.indexOf(getPre()) === 0) {
     const args = message.content.slice(getPre().length).trim().split(" ");
     const command = args.shift().toLowerCase();
@@ -123,30 +116,24 @@ client.on("message", (message) => {
         `Sweety Pie <@${message.author.id}> I am your mother,I brought you into this world and I can take you out of it!`
       );
     }
+  } else if (isMom) {
+    const channelCache = client.channels.cache.get(genInfo(message).channelId);
+    const msgCache = channelCache.messages.cache;
+    let str = ``;
+    for (const [key, value] of msgCache) {
+      let val = value.content;
+      let valSplit = val.split(" ");
+      valSplit.forEach((word, i) => {
+        if (word.startsWith("<@") && word.endsWith(">")) {
+          valSplit[i] = `\n`;
+        }
+        str += ` ${valSplit.join(" ")}`;
+      });
+    }
+    //
+    const sentence = markovChain(str);
+    const pick = sentence.split("\n");
+    sMsg(message.channel, `${capFirst(randomWord(pick))}.`);
   }
-
-  // else if (
-  //   userMention?.bot &&
-  //   userMention?.username === "MOM" &&
-  //   userMention?.discriminator === "2763"
-  // ) {
-  //   const channelCache = client.channels.cache.get(genInfo(message).channelId);
-  //   const msgCache = channelCache.messages.cache;
-  //   let str = ``;
-  //   for (const [key, value] of msgCache) {
-  //     let val = value.content;
-  //     if (val.startsWith("<@") && val.endsWith(">")) {
-  //       let user = getUserFromMention(val);
-  //       if (user.username !== "MOM") {
-  //         str += ` @${user.username}#${user.discriminator} `;
-  //       }
-  //     } else {
-  //       str += `${val}`;
-  //     }
-  //   }
-  //   const sentence = markovChain(str);
-  //   const pick = sentence.split("\n").join(" %%%% ").split("%%%%");
-  //   sMsg(message, `${capFirst(randomWord(pick))}.`);
-  // }
 });
 client.login(myConf.token);

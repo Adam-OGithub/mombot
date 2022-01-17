@@ -7,6 +7,7 @@ const {
   getChannel,
   getUser,
   getPre,
+  parseUsrChan,
 } = require("../custom_nodemods/utils.js");
 
 const delay = async (reminder) => {
@@ -18,22 +19,11 @@ const delay = async (reminder) => {
 };
 
 exports.run = async (client, msg, args, discord, infoObj) => {
-  const sInfo = infoObj.msg.split(" ");
-  const channels = [];
   const reminder = {};
   let count = 0;
   //check if entry is user or channel
-  sInfo.forEach((entry) => {
-    if (entry.startsWith("<#") && entry.endsWith(">")) {
-      channels.push(entry.slice(2, -1));
-    } else if (entry.startsWith("<@") && entry.endsWith(">")) {
-      if (entry.slice(2, -1).startsWith(`!`)) {
-        reminder.users += ` ${entry} `;
-      } else {
-        reminder.users += ` ${entry} `;
-      }
-    }
-  });
+  const [channels, users, usersF] = parseUsrChan(infoObj.msg);
+  reminder.users = `${usersF.join(" ")}`;
 
   const myCheck = infoObj.msg.split("");
   myCheck.forEach((entry) => {

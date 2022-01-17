@@ -185,6 +185,28 @@ const getChannel = (channelId, infoObj) =>
 
 const getUser = (userId, client) => client.users.cache.get(userId);
 
+const parseUserChannel = (message) => {
+  const sInfo = message.split(" ");
+  const channels = [];
+  const users = [];
+  const usersF = [];
+  sInfo.forEach((entry) => {
+    if (entry.startsWith("<#") && entry.endsWith(">")) {
+      channels.push(entry.slice(2, -1));
+    } else if (entry.startsWith("<@") && entry.endsWith(">")) {
+      let men = entry.slice(2, -1);
+      if (men.startsWith(`!`)) {
+        usersF.push(entry);
+        users.push(men.slice(1));
+      } else {
+        usersF.push(entry);
+        users.push(men);
+      }
+    }
+  });
+  return [channels, users, usersF];
+};
+
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
@@ -199,3 +221,4 @@ exports.dates = dateInfo;
 exports.getChannel = getChannel;
 exports.getUser = getUser;
 exports.getPre = getPre;
+exports.parseUsrChan = parseUserChannel;
