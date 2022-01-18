@@ -112,7 +112,7 @@ client.on("message", (message) => {
       .then((res) => {
         const out = res.data.result[0]?.prisonid;
 
-        if (out !== undefined) {
+        if (out !== undefined && res.data.result[0]?.prisonid !== null) {
           sMsg(
             message.channel,
             `Sweety Pie <@${message.author.id}> I am your mother,I brought you into this world and I can take you out of it!`
