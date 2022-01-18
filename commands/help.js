@@ -33,6 +33,10 @@ exports.run = async (client, msg, args, discord) => {
       label: "{roll}",
       val: "d <dice number> or <total dice> d <dice number> - Let momma roll you some dice!",
     },
+    {
+      label: "{set}",
+      val: "prison - Sets prison channel,\n prison_remove - Removes prison channel, \n hello - Allows to speak with other discords, \nhello_remove - Removes speaking with other discords. ",
+    },
   ];
 
   const add = [...commands, ...help];

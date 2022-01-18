@@ -24,7 +24,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         break;
       case "hello_remove":
         myReq.query = `REPLACE INTO hello SET guildid = ${infoObj.guildID}`;
-        momMsg = `Momma will no longer allow other discords to speaak here.`;
+        momMsg = `Momma will no longer allow other discords to speak here.`;
         break;
       default:
     }

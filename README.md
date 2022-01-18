@@ -11,8 +11,6 @@ Version 16.13.1 is recommendee
 {
 "prefix": "$",
 "color": "RANDOM",
-"prison": "channelid",
-"prisonGuild": "guildid",
 "testing": {
 "usedev": true,
 "prefix": "$$"
