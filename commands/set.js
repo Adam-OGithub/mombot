@@ -25,7 +25,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     axios
       .post(config.web.dburl, myReq)
       .then((res) => {
-        if (res?.data && res?.data?.affectedRows > 0) {
+        if (res?.data !== undefined) {
           sMsg(msg.channel, `Momma has updated this channel to be the prison!`);
         }
       })
