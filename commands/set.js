@@ -9,7 +9,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     const arg = args[0].toLowerCase();
     switch (arg) {
       case "prison":
-        myReq.query = `INSERT IGNORE INTO guild(guildid,name,owner,prisonid) VALUES (${infoObj.guildID},"${infoObj.guildName}",${infoObj.guildOwner},${infoObj.channelId})`;
+        myReq.query = `REPLACE INTO guild SET guildid = ${infoObj.guildID}, name = "${infoObj.guildName}", owner = ${infoObj.guildOwner}, prisonid = ${infoObj.channelId}`;
         break;
       case "prison remove":
         myReq.query = ``;
