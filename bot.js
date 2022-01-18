@@ -51,16 +51,16 @@ const changeAc = async () => {
 app.post(config.web.url, async (req, res) => {
   const resOut = {};
   const reqB = req.body;
-  con.connect(function (err) {
+  // con.connect(function (err) {
+  //   if (err) throw (resOut.error = err);
+  con.query(reqB.query, function (err, result) {
     if (err) throw (resOut.error = err);
-    con.query(reqB.query, function (err, result) {
-      if (err) throw (resOut.error = err);
-      resOut.result = result;
-      res.json(resOut);
-      con.end();
-    });
+    resOut.result = result;
+    res.json(resOut);
+    // con.end();
   });
 });
+// });
 
 //sets server app to listen
 app.listen(config.web.port, () => {
