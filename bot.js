@@ -1,5 +1,6 @@
 "use strict";
 const Discord = require("discord.js");
+const axios = require("axios");
 const mysql = require("mysql");
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -48,12 +49,14 @@ const changeAc = async () => {
 };
 
 app.post(config.web.url, async (req, res) => {
+  const resOut = {};
   const reqB = req.body;
   con.connect(function (err) {
-    if (err) throw err;
+    if (err) throw (resOut.error = err);
     con.query(reqB.query, function (err, result) {
-      if (err) throw err;
-      res.json(result);
+      if (err) throw (resOut.error = err);
+      resOut.result = result;
+      res.json(resOut);
       con.end();
     });
   });
@@ -100,22 +103,34 @@ client.on("message", (message) => {
       console.error(`\x1b[32m`, `[ERROR]: ${e.message}`);
     }
   } else if (message.mentions.everyone) {
+    const infoObj = genInfo(message, client);
+    const myReq = {};
+    myReq.query = `SELECT prisonid FROM guild WHERE guildid = "${infoObj.guildID}"`;
     const info = genInfo(message, client);
-    if (info.guildID === config.prisonGuild) {
-      sMsg(
-        message.channel,
-        `Sweety Pie <@${message.author.id}> I am your mother,I brought you into this world and I can take you out of it!`
-      );
-      sMsg(
-        getChannel(config.prison, info),
-        `<@${message.author.id}> you belong here`
-      );
-    } else {
-      sMsg(
-        message.channel,
-        `Sweety Pie <@${message.author.id}> I am your mother,I brought you into this world and I can take you out of it!`
-      );
-    }
+    axios
+      .post(config.web.dburl, myReq)
+      .then((res) => {
+        const out = res.data.result[0]?.prisonid;
+
+        if (out !== undefined) {
+          sMsg(
+            message.channel,
+            `Sweety Pie <@${message.author.id}> I am your mother,I brought you into this world and I can take you out of it!`
+          );
+          sMsg(
+            getChannel(out, info),
+            `<@${message.author.id}> you belong here`
+          );
+        } else {
+          sMsg(
+            message.channel,
+            `Sweety Pie <@${message.author.id}> I am your mother,I brought you into this world and I can take you out of it!`
+          );
+        }
+      })
+      .catch((e) => {
+        console.log(`${e}`);
+      });
   } else if (isMom) {
     const channelCache = client.channels.cache.get(genInfo(message).channelId);
     const msgCache = channelCache.messages.cache;
@@ -124,7 +139,10 @@ client.on("message", (message) => {
       let val = value.content;
       let valSplit = val.split(" ");
       valSplit.forEach((word, i) => {
-        if (word.startsWith("<@") && word.endsWith(">")) {
+        if (
+          (word.startsWith("<@") && word.endsWith(">")) ||
+          (word.startsWith("<#") && word.endsWith(">"))
+        ) {
           valSplit[i] = `\n`;
         }
         str += ` ${valSplit.join(" ")}`;

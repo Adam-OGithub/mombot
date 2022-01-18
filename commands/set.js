@@ -9,15 +9,25 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     const arg = args[0].toLowerCase();
     switch (arg) {
       case "prison":
+        myReq.query = `INSERT IGNORE INTO guild(guildid,name,owner,prisonid) VALUES (${infoObj.guildID},"${infoObj.guildName}",${infoObj.guildOwner},${infoObj.channelId})`;
+        break;
+      case "prison remove":
+        myReq.query = ``;
+        break;
+      case "hello":
+        myReq.query = ``;
+        break;
+      case "hello remove":
         myReq.query = ``;
         break;
       default:
     }
-
     axios
       .post(config.web.dburl, myReq)
       .then((res) => {
-        console.log(res.data);
+        if (res?.data && res?.data?.affectedRows > 0) {
+          sMsg(msg.channel, `Momma has updated this channel to be the prison!`);
+        }
       })
       .catch((e) => {
         console.log(`${e}`);
