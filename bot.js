@@ -105,7 +105,7 @@ client.on("message", (message) => {
   } else if (message.mentions.everyone) {
     const infoObj = genInfo(message, client);
     const myReq = {};
-    myReq.query = `SELECT prisonid FROM guild WHERE guildid = "${infoObj.guildID}"`;
+    myReq.query = `SELECT prisonid FROM prison WHERE guildid = "${infoObj.guildID}"`;
     const info = genInfo(message, client);
     axios
       .post(config.web.dburl, myReq)
