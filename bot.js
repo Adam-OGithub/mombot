@@ -178,7 +178,7 @@ client.on("message", (message) => {
             });
             channelsObj.forEach((channelObj) => {
               console.log(channelObj?.id);
-              if (channelObj?.id !== infoObj?.channelId) {
+              if (channelObj?.id && channelObj?.id !== infoObj?.channelId) {
                 let newMsg = `Sending message from Discord "${infoObj?.guildName}" by ${infoObj?.userName}#${infoObj?.userUid}: ${infoObj?.msg} `;
                 sMsg(channelObj, newMsg);
               }
