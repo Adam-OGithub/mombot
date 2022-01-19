@@ -36,6 +36,14 @@ const con = mysql.createConnection({
   timeout: config.sql.timeout,
 });
 
+const errmsg = (e) => {
+  console.error(`\x1b[32m`, `[ERROR]: ${e.message}`);
+};
+
+const cmsg = (str) => {
+  console.log(str);
+};
+
 const changeAc = async () => {
   //sets activity for bot first
   client.user.setActivity(randomWord(botStatus));
@@ -46,18 +54,18 @@ const changeAc = async () => {
 };
 
 app.post(config.web.url, async (req, res) => {
-  const resOut = {};
-  const reqB = req.body;
-  // con.connect(function (err) {
-  //   if (err) throw (resOut.error = err);
-  con.query(reqB.query, function (err, result) {
-    if (err) throw (resOut.error = err);
-    resOut.result = result;
-    res.json(resOut);
-    // con.end();
-  });
+  try {
+    const resOut = {};
+    const reqB = req.body;
+    con.query(reqB.query, function (err, result) {
+      if (err) throw (resOut.error = err);
+      resOut.result = result;
+      res.json(resOut);
+    });
+  } catch (e) {
+    errmsg(e);
+  }
 });
-// });
 
 //sets server app to listen
 app.listen(config.web.port, () => {
@@ -69,14 +77,6 @@ client.on("ready", () => {
   console.log(`\x1b[32m`, `${client.user.tag} is online!`);
   changeAc();
 });
-
-const errmsg = (e) => {
-  console.error(`\x1b[32m`, `[ERROR]: ${e.message}`);
-};
-
-const cmsg = (str) => {
-  console.log(str);
-};
 
 const alt = (select, client, message, Discord, infoObj) => {
   try {
