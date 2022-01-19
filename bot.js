@@ -177,8 +177,9 @@ client.on("message", (message) => {
               channelsObj.push(guildIds[i].channels.cache.get(result.helloid));
             });
             channelsObj.forEach((channelObj) => {
-              if (channelObj.id !== infoObj.channelId) {
-                let newMsg = `Sending message from Discord "${infoObj.guildName}" by ${infoObj.userName}#${infoObj.userUid}: ${infoObj.msg} `;
+              console.log(channelObj?.id);
+              if (channelObj?.id !== infoObj?.channelId) {
+                let newMsg = `Sending message from Discord "${infoObj?.guildName}" by ${infoObj?.userName}#${infoObj?.userUid}: ${infoObj?.msg} `;
                 sMsg(channelObj, newMsg);
               }
             });
