@@ -10,16 +10,12 @@ const app = express();
 const { botStatus } = require("./custom_nodemods/sayings.js");
 const {
   randomWord,
-  markovChain,
   sMsg,
-  capFirst,
   genInfo,
-  dates,
   getChannel,
   getPre,
   parseUsrChan,
   getUser,
-  makeEmbed,
 } = require("./custom_nodemods/utils.js");
 const minutes = 5;
 const seconds = minutes * 60;
@@ -74,6 +70,26 @@ client.on("ready", () => {
   changeAc();
 });
 
+const errmsg = (e) => {
+  console.error(`\x1b[32m`, `[ERROR]: ${e.message}`);
+};
+
+const cmsg = (str) => {
+  console.log(str);
+};
+
+const alt = (select, client, message, Discord, infoObj) => {
+  try {
+    let runCommand = require(`./momcommands/${select}.js`);
+    if (message.author.bot !== true) {
+      cmsg(`${infoObj.tag} ran '${select}.js'`);
+      runCommand.run(client, message, Discord, infoObj);
+    }
+  } catch (e) {
+    errmsg(e);
+  }
+};
+
 const myConf = {};
 if (config.testing.usedev) {
   myConf.token = config.tokens.dev;
@@ -98,99 +114,18 @@ client.on("message", (message) => {
     const args = message.content.slice(getPre().length).trim().split(" ");
     const command = args.shift().toLowerCase();
     try {
-      console.log(`\x1b[32m`, `${message.author.tag} executed '${command}'`);
+      cmsg(`${infoObj.tag} ran '${command}'`);
       let runCommand = require(`./commands/${command}.js`);
       runCommand.run(client, message, args, Discord, infoObj);
     } catch (e) {
-      console.error(`\x1b[32m`, `[ERROR]: ${e.message}`);
+      errmsg(e);
     }
   } else if (message.mentions.everyone) {
-    const myReq = {};
-    myReq.query = `SELECT prisonid FROM prison WHERE guildid = "${infoObj.guildID}"`;
-    axios
-      .post(config.web.dburl, myReq)
-      .then((res) => {
-        const out = res.data.result[0]?.prisonid;
-
-        if (out !== undefined && out !== null) {
-          sMsg(
-            message.channel,
-            `Sweety Pie <@${message.author.id}> I am your mother,I brought you into this world and I can take you out of it!`
-          );
-          sMsg(
-            getChannel(out, infoObj),
-            `<@${message.author.id}> you belong here`
-          );
-        } else {
-          sMsg(
-            message.channel,
-            `Sweety Pie <@${message.author.id}> I am your mother,I brought you into this world and I can take you out of it!`
-          );
-        }
-      })
-      .catch((e) => {
-        console.log(`${e}`);
-      });
+    alt("mentionall", client, message, Discord, infoObj);
   } else if (isMom) {
-    const channelCache = client.channels.cache.get(genInfo(message).channelId);
-    const msgCache = channelCache.messages.cache;
-    let str = ``;
-    for (const [key, value] of msgCache) {
-      let val = value.content;
-      let valSplit = val.split(" ");
-      valSplit.forEach((word, i) => {
-        if (
-          (word.startsWith("<@") && word.endsWith(">")) ||
-          (word.startsWith("<#") && word.endsWith(">"))
-        ) {
-          valSplit[i] = `\n`;
-        }
-        str += ` ${valSplit.join(" ")}`;
-      });
-    }
-    //
-    const sentence = markovChain(str);
-    const pick = sentence.split("\n");
-    sMsg(message.channel, `${capFirst(randomWord(pick))}.`);
+    alt("atmom", client, message, Discord, infoObj);
   } else {
-    const myReq = {};
-    const guildIds = [];
-    const channelsObj = [];
-    myReq.query = `SELECT helloid FROM hello WHERE guildid = "${infoObj.guildID}"`;
-
-    axios.post(config.web.dburl, myReq).then((res) => {
-      const out = res.data.result[0]?.helloid;
-      if (
-        out !== null &&
-        out === infoObj.channelId &&
-        message.author.bot !== true
-      ) {
-        //if query returns channelid is same as hello
-        for (const [key, value] of client.guilds.cache) {
-          guildIds.push(client.guilds.cache.get(key));
-          //console.log(guildIds[0]);
-        }
-        myReq.query = `SELECT * FROM hello`;
-        axios.post(config.web.dburl, myReq).then((res) => {
-          const results = res?.data?.result;
-          if (results !== undefined) {
-            results.forEach((result, i) => {
-              channelsObj.push(guildIds[i].channels.cache.get(result.helloid));
-            });
-            channelsObj.forEach((channelObj) => {
-              console.log(channelObj?.id);
-              if (channelObj?.id && channelObj?.id !== infoObj?.channelId) {
-                const embeded = makeEmbed(
-                  `Hello "${infoObj?.guildName}"- "${infoObj?.userName}#${infoObj?.userUid}"`,
-                  ` ${infoObj?.msg} `
-                );
-                sMsg(channelObj, embeded);
-              }
-            });
-          }
-        });
-      }
-    });
+    alt("hello", client, message, Discord, infoObj);
   }
 });
 client.login(myConf.token);

@@ -125,6 +125,7 @@ const genInfo = (msg, client) => {
   myObj.userId = msg.author.id;
   myObj.userUid = msg.author.discriminator;
   myObj.isBot = msg.author.bot;
+  myObj.tag = msg.author.tag;
   if (client !== undefined) {
     myObj.currentGuild = client.guilds.cache.get(myObj.guildID);
     myObj.guildMemCount = myObj.currentGuild.memberCount;
