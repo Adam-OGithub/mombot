@@ -1,3 +1,4 @@
+"use strict";
 const ud = require("relevant-urban");
 const { sMsg, makeEmbed } = require("../custom_nodemods/utils");
 exports.run = async (client, msg, args, discord) => {

@@ -1,3 +1,4 @@
+"use strict";
 const config = require("../config.json");
 const { sMsg, getChannel } = require("../custom_nodemods/utils.js");
 const axios = require("../node_modules/axios");
