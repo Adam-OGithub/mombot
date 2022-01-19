@@ -4,7 +4,7 @@ A discord bot for mom
 
 # Node
 
-Version 16.13.1 is recommendee
+Version 16.13.1 is recommended
 
 # config file - config.js
 
@@ -13,7 +13,7 @@ Version 16.13.1 is recommendee
 "color": "RANDOM",
 "testing": {
 "usedev": true,
-"prefix": "$$"
+"prefix": "!"
 },
 "tokens": {
 "dev": "botdevtoken",
@@ -31,4 +31,29 @@ Version 16.13.1 is recommendee
 "port": portnum,
 "dburl": "dburl/url"
 }
+}
+
+#Database - Tables / Columns
+
+guild {
+guildid
+name
+owner  
+PRIMARY KEY (guildid)
+}
+
+prison {
+guildid
+prisonid  
+PRIMARY KEY (guildid)  
+}
+
+hello {
+guildid
+helloid
+PRIMARY KEY (guildid)  
+}
+
+remind {
+tbd
 }
