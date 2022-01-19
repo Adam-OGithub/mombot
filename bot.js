@@ -19,6 +19,7 @@ const {
   getPre,
   parseUsrChan,
   getUser,
+  makeEmbed,
 } = require("./custom_nodemods/utils.js");
 const minutes = 5;
 const seconds = minutes * 60;
@@ -179,8 +180,11 @@ client.on("message", (message) => {
             channelsObj.forEach((channelObj) => {
               console.log(channelObj?.id);
               if (channelObj?.id && channelObj?.id !== infoObj?.channelId) {
-                let newMsg = `Sending message from Discord "${infoObj?.guildName}" by ${infoObj?.userName}#${infoObj?.userUid}: ${infoObj?.msg} `;
-                sMsg(channelObj, newMsg);
+                const embeded = makeEmbed(
+                  `Hello "${infoObj?.guildName}"- "${infoObj?.userName}#${infoObj?.userUid}"`,
+                  ` ${infoObj?.msg} `
+                );
+                sMsg(channelObj, embeded);
               }
             });
           }
