@@ -21,21 +21,15 @@ const minutes = 5;
 const seconds = minutes * 60;
 const time = seconds * 1000;
 
+//WEB config=======================
 app.use(
   bodyParser.urlencoded({
     extended: true,
   })
 );
 app.use(bodyParser.json());
-
-const con = mysql.createConnection({
-  host: config.sql.host,
-  user: config.sql.username,
-  password: config.sql.password,
-  database: config.sql.database,
-  timeout: config.sql.timeout,
-});
-
+//WEB config=======================
+// helper funcs =======================
 const errmsg = (e) => {
   console.error(`\x1b[32m`, `[ERROR]: ${e.message}`);
 };
@@ -52,14 +46,37 @@ const changeAc = async () => {
     client.user.setActivity(randomWord(botStatus));
   }, time);
 };
+// helper funcs =======================
+//DATABASE INFO =======================
+const dbConf = {
+  host: config.sql.host,
+  user: config.sql.username,
+  password: config.sql.password,
+  database: config.sql.database,
+  timeout: config.sql.timeout,
+};
+let con = mysql.createConnection(dbConf);
 
+//END DATABASE INFO =======================
+//WEB CONNECT =======================
 app.post(config.web.url, async (req, res) => {
   try {
     const resOut = {};
     const reqB = req.body;
     con.query(reqB.query, function (err, result) {
-      if (err) throw (resOut.error = err);
-      resOut.result = result;
+      console.log("hit");
+      if (err?.code) {
+        resOut.error = err;
+        console.log(err);
+        if (err.code === "PROTOCOL_CONNECTION_LOST") {
+          const handleDis = () => (con = mysql.createConnection(dbConf));
+          handleDis();
+        }
+        console.log(`res err`);
+      } else {
+        console.log(`resout`);
+        resOut.result = result;
+      }
       res.json(resOut);
     });
   } catch (e) {
@@ -77,6 +94,7 @@ client.on("ready", () => {
   console.log(`\x1b[32m`, `${client.user.tag} is online!`);
   changeAc();
 });
+//END WEB CONNECT =======================
 
 const alt = (select, client, message, Discord, infoObj) => {
   try {

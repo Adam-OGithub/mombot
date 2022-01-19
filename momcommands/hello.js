@@ -9,9 +9,13 @@ exports.run = async (client, message, discord, infoObj) => {
   myReq.query = `SELECT helloid FROM hello WHERE guildid = "${infoObj.guildID}"`;
 
   axios.post(config.web.dburl, myReq).then((res) => {
-    const out = res.data.result[0]?.helloid;
+    let out;
+    if (res?.data?.result !== undefined) {
+      out = res?.data?.result[0]?.helloid;
+    }
     if (
       out !== null &&
+      out !== undefined &&
       out === infoObj.channelId &&
       message.author.bot !== true
     ) {
