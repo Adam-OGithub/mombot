@@ -33,7 +33,7 @@ Version 16.13.1 is recommended
 }
 }
 
-#Database - Tables / Columns
+# Database - Tables / Columns
 
 guild {
 guildid
