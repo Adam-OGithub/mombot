@@ -17,7 +17,9 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     }
   });
 
+  //Makes sure there are only 4 quotes
   if (count === 4) {
+    //easier split for quates
     const fArgs = infoObj.msg
       .split(`${getPre()}poll`)[1]
       .split("")

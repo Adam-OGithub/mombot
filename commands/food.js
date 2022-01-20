@@ -1,9 +1,12 @@
 "use strict";
 const axios = require("../node_modules/axios");
-const { sMsg, makeEmbed } = require("../custom_nodemods/utils");
-const millToOz = (mil) => (mil !== undefined ? mil * 0.033814 : mil);
-const gramToOz = (gram) => (gram !== undefined ? gram * 0.03527396195 : gram);
-const kiloToLb = (kilo) => (kilo !== undefined ? kilo * 2.20462262185 : kilo);
+const { sMsg, makeEmbed } = require("../custom_nodemods/utils.js");
+const {
+  millToOz,
+  gramToOz,
+  kiloToLb,
+} = require("../custom_nodemods/conversions.js");
+
 exports.run = async (client, msg, args, discord) => {
   axios
     .get("https://www.themealdb.com/api/json/v1/1/random.php")

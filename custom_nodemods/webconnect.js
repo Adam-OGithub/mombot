@@ -7,6 +7,7 @@ const { cmsg, errmsg } = require("../custom_nodemods/utils.js");
 const app = express();
 
 const webdb = async () => {
+  //Set database config
   const dbConf = {
     host: config.sql.host,
     user: config.sql.username,
@@ -27,11 +28,11 @@ const webdb = async () => {
     try {
       const resOut = {};
       const reqB = req.body;
-      console.log(reqB);
       con.query(reqB.query, function (err, result) {
         if (err?.code) {
           resOut.error = err;
           cmsg(`Error=${err}`);
+          //If connection is lost reset connection
           if (err.code === "PROTOCOL_CONNECTION_LOST") {
             const handleDis = () => (con = mysql.createConnection(dbConf));
             handleDis();

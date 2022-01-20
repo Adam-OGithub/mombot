@@ -10,6 +10,8 @@ const {
 const roll = (die) => randomInt(0, die);
 const addVals = (pre, cur) => BigInt(pre) + BigInt(cur);
 const total = (allDice) => allDice.reduce(addVals);
+
+//Addes comma between each section that needs a comma
 const addComma = (arr) => {
   let i = 1;
   let temp = ``;
@@ -33,6 +35,7 @@ const addComma = (arr) => {
   return temp;
 };
 
+//Formats the dice to add commas
 const format = (die) => {
   const dSplit = (die + " ").split("").map((i) => Number(i));
   const len = dSplit.length;
@@ -62,6 +65,7 @@ const format = (die) => {
   return str;
 };
 
+//Adding dice to output
 const cycleRoll = (die, multi, notSingle = false, overTen) => {
   let str = ``;
   if (notSingle) {
@@ -90,6 +94,8 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     const multi = lower[0].split(`${getPre()}roll`)[1];
     const die = Number.parseInt(lower[1], 10);
     const multiDie = Number.parseInt(multi, 10);
+
+    //MAkes sure die is a number and within range
     if (typeof die === "number" && die <= 90071992547409) {
       let str = ``;
       if (multiDie !== undefined && multiDie <= 9000000) {

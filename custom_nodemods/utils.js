@@ -3,6 +3,8 @@ const Discord = require("discord.js");
 const config = require("../config.json");
 const path = require("path");
 const fs = require("fs");
+
+//Gets prefix for command from config
 const getPre = () => {
   let prefix;
   if (config.testing.usedev) {
@@ -12,10 +14,14 @@ const getPre = () => {
   }
   return prefix;
 };
+
+//Selects a random word from an array
 const randomWord = (arr) => arr[Math.trunc(Math.random() * arr.length)];
 
+//Rounds intergers
 const round = (myInt) => Math.trunc(myInt);
 
+//Generates a markov chain from a string
 const markovMe = (input) => {
   const markovChain = {};
   const textArr = input.split(" ");
@@ -42,11 +48,13 @@ const markovMe = (input) => {
   return result;
 };
 
+//Capitalises first letter in a string
 const capFirst = (str) =>
   str !== undefined
     ? str[0].toUpperCase() + str.slice(1)
     : `Mom still loves you honey, even though you were born an error`;
 
+//List of emotes
 const emotes = [
   "🐶",
   "🐺",
@@ -79,6 +87,7 @@ const emotes = [
   "🐟",
 ];
 
+//Sends message to respective channel or reacts to message
 const sMsg = (
   mainObj,
   mainMsg,
@@ -111,6 +120,7 @@ const sMsg = (
     });
 };
 
+//Generates client and message information for easieraccess
 const genInfo = (msg, client) => {
   const myObj = {};
   myObj.channelId = msg.channel.id;
@@ -141,9 +151,11 @@ const genInfo = (msg, client) => {
   return myObj;
 };
 
+//Generates a random number between a min and max
 const randomInt = (min, max) =>
   Math.floor(Math.trunc(Math.random() * (max - min) + 1) + min);
 
+//Creates an embed
 const makeEmbed = (title, description, fields, url, image) => {
   let embed = new Discord.MessageEmbed()
     .setTitle(title)
@@ -166,10 +178,12 @@ const makeEmbed = (title, description, fields, url, image) => {
   return embed;
 };
 
+//Returns help menu
 const getHelp = (msg) => {
   sMsg(msg, `${config.prefix}help`);
 };
 
+//Object for easy dates
 const dateInfo = {
   full: () => new Date(),
   year: () => new Date().getFullYear(),
@@ -182,11 +196,14 @@ const dateInfo = {
   epocSecs: () => Math.floor(new Date() / 1000),
 };
 
+//Gets the channel object
 const getChannel = (channelId, infoObj) =>
   infoObj.currentGuild.channels.cache.get(channelId);
 
+//Get the user object
 const getUser = (userId, client) => client.users.cache.get(userId);
 
+//Gets channel and users id and objects
 const parseUserChannel = (message) => {
   const sInfo = message.split(" ");
   const channels = [];
@@ -209,6 +226,7 @@ const parseUserChannel = (message) => {
   return [channels, users, usersF];
 };
 
+//Checks if use sending command is mom
 const getIsMom = (users, client) => {
   let isMom = false;
   //looks for mom to see if mentioned
@@ -221,6 +239,7 @@ const getIsMom = (users, client) => {
   return isMom;
 };
 
+//returns timeouts in minutes
 const setTimoutMin = (min) => {
   const minutes = min;
   const seconds = minutes * 60;
@@ -228,14 +247,17 @@ const setTimoutMin = (min) => {
   return time;
 };
 
+//send erros message to console
 const errmsg = (e) => {
   console.error(`\x1b[32m`, `[ERROR]: ${e.message}`);
 };
 
+//Sends log to console
 const cmsg = (str) => {
   console.log(str);
 };
 
+//Gets the current files in a directory and removes .js
 const getDirFiles = (dir) => {
   const comDir = path.join(__dirname, dir);
   const allComs = [];
@@ -248,6 +270,8 @@ const getDirFiles = (dir) => {
   return allComs;
 };
 
+//Gets the command location and then returns the command entered
+//Used for inline commandssd
 const getCommand = (infoObj, allComs) => {
   const argsAll = infoObj.msg.slice(getPre().length).trim().split(" ");
   let cmd = null;

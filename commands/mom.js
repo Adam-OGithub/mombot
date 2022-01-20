@@ -16,6 +16,7 @@ const {
   sMsg,
 } = require("../custom_nodemods/utils.js");
 
+//Replaces all words with random word that meet criteria
 const loopVars = (sArr) => {
   sArr.forEach((word, i) => {
     switch (word) {
@@ -52,6 +53,7 @@ exports.run = async (client, msg, args, discord) => {
   let loop = true;
   let i = 0;
   let str = ``;
+  //loops until a unique sentence is found if no unique sentence is found uses markov chain
   while (loop) {
     let select = randomWord(momSayings);
     let sArr = select.split(" ");

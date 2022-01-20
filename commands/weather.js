@@ -2,18 +2,14 @@
 const config = require("../config.json");
 const axios = require("../node_modules/axios");
 const { round, sMsg, makeEmbed } = require("../custom_nodemods/utils.js");
+const {
+  convertKToF,
+  meterToMile,
+  milToIn,
+} = require("../custom_nodemods/conversions.js");
 const { weatherWords } = require("../custom_nodemods/sayings.js");
 
-const convertKToF = (K) =>
-  K !== undefined
-    ? ((+K - 273.15) * 9) / 5 + 32
-    : `Your guess is as good as mine.`;
-
-const meterToMile = (M) =>
-  M !== undefined
-    ? `${(M * 2.236936).toFixed(2)}/mph`
-    : `Your guess is as good as mine.`;
-const milToIn = (M) => (M !== undefined ? (M * 0.03937).toFixed(2) : 0);
+//converts degree to direction
 const degToDir = (deg) => {
   let dir = ``;
   if (deg !== undefined) {
@@ -64,7 +60,7 @@ exports.run = async (client, msg, args, discord) => {
     } else {
       cc = `us`;
     }
-
+    //sets url based on zip else it chooses city
     if (type === `zip`) {
       url = `https://api.openweathermap.org/data/2.5/weather?zip=${zipcode},${cc}&appid=${config.tokens.weather}`;
     } else {
@@ -95,13 +91,16 @@ exports.run = async (client, msg, args, discord) => {
         const maxTempF = convertKToF(maxTemp);
         let isRainOrSnow = ``;
         let mommaInput = ``;
+
+        //Sets rain if there is rain
         if (typeOfPrecip !== undefined) {
           isRainOrSnow = `Curently ${typeOfPrecip} with ${precip} in last hour.`;
         }
-
+        //Picks Windy word if speed is greater that 13
         if (windSpeed > 13) {
           mommaInput += `${weatherWords.windy} \n`;
         }
+        //Sets emote to be used based on temperature
         let emote = ``;
         if (tempF <= 40) {
           emote = `cold_face`;
@@ -124,6 +123,7 @@ exports.run = async (client, msg, args, discord) => {
         } else {
           emote = `face_with_monocle`;
         }
+        //Sets imbed
         const inner = `Temperature is ${round(tempF)}ºF and feels like ${round(
           feelsLikeF
         )}ºF\n Min temp ${round(minTempF)}ºF, Max Temp ${round(
@@ -141,7 +141,7 @@ exports.run = async (client, msg, args, discord) => {
         } else {
           sMsg(
             msg.channel,
-            `Momma is going to have to find you a new home,because ${args[0]} can not be found.`
+            `Momma is going to have to find you a new home,because ${arg1} can not be found.`
           );
         }
       })
@@ -149,7 +149,7 @@ exports.run = async (client, msg, args, discord) => {
         if (e?.response?.data?.message === "city not found") {
           sMsg(
             msg.channel,
-            `Momma is going to have to find you a new home,because ${args[0]} can not be found.`
+            `Momma is going to have to find you a new home,because ${arg1} can not be found.`
           );
         }
       });

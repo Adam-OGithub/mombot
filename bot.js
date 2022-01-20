@@ -18,6 +18,8 @@ const {
 const { webdb } = require("./custom_nodemods/webconnect.js");
 const time = setTimoutMin(5);
 const allComs = getDirFiles("../commands");
+const myConf = {};
+
 const changeAc = async () => {
   //sets activity for bot first
   client.user.setActivity(randomWord(botStatus));
@@ -27,13 +29,14 @@ const changeAc = async () => {
   }, time);
 };
 
-const myConf = {};
+//Gets tokens from config
 if (config.testing.usedev) {
   myConf.token = config.tokens.dev;
 } else {
   myConf.token = config.tokens.prod;
 }
 
+//Runs commands based on args
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
   try {
     const runCommand = require(`./${dir}/${select}.js`);
@@ -46,22 +49,20 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
   }
 };
 
-webdb();
-//Start Bot
+//Start Bot and database
 client.on("ready", () => {
+  webdb();
   console.log(`\x1b[32m`, `${client.user.tag} is online!`);
   changeAc();
 });
 
 client.on("message", (message) => {
-  //Gets channels and users in message
   const [channels, users, usersF] = parseUsrChan(message.content);
   const infoObj = genInfo(message, client);
   const isMom = getIsMom(users, client);
   const cmd = getCommand(infoObj, allComs);
   const argIndex = infoObj.msg.split(" ").indexOf(`${getPre()}${cmd}`);
   const args = infoObj.msg.split(" ").slice(argIndex, message.content.length);
-
   if (cmd !== null) {
     alt(cmd, "commands", client, message, args, Discord, infoObj);
   } else if (message.mentions.everyone) {
