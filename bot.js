@@ -57,7 +57,7 @@ client.on("message", (message) => {
   //Gets channels and users in message
   const [channels, users, usersF] = parseUsrChan(message.content);
   const infoObj = genInfo(message, client);
-  const isMom = getIsMom(users);
+  const isMom = getIsMom(users, client);
   const cmd = getCommand(infoObj, allComs);
   const argIndex = infoObj.msg.split(" ").indexOf(`${getPre()}${cmd}`);
   const args = infoObj.msg.split(" ").slice(argIndex, message.content.length);

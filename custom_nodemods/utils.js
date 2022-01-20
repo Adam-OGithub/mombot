@@ -209,7 +209,7 @@ const parseUserChannel = (message) => {
   return [channels, users, usersF];
 };
 
-const getIsMom = (users) => {
+const getIsMom = (users, client) => {
   let isMom = false;
   //looks for mom to see if mentioned
   users.forEach((userid) => {
