@@ -15,8 +15,11 @@ const meterToMile = (M) =>
 //Converts millimetters to inches
 const milToIn = (M) => (M !== undefined ? (M * 0.03937).toFixed(2) : 0);
 
+//Converts milliliters to oz
 const millToOz = (mil) => (mil !== undefined ? mil * 0.033814 : mil);
+//converts grams to oz
 const gramToOz = (gram) => (gram !== undefined ? gram * 0.03527396195 : gram);
+//converts kilos to lbs
 const kiloToLb = (kilo) => (kilo !== undefined ? kilo * 2.20462262185 : kilo);
 
 exports.convertKToF = convertKToF;
