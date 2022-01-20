@@ -2,19 +2,22 @@
 const ud = require("relevant-urban");
 const { sMsg, makeEmbed } = require("../custom_nodemods/utils");
 exports.run = async (client, msg, args, discord) => {
-  let worder = args[0];
+  console.log(`args=${args[1]}`);
+  let worder = args[1];
   if (!worder) return sMsg(msg.channel, `Specify a Word`);
-  let defin = await ud(args.join(" ")).catch((e) => {
+  let defin = await ud(args.slice(1, args.length).join(" ")).catch((e) => {
     sMsg(msg.channel, `Word not found`);
     return;
   });
 
   let embed = makeEmbed(
-    defin.word,
-    defin.definition,
+    defin?.word,
+    defin?.definition,
     undefined,
-    defin.urbanURL
+    defin?.urbanURL
   );
 
-  sMsg(msg.channel, embed);
+  if (defin?.word && defin?.definition) {
+    sMsg(msg.channel, embed);
+  }
 };

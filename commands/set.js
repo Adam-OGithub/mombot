@@ -4,9 +4,10 @@ const config = require("../config.json");
 const axios = require("../node_modules/axios");
 exports.run = async (client, msg, args, discord, infoObj) => {
   const myReq = {};
-  if (args[0] !== undefined) {
-    const guild = infoObj.currentGuild;
-    const arg = args[0].toLowerCase();
+  const arg1 = args[1];
+  if (arg1 !== undefined) {
+    let run = true;
+    const arg = arg1.toLowerCase();
     console.log(arg);
     let momMsg = ``;
     switch (arg) {
@@ -27,17 +28,23 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         momMsg = `Momma will no longer allow other discords to speak here.`;
         break;
       default:
+        run = false;
+        break;
     }
-    axios
-      .post(config.web.dburl, myReq)
-      .then((res) => {
-        if (res?.data !== undefined) {
-          sMsg(msg.channel, momMsg);
-        }
-      })
-      .catch((e) => {
-        console.log(`${e}`);
-      });
+    if (run) {
+      axios
+        .post(config.web.dburl, myReq)
+        .then((res) => {
+          if (res?.data !== undefined) {
+            sMsg(msg.channel, momMsg);
+          }
+        })
+        .catch((e) => {
+          console.log(`${e}`);
+        });
+    } else {
+      getHelp(msg.channel);
+    }
   } else {
     getHelp(msg.channel);
   }

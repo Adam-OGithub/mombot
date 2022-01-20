@@ -2,7 +2,7 @@
 const config = require("../config.json");
 const { sMsg, getChannel } = require("../custom_nodemods/utils.js");
 const axios = require("../node_modules/axios");
-exports.run = async (client, message, discord, infoObj) => {
+exports.run = async (client, message, args, discord, infoObj) => {
   const myReq = {};
   myReq.query = `SELECT prisonid FROM prison WHERE guildid = "${infoObj.guildID}"`;
   axios

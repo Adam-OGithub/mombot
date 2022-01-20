@@ -1,7 +1,8 @@
 "use strict";
 const Discord = require("discord.js");
 const config = require("../config.json");
-
+const path = require("path");
+const fs = require("fs");
 const getPre = () => {
   let prefix;
   if (config.testing.usedev) {
@@ -208,6 +209,59 @@ const parseUserChannel = (message) => {
   return [channels, users, usersF];
 };
 
+const getIsMom = (users) => {
+  let isMom = false;
+  //looks for mom to see if mentioned
+  users.forEach((userid) => {
+    let userObj = getUser(userid, client);
+    if (userObj.username === "MOM" && userObj.bot) {
+      isMom = true;
+    }
+  });
+  return isMom;
+};
+
+const setTimoutMin = (min) => {
+  const minutes = min;
+  const seconds = minutes * 60;
+  const time = seconds * 1000;
+  return time;
+};
+
+const errmsg = (e) => {
+  console.error(`\x1b[32m`, `[ERROR]: ${e.message}`);
+};
+
+const cmsg = (str) => {
+  console.log(str);
+};
+
+const getDirFiles = (dir) => {
+  const comDir = path.join(__dirname, dir);
+  const allComs = [];
+  fs.readdir(comDir, (e, files) => {
+    if (e) throw cmsg(e);
+    files.forEach((f) => {
+      allComs.push(f.split(".js")[0]);
+    });
+  });
+  return allComs;
+};
+
+const getCommand = (infoObj, allComs) => {
+  const argsAll = infoObj.msg.slice(getPre().length).trim().split(" ");
+  let cmd = null;
+  allComs.forEach((c) => {
+    let loc = argsAll.indexOf(`${getPre()}${c.toLowerCase()}`);
+    if (loc !== -1) {
+      cmd = argsAll[loc].split(getPre())[1];
+    } else if (infoObj.msg.indexOf(getPre()) === 0) {
+      cmd = argsAll[0];
+    }
+  });
+  return cmd;
+};
+
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
@@ -223,3 +277,9 @@ exports.getChannel = getChannel;
 exports.getUser = getUser;
 exports.getPre = getPre;
 exports.parseUsrChan = parseUserChannel;
+exports.getIsMom = getIsMom;
+exports.setTimoutMin = setTimoutMin;
+exports.errmsg = errmsg;
+exports.cmsg = cmsg;
+exports.getDirFiles = getDirFiles;
+exports.getCommand = getCommand;

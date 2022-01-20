@@ -47,18 +47,20 @@ exports.run = async (client, msg, args, discord) => {
   let cc = ``;
   let city = ``;
   let url = ``;
-  if (args[0] !== undefined) {
-    const isNum = args[0].match(/^[0-9]+$/);
+  const arg1 = args[1];
+  const arg2 = args[2];
+  if (arg1 !== undefined) {
+    const isNum = arg1.match(/^[0-9]+$/);
     if (isNum === null) {
-      city = args[0];
+      city = arg1;
       type = `city`;
-    } else if (args[0].length <= 5) {
-      zipcode = args[0];
+    } else if (arg1.length <= 5) {
+      zipcode = arg1;
       type = `zip`;
     }
 
-    if (args[1] !== undefined) {
-      cc = args[1];
+    if (arg2 !== undefined) {
+      cc = arg2;
     } else {
       cc = `us`;
     }

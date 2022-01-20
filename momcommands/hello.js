@@ -2,7 +2,7 @@
 const config = require("../config.json");
 const { sMsg, makeEmbed } = require("../custom_nodemods/utils.js");
 const axios = require("../node_modules/axios");
-exports.run = async (client, message, discord, infoObj) => {
+exports.run = async (client, message, args, discord, infoObj) => {
   const myReq = {};
   const guildIds = [];
   const channelsObj = [];
@@ -22,7 +22,6 @@ exports.run = async (client, message, discord, infoObj) => {
       //if query returns channelid is same as hello
       for (const [key, value] of client.guilds.cache) {
         guildIds.push(client.guilds.cache.get(key));
-        //console.log(guildIds[0]);
       }
       myReq.query = `SELECT * FROM hello`;
       axios.post(config.web.dburl, myReq).then((res) => {

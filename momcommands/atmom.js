@@ -5,7 +5,7 @@ const {
   capFirst,
   randomWord,
 } = require("../custom_nodemods/utils.js");
-exports.run = async (client, message, discord, infoObj) => {
+exports.run = async (client, message, args, discord, infoObj) => {
   const channelCache = client.channels.cache.get(infoObj.channelId);
   const msgCache = channelCache.messages.cache;
   let str = ``;

@@ -85,7 +85,7 @@ const cycleRoll = (die, multi, notSingle = false, overTen) => {
 };
 
 exports.run = async (client, msg, args, discord, infoObj) => {
-  if (args[0] !== undefined) {
+  if (args[1] !== undefined) {
     const lower = infoObj.msg.toLowerCase().split(" ").join("").split("d");
     const multi = lower[0].split(`${getPre()}roll`)[1];
     const die = Number.parseInt(lower[1], 10);
