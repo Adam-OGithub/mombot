@@ -178,9 +178,20 @@ const makeEmbed = (title, description, fields, url, image) => {
   return embed;
 };
 
+const getToken = () => {
+  let token = ``;
+  //Gets tokens from config
+  if (config.testing.usedev) {
+    token = config.tokens.dev;
+  } else {
+    token = config.tokens.prod;
+  }
+  return token;
+};
 //Returns help menu
 const getHelp = (msg) => {
-  sMsg(msg, `${config.prefix}help`);
+  sMsg(msg, `${getPre()}help`);
+  console.log(`hit`);
 };
 
 //Object for easy dates
@@ -202,6 +213,9 @@ const getChannel = (channelId, infoObj) =>
 
 //Get the user object
 const getUser = (userId, client) => client.users.cache.get(userId);
+
+//Gets guild obj
+const getGuild = (guildId, client) => client.guilds.cache.get(guildId);
 
 //Gets channel and users id and objects
 const parseUserChannel = (message) => {
@@ -307,3 +321,5 @@ exports.errmsg = errmsg;
 exports.cmsg = cmsg;
 exports.getDirFiles = getDirFiles;
 exports.getCommand = getCommand;
+exports.getToken = getToken;
+exports.getGuild = getGuild;

@@ -1,31 +1,24 @@
 "use strict";
 const {
   sMsg,
-  makeEmbed,
   getHelp,
-  dates,
   getChannel,
-  getUser,
   getPre,
   parseUsrChan,
 } = require("../custom_nodemods/utils.js");
-
-const delay = async (reminder) => {
-  setTimeout(() => {
-    reminder.channels.forEach((channelObj) => {
-      sMsg(channelObj, reminder.fullmsg);
-    });
-  }, reminder.time);
-};
+const config = require("../config.json");
+const axios = require("../node_modules/axios");
 
 exports.run = async (client, msg, args, discord, infoObj) => {
   const reminder = {};
+  const myReq = {};
   let count = 0;
   //check if entry is user or channel
   const [channels, users, usersF] = parseUsrChan(infoObj.msg);
   reminder.users = `${usersF.join(" ")}`;
-
   const myCheck = infoObj.msg.split("");
+  console.log(infoObj.msg);
+  console.log(`==========`);
   myCheck.forEach((entry) => {
     if (entry === `"`) {
       count++;
@@ -49,7 +42,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     channels.forEach((entry) => {
       channelArr.push(getChannel(entry, infoObj));
     });
-    reminder.channels = channelArr;
+    reminder.channels = channelArr.join(" ");
 
     const time = reminder.timetemp
       .split("/")
@@ -59,28 +52,70 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       .split(":")
       .join("^")
       .split("^");
-    console.log(+`20${time[2]}`, +time[0], +time[1], +time[3], +time[4], 0);
-    const timeSet = Math.floor(
-      new Date(+`20${time[2]}`, +time[0], +time[1], +time[3], +time[4], 0)
-    );
-    console.log(new Date(2022, 4, 29 - 1, 22, 0, 0, 0));
-    console.log(
+    console.log(`Time is ${time}`);
+    reminder.future =
       new Date(
-        +`20${time[2]}`,
-        +time[0] - 1,
-        +time[1] - 1,
-        +time[3],
-        +time[4],
-        0
-      )
-    );
-    const newTime = dates.epocSecs() - timeSet;
-    console.log(newTime);
+        +`${time[2]}`, //year
+        +time[0] - 1, //month 0-11
+        +time[1], // day 1-31
+        +time[3] - 6, // hours 0-23 UTC
+        +time[4], // minutes 0-59
+        0, //seconds
+        0 //mil seconds
+      ) / 1000;
 
-    reminder.time = newTime;
-    reminder.fullmsg = `${reminder.msg} ${reminder.users}`;
-    delay(reminder);
+    const cleanMsg = (msg) => {
+      const exceptions = [
+        `||`,
+        `-`,
+        `*`,
+        `-`,
+        `<>`,
+        `<`,
+        `>`,
+        `,`,
+        `=`,
+        `<=`,
+        `>=`,
+        `~=`,
+        `!=`,
+        `^=`,
+        `(`,
+        `)`,
+        `@`,
+        `!`,
+        `/`,
+        `#`,
+      ];
+      const msgArr = msg
+        .split("")
+        .map((char) => {
+          return exceptions.includes(char) ? `` : char;
+        })
+        .join("");
+      return msgArr;
+    };
+    myReq.query = `INSERT INTO remind (guildid,userid,names,channels,message,time) VALUES (${
+      infoObj.guildID
+    },"${infoObj.tag}","${cleanMsg(reminder.users)}","${cleanMsg(
+      reminder.channels
+    )}","${cleanMsg(reminder.msg)}",${reminder.future}) `;
+    console.log(myReq.query);
+
+    axios
+      .post(config.web.dburl, myReq)
+      .then((res) => {
+        if (res?.data !== undefined) {
+          sMsg(msg.channel, "Reminder added!");
+        } else {
+          sMsg(msg.channel, "Reminder not added.");
+        }
+      })
+      .catch((e) => {
+        console.log(`${e}`);
+      });
   } else {
     getHelp(msg.channel);
   }
 };
+//DELETE FROM remind WHERE id = "1";

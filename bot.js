@@ -2,45 +2,27 @@
 const Discord = require("discord.js");
 const config = require("./config.json");
 const client = new Discord.Client();
-const { botStatus } = require("./custom_nodemods/sayings.js");
 const {
-  randomWord,
   genInfo,
   getPre,
   parseUsrChan,
   getCommand,
   getIsMom,
-  setTimoutMin,
   errmsg,
   cmsg,
   getDirFiles,
+  getToken,
 } = require("./custom_nodemods/utils.js");
 const { webdb } = require("./custom_nodemods/webconnect.js");
-const time = setTimoutMin(5);
+const { changeAc, reminders } = require("./custom_nodemods/timers.js");
+
 const allComs = getDirFiles("../commands");
-const myConf = {};
-
-const changeAc = async () => {
-  //sets activity for bot first
-  client.user.setActivity(randomWord(botStatus));
-  //sets bot activity every x minutes
-  setInterval(() => {
-    client.user.setActivity(randomWord(botStatus));
-  }, time);
-};
-
-//Gets tokens from config
-if (config.testing.usedev) {
-  myConf.token = config.tokens.dev;
-} else {
-  myConf.token = config.tokens.prod;
-}
 
 //Runs commands based on args
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
   try {
     const runCommand = require(`./${dir}/${select}.js`);
-    if (message.author.bot !== true) {
+    if (message.author.bot !== true || select === "help") {
       cmsg(`${infoObj.tag} ran '${select}.js' with args (${args})`);
       runCommand.run(client, message, args, Discord, infoObj);
     }
@@ -53,7 +35,8 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
 client.on("ready", () => {
   webdb();
   console.log(`\x1b[32m`, `${client.user.tag} is online!`);
-  changeAc();
+  changeAc(client);
+  reminders(client);
 });
 
 client.on("message", (message) => {
@@ -73,4 +56,4 @@ client.on("message", (message) => {
     alt("hello", "momcommands", client, message, args, Discord, infoObj);
   }
 });
-client.login(myConf.token);
+client.login(getToken());
