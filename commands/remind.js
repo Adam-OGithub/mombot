@@ -51,10 +51,9 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       .split(":")
       .join("^")
       .split("^");
-    //Hour is subtract from central cst
+    let hour = 0;
     if (time[5] !== undefined) {
       const loc = time[5].toLowerCase();
-      let hour = 0;
       switch (loc) {
         case "cst":
           hour = 6;
@@ -69,9 +68,12 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           hour = 4;
           break;
         default:
+          hour = 100;
           break;
       }
-
+    }
+    //Hour is subtract from central cst
+    if (time[5] !== undefined && hour !== 100) {
       reminder.future =
         new Date(
           +`${time[2]}`, //year
