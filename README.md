@@ -55,5 +55,17 @@ PRIMARY KEY (guildid)
 }
 
 remind {
-tbd
+id  
+ guildid  
+ userid  
+ names  
+ channels  
+ message  
+ time  
+ PRIMARY KEY (id)
 }
+
+# Add MOM without the hassel
+
+May need to add seperate elevated roles.
+https://discord.com/oauth2/authorize?client_id=846779816736849920&permissions=0&scope=bot%20applications.commands
