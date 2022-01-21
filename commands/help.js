@@ -40,7 +40,7 @@ exports.run = async (client, msg, args, discord) => {
     },
     {
       label: "{remind}",
-      val: `<channel> <users> "<M>/<D>/<YYYY> <24H>:<minute>:<timezone> \n Example: ${getPre()}remind #testchannel @MOM  @Pork  "1/21/2022 15:00:cst" "This is a test" \n- Let momma remind you!`,
+      val: `<channel> <users> "<M>/<D>/<YYYY> <24H>:<minute>:<timezone>" "<message>" \n Example: ${getPre()}remind #testchannel @MOM  @Pork  "1/21/2022 15:00:cst" "This is a test" \n- Let momma remind you!`,
     },
     {
       label: "{animalfacts}",
