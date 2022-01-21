@@ -22,7 +22,7 @@ const allComs = getDirFiles("../commands");
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
   try {
     const runCommand = require(`./${dir}/${select}.js`);
-    if (message.author.bot !== true || select === "help") {
+    if (message.author.bot !== true || allComs.includes(select)) {
       cmsg(`${infoObj.tag} ran '${select}.js' with args (${args})`);
       runCommand.run(client, message, args, Discord, infoObj);
     }

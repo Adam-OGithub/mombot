@@ -19,7 +19,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
   reminder.users = `${usersF.join(" ")}`;
   const myCheck = infoObj.msg.split("");
   myCheck.forEach((entry) => {
-    if (entry === `"`) {
+    if (entry === `"` || entry === `”`) {
       count++;
     }
   });
@@ -28,15 +28,14 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     const fArgs = infoObj.msg
       .split(`${getPre()}remind`)[1]
       .split("")
-      .map((letter) => (letter === `"` ? `^^A^^` : letter))
+      .map((letter) => (letter === `"` || letter === `”` ? `^^A^^` : letter))
       .join("")
       .split("^^A^^");
     reminder.timetemp = fArgs[1];
     reminder.msg = fArgs[3];
   }
 
-  //Gets all channel objects mentioned
-  if (channels.length > 0 && reminder?.time !== " " && count === 4) {
+  if (channels.length > 0 && reminder?.timetemp !== " " && count === 4) {
     const channelArr = [];
     channels.forEach((entry) => {
       channelArr.push(getChannel(entry, infoObj));

@@ -12,7 +12,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
   let count = 0;
   const myCheck = infoObj.msg.split("");
   myCheck.forEach((entry) => {
-    if (entry === `"`) {
+    if (entry === `"` || entry === `”`) {
       count++;
     }
   });
@@ -23,7 +23,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     const fArgs = infoObj.msg
       .split(`${getPre()}poll`)[1]
       .split("")
-      .map((letter) => (letter === `"` ? `^^A^^` : letter))
+      .map((letter) => (letter === `"` || letter === `”` ? `^^A^^` : letter))
       .join("")
       .split("^^A^^");
     const question = fArgs[1];
