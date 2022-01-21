@@ -36,7 +36,6 @@ const reminders = async (client) => {
           resArr.forEach((entry) => {
             let channelObjArr = [];
             //if object is less than current time
-            console.log(dates.epocSecs());
             if (+entry.time <= dates.epocSecs()) {
               //Gets guild object of array
               myGuild.currentGuild = getGuild(entry.guildid, client);
