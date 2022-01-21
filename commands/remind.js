@@ -18,8 +18,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
   const [channels, users, usersF] = parseUsrChan(infoObj.msg);
   reminder.users = `${usersF.join(" ")}`;
   const myCheck = infoObj.msg.split("");
-  console.log(infoObj.msg);
-  console.log(`==========`);
   myCheck.forEach((entry) => {
     if (entry === `"`) {
       count++;
@@ -57,7 +55,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     if (time[5] !== undefined) {
       const loc = time[5].toLowerCase();
       let hour = 0;
-      console.log(loc);
       switch (loc) {
         case "cst":
           hour = 6;
@@ -100,7 +97,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       },"${infoObj.tag}","${cleanMsg(reminder.users)}","${cleanMsg(
         reminder.channels
       )}","${cleanMsg(reminder.msg)}",${reminder.future}) `;
-      console.log(myReq.query);
 
       axios
         .post(config.web.dburl, myReq)

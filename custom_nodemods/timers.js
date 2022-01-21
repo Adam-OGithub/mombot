@@ -48,7 +48,6 @@ const reminders = async (client) => {
               //if users exists add to message
               let newMsg = `${entry.message}`;
               if (users.length > 0 && users[0] !== "") {
-                console.log(users);
                 users.forEach((user) => {
                   newMsg += ` <@${user}> `;
                 });
@@ -62,7 +61,7 @@ const reminders = async (client) => {
               axios
                 .post(config.web.dburl, myReq)
                 .then((res) => {
-                  //Do nothing for now
+                  //do nothing
                 })
                 .catch((e) => {
                   console.log(`${e}`);
