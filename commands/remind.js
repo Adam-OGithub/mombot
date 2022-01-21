@@ -5,6 +5,7 @@ const {
   getChannel,
   getPre,
   parseUsrChan,
+  exceptions,
 } = require("../custom_nodemods/utils.js");
 const config = require("../config.json");
 const axios = require("../node_modules/axios");
@@ -52,68 +53,70 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       .split(":")
       .join("^")
       .split("^");
-    console.log(`Time is ${time}`);
-    reminder.future =
-      new Date(
-        +`${time[2]}`, //year
-        +time[0] - 1, //month 0-11
-        +time[1], // day 1-31
-        +time[3] - 6, // hours 0-23 UTC
-        +time[4], // minutes 0-59
-        0, //seconds
-        0 //mil seconds
-      ) / 1000;
+    //Hour is subtract from central cst
+    if (time[5] !== undefined) {
+      const loc = time[5].toLowerCase();
+      let hour = 0;
+      console.log(loc);
+      switch (loc) {
+        case "cst":
+          hour = 6;
+          break;
+        case "est":
+          hour = 7;
+          break;
+        case "mnt":
+          hour = 5;
+          break;
+        case "pst":
+          hour = 4;
+          break;
+        default:
+          break;
+      }
 
-    const cleanMsg = (msg) => {
-      const exceptions = [
-        `||`,
-        `-`,
-        `*`,
-        `-`,
-        `<>`,
-        `<`,
-        `>`,
-        `,`,
-        `=`,
-        `<=`,
-        `>=`,
-        `~=`,
-        `!=`,
-        `^=`,
-        `(`,
-        `)`,
-        `@`,
-        `!`,
-        `/`,
-        `#`,
-      ];
-      const msgArr = msg
-        .split("")
-        .map((char) => {
-          return exceptions.includes(char) ? `` : char;
+      reminder.future =
+        new Date(
+          +`${time[2]}`, //year
+          +time[0] - 1, //month 0-11
+          +time[1], // day 1-31
+          +time[3] - hour, // hours 0-23 UTC
+          +time[4], // minutes 0-59
+          0, //seconds
+          0 //mil seconds
+        ) / 1000;
+
+      const cleanMsg = (msg) => {
+        const msgArr = msg
+          .split("")
+          .map((char) => {
+            return exceptions.includes(char) ? `` : char;
+          })
+          .join("");
+        return msgArr;
+      };
+      myReq.query = `INSERT INTO remind (guildid,userid,names,channels,message,time) VALUES (${
+        infoObj.guildID
+      },"${infoObj.tag}","${cleanMsg(reminder.users)}","${cleanMsg(
+        reminder.channels
+      )}","${cleanMsg(reminder.msg)}",${reminder.future}) `;
+      console.log(myReq.query);
+
+      axios
+        .post(config.web.dburl, myReq)
+        .then((res) => {
+          if (res?.data !== undefined) {
+            sMsg(msg.channel, "Reminder added!");
+          } else {
+            sMsg(msg.channel, "Reminder not added.");
+          }
         })
-        .join("");
-      return msgArr;
-    };
-    myReq.query = `INSERT INTO remind (guildid,userid,names,channels,message,time) VALUES (${
-      infoObj.guildID
-    },"${infoObj.tag}","${cleanMsg(reminder.users)}","${cleanMsg(
-      reminder.channels
-    )}","${cleanMsg(reminder.msg)}",${reminder.future}) `;
-    console.log(myReq.query);
-
-    axios
-      .post(config.web.dburl, myReq)
-      .then((res) => {
-        if (res?.data !== undefined) {
-          sMsg(msg.channel, "Reminder added!");
-        } else {
-          sMsg(msg.channel, "Reminder not added.");
-        }
-      })
-      .catch((e) => {
-        console.log(`${e}`);
-      });
+        .catch((e) => {
+          console.log(`${e}`);
+        });
+    } else {
+      getHelp(msg.channel);
+    }
   } else {
     getHelp(msg.channel);
   }

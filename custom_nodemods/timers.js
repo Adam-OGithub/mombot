@@ -36,7 +36,8 @@ const reminders = async (client) => {
           resArr.forEach((entry) => {
             let channelObjArr = [];
             //if object is less than current time
-            if (entry.time <= dates.epocSecs()) {
+            console.log(dates.epocSecs());
+            if (+entry.time <= dates.epocSecs()) {
               //Gets guild object of array
               myGuild.currentGuild = getGuild(entry.guildid, client);
               let channels = entry.channels.split(" ");
@@ -47,7 +48,8 @@ const reminders = async (client) => {
               });
               //if users exists add to message
               let newMsg = `${entry.message}`;
-              if (users.length > 0) {
+              if (users.length > 0 && users[0] !== "") {
+                console.log(users);
                 users.forEach((user) => {
                   newMsg += ` <@${user}> `;
                 });

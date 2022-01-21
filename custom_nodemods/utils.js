@@ -194,6 +194,14 @@ const getHelp = (msg) => {
   console.log(`hit`);
 };
 
+//returns timeouts in minutes
+const setTimoutMin = (min) => {
+  const minutes = min;
+  const seconds = minutes * 60;
+  const time = seconds * 1000;
+  return time;
+};
+
 //Object for easy dates
 const dateInfo = {
   full: () => new Date(),
@@ -204,7 +212,7 @@ const dateInfo = {
   minute: () => new Date().getMinutes(),
   second: () => new Date().getSeconds(),
   milsecond: () => new Date().getMilliseconds(),
-  epocSecs: () => Math.floor(new Date() / 1000),
+  epocSecs: () => Math.floor((new Date() - setTimoutMin(360)) / 1000),
 };
 
 //Gets the channel object
@@ -246,19 +254,11 @@ const getIsMom = (users, client) => {
   //looks for mom to see if mentioned
   users.forEach((userid) => {
     let userObj = getUser(userid, client);
-    if (userObj.username === "MOM" && userObj.bot) {
+    if (userObj?.username === "MOM" && userObj?.bot) {
       isMom = true;
     }
   });
   return isMom;
-};
-
-//returns timeouts in minutes
-const setTimoutMin = (min) => {
-  const minutes = min;
-  const seconds = minutes * 60;
-  const time = seconds * 1000;
-  return time;
 };
 
 //send erros message to console
@@ -300,6 +300,28 @@ const getCommand = (infoObj, allComs) => {
   return cmd;
 };
 
+const exceptions = [
+  `||`,
+  `-`,
+  `*`,
+  `-`,
+  `<>`,
+  `<`,
+  `>`,
+  `,`,
+  `=`,
+  `<=`,
+  `>=`,
+  `~=`,
+  `!=`,
+  `^=`,
+  `(`,
+  `)`,
+  `@`,
+  `!`,
+  `/`,
+  `#`,
+];
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
@@ -323,3 +345,4 @@ exports.getDirFiles = getDirFiles;
 exports.getCommand = getCommand;
 exports.getToken = getToken;
 exports.getGuild = getGuild;
+exports.exceptions = exceptions;
