@@ -4,6 +4,10 @@ const { sMsg, makeEmbed, getPre } = require("../custom_nodemods/utils");
 exports.run = async (client, msg, args, discord) => {
   const endHelp = [
     {
+      label: "{momscode}",
+      val: "Get moms Github code!",
+    },
+    {
       label: "{set}",
       val: "prison - Sets prison channel,\n prison_remove - Removes prison channel, \n hello - Allows to speak with other discords, \nhello_remove - Removes speaking with other discords. ",
     },
