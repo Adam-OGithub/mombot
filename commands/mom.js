@@ -82,10 +82,10 @@ exports.run = async (client, msg, args, discord) => {
   } else {
     axios.get("http://www.madsci.org/cgi-bin/lynn/jardin/SCG").then((res) => {
       const resArr = res.data.split("\n");
-      const content = resArr.slice(
-        resArr.indexOf(`<h2>`) + 2,
-        resArr.indexOf(`</h2>`)
-      )[0];
+      const content = resArr
+        .slice(resArr.indexOf(`<h2>`) + 2, resArr.indexOf(`</h2>`))
+        .join(" ");
+      console.log(resArr);
       sMsg(msg.channel, content);
     });
   }

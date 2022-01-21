@@ -20,7 +20,7 @@ exports.run = async (client, msg, args, discord) => {
     },
     {
       label: "{mom}",
-      val: "Momma pep talk.",
+      val: "Momma pep talk.Sometimes pep down.",
     },
     {
       label: "{food}",
