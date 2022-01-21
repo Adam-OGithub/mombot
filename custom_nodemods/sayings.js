@@ -86,6 +86,58 @@ const botStatus = [
   ...games,
 ];
 
+//https://and-here-is-my-code.glitch.me/
+const animalApi = [
+  "lizards",
+  "raccoon",
+  "dingo",
+  "camel",
+  "crab",
+  "cow",
+  "hippo",
+  "fish",
+  "chicken",
+  "shark",
+  "lion",
+  "whale",
+  "snake",
+  "cat",
+  "dog",
+  "bear",
+  "killerwhale",
+  "giraffe",
+  "dolphin",
+];
+
+//https://and-here-is-my-code.glitch.me/
+const animalImageaApi = [
+  "sheep",
+  "crab",
+  "shark",
+  "chicken",
+  "hippo",
+  "rhino",
+  "lion",
+  "dingo",
+  "penguin",
+  "dolphin",
+  "camel",
+  "bear",
+  "horse",
+  "duck",
+  "pig",
+  "cow",
+  "snake",
+  "killwhale",
+  "giraffe",
+  "elephant",
+  "turtle",
+  "lizard",
+  "dog",
+  "cat",
+  "panda",
+  "spider",
+];
 const weatherWords = {
   cold: `Momma suggest you wear a heavy coat.`,
   kindaCold: `Momma suggest a light coat.`,
@@ -106,3 +158,5 @@ exports.people = people;
 exports.items = items;
 exports.botStatus = botStatus;
 exports.weatherWords = weatherWords;
+exports.animalApi = animalApi;
+exports.animalImageaApi = animalImageaApi;

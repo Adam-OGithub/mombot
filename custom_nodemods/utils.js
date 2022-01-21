@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 const config = require("../config.json");
 const path = require("path");
 const fs = require("fs");
-
+const axios = require("../node_modules/axios");
 //Gets prefix for command from config
 const getPre = () => {
   let prefix;
@@ -162,6 +162,7 @@ const makeEmbed = (title, description, fields, url, image) => {
     .setColor(config.color)
     .setDescription(description);
 
+  console.log(`-------------------`);
   if (fields !== undefined) {
     fields.forEach((field) => {
       embed.addField(field.label, field.val);
@@ -322,6 +323,26 @@ const exceptions = [
   `/`,
   `#`,
 ];
+
+const glitchApi = (msg, label, link, image = undefined) => {
+  axios
+    .get(link)
+    .then((res1) => {
+      let out, des;
+      if (image !== undefined) {
+        out = res1.data.Link;
+        des = ``;
+      } else {
+        out = undefined;
+        des = res1.data.Link;
+      }
+      const embed = makeEmbed(label, des, undefined, undefined, out);
+      sMsg(msg.channel, embed);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+};
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
@@ -346,3 +367,4 @@ exports.getCommand = getCommand;
 exports.getToken = getToken;
 exports.getGuild = getGuild;
 exports.exceptions = exceptions;
+exports.glitchApi = glitchApi;

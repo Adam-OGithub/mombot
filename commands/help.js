@@ -42,6 +42,26 @@ exports.run = async (client, msg, args, discord) => {
       label: "{remind}",
       val: `<channel> <users> "<M>/<D>/<YYYY> <24H>:<minute>:<timezone> \n Example: ${getPre()}remind #testchannel @MOM  @Pork  "1/21/2022 15:00:cst" "This is a test" \n- Let momma remind you!`,
     },
+    {
+      label: "{animalfacts}",
+      val: "Momma tells you some random animal facts!",
+    },
+    {
+      label: "{coinflip}",
+      val: "Momma loves coin flips!",
+    },
+    {
+      label: "{joke}",
+      val: "Momma tells jokes better than dad!",
+    },
+    {
+      label: "{meme}",
+      val: "Momma sees those memes...",
+    },
+    {
+      label: "{quote}",
+      val: "Momma drops some quotes in the channel.",
+    },
   ];
 
   const add = [...commands, ...endHelp];
