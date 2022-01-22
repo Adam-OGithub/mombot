@@ -55,6 +55,7 @@ const getRoles = async (guildObj, userid) => {
   const obj = {};
   const user = await guildObj.members.fetch(userid);
   obj.roles = user._roles;
+  obj.guildRoles = user.guild.roles.cache;
   return obj;
 };
 
@@ -88,7 +89,6 @@ const checkRoles = (msg, roles, perms) => {
       }
     });
   });
-  console.log(obj);
   return obj;
 };
 exports.perms = perms;
