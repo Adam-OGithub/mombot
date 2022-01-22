@@ -18,7 +18,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         }
       }
 
-      if (isAdmin) {
+      if (isAdmin && msg.author.bot !== true) {
         const myReq = {};
         const arg1 = args[1];
         if (arg1 !== undefined) {
