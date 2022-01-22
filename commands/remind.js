@@ -19,7 +19,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
   reminder.users = `${usersF.join(" ")}`;
   const myCheck = infoObj.msg.split("");
   myCheck.forEach((entry) => {
-    if (entry === `"` || entry === `”`) {
+    if (entry === `"` || entry === `”` || entry === `“`) {
       count++;
     }
   });
@@ -28,7 +28,9 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     const fArgs = infoObj.msg
       .split(`${getPre()}remind`)[1]
       .split("")
-      .map((letter) => (letter === `"` || letter === `”` ? `^^A^^` : letter))
+      .map((letter) =>
+        letter === `"` || letter === `”` || letter === `“` ? `^^A^^` : letter
+      )
       .join("")
       .split("^^A^^");
     reminder.timetemp = fArgs[1];
