@@ -9,7 +9,7 @@ exports.run = async (client, msg, args, discord) => {
     },
     {
       label: "{set}",
-      val: "prison - Sets prison channel,\n prison_remove - Removes prison channel, \n hello - Allows to speak with other discords, \nhello_remove - Removes speaking with other discords. ",
+      val: ` prison - Sets prison channel.\n prison_remove - Removes prison channel.\n prison_role "<role name>" -Sets role used for prison.\n hello - Allows to speak with other discords.\n hello_remove - Removes speaking with other discords.`,
     },
     {
       label: "{help}",
@@ -44,7 +44,7 @@ exports.run = async (client, msg, args, discord) => {
     },
     {
       label: "{remind}",
-      val: `<channel> <users> "<M>/<D>/<YYYY> <24H>:<minute>:<timezone>" "<message>" \n Example: ${getPre()}remind #testchannel @MOM  @Pork  "1/21/2022 15:00:cst" "This is a test" \n- Let momma remind you!`,
+      val: `<channel/channels> <user/users> "<M>/<D>/<YYYY> <24H>:<minute>:<timezone>" "<message>" \n Example: ${getPre()}remind #testchannel1 #testchannel2 @MOM  @Pork  "1/21/2022 15:00:cst" "This is a test" \n- Let momma remind you!`,
     },
     {
       label: "{animalfacts}",
