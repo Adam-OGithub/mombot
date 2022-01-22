@@ -1,6 +1,5 @@
 "use strict";
 const Discord = require("discord.js");
-const config = require("./config.json");
 const client = new Discord.Client();
 const {
   genInfo,
@@ -15,9 +14,8 @@ const {
 } = require("./custom_nodemods/utils.js");
 const { webdb } = require("./custom_nodemods/webconnect.js");
 const { changeAc, reminders } = require("./custom_nodemods/timers.js");
-
 const allComs = getDirFiles("../commands");
-
+const { perms, getRoles } = require("./custom_nodemods/permissions.js");
 //Runs commands based on args
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
   try {
@@ -56,4 +54,5 @@ client.on("message", (message) => {
     alt("hello", "momcommands", client, message, args, Discord, infoObj);
   }
 });
+
 client.login(getToken());
