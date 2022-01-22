@@ -24,14 +24,13 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         .post(config.web.dburl, myReq)
         .then((res) => {
           const prisonRole = res?.data?.result[0]?.prisonRole;
-
-          roleObj.roles.forEach((role) => {
-            if (role === prisonRole) {
-              isInPrison = true;
-            }
-          });
-
-          console.log(isInPrison);
+          if (prisonRole !== undefined) {
+            roleObj.roles.forEach((role) => {
+              if (role === prisonRole) {
+                isInPrison = true;
+              }
+            });
+          }
           if (isInPrison) {
             //
             sMsg(msg.channel, "Naughty Children to not get reminders!");
