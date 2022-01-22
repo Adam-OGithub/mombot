@@ -9,6 +9,25 @@ const {
 } = require("../custom_nodemods/permissions.js");
 exports.run = async (client, msg, args, discord, infoObj) => {
   let isAdmin = false;
+  let count = 0;
+  let fArgs = ``;
+  const myCheck = infoObj.msg.split("");
+  myCheck.forEach((entry) => {
+    if (entry === `"` || entry === `”` || entry === `“`) {
+      count++;
+    }
+  });
+
+  if (count === 2) {
+    fArgs = infoObj.msg
+      .split(`${getPre()}set`)[1]
+      .split("")
+      .map((letter) =>
+        letter === `"` || letter === `”` || letter === `“` ? `^^A^^` : letter
+      )
+      .join("")
+      .split("^^A^^");
+  }
   getRoles(msg.guild, infoObj.userId)
     .then((obj) => {
       const roleObj = checkRoles(msg, obj.roles, [perms.admin, perms.kick]);
@@ -17,9 +36,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           isAdmin = true;
         }
       }
-      console.log(`=============`);
-      console.log(args[2]);
-      console.log(`=============`);
       if (isAdmin && msg.author.bot !== true) {
         const myReq = {};
         const arg1 = args[1];
@@ -40,15 +56,23 @@ exports.run = async (client, msg, args, discord, infoObj) => {
               break;
             case "prison_role":
               let hasVal = false;
-              obj.guildRoles.forEach((value, key) => {
-                console.log(value.name);
-                if (args[2].toLowerCase() === value?.name.toLowerCase()) {
-                  myReq.query = `REPLACE INTO prison_role SET guildid = ${infoObj.guildID}, prisonRole = ${value.id}`;
-                  hasVal = true;
-                }
-              });
+              if (count === 2) {
+                obj.guildRoles.forEach((value, key) => {
+                  if (
+                    fArgs[1].split(" ").join("").toLowerCase() ===
+                    value?.name.split(" ").join("").toLowerCase()
+                  ) {
+                    myReq.query = `REPLACE INTO prison_role SET guildid = ${infoObj.guildID}, prisonRole = ${value.id}`;
+                    hasVal = true;
+                  }
+                });
+              }
+
               if (hasVal) {
                 momMsg = `Prison role added!`;
+              } else if (count < 2) {
+                momMsg = `Did not quote role.`;
+                run = false;
               } else {
                 momMsg = `Unable to locate role.`;
                 run = false;
