@@ -2,26 +2,28 @@
 const { sMsg, getHelp } = require("../custom_nodemods/utils.js");
 const config = require("../config.json");
 const axios = require("../node_modules/axios");
-const { perms, getRoles } = require("../custom_nodemods/permissions.js");
+const {
+  perms,
+  getRoles,
+  checkRoles,
+} = require("../custom_nodemods/permissions.js");
 exports.run = async (client, msg, args, discord, infoObj) => {
   let isAdmin = false;
   getRoles(msg.guild, infoObj.userId)
-    .then((roles) => {
-      roles.forEach((role) => {
-        console.log(role);
-        let roleCheck = msg.guild.roles.cache.get(role);
-        if (roleCheck.permissions.has(perms.admin)) {
-          console.log("This member is Admin");
+    .then((obj) => {
+      const roleObj = checkRoles(msg, obj.roles, [perms.admin, perms.kick]);
+      for (const prop in roleObj) {
+        if (roleObj[prop]?.admin) {
           isAdmin = true;
         }
-      });
+      }
+
       if (isAdmin) {
         const myReq = {};
         const arg1 = args[1];
         if (arg1 !== undefined) {
           let run = true;
           const arg = arg1.toLowerCase();
-          console.log(arg);
           let momMsg = ``;
           switch (arg) {
             case "prison":
