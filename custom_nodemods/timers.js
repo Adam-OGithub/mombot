@@ -117,7 +117,7 @@ const playstation5 = async (client) => {
           urls.forEach((url, i) => {
             let embed = makeEmbed(
               "PS5 Available!",
-              `${info[i]} \n https://www.techradar.com/deals/live/ps5-restock-live-blog`,
+              `${info[i]} \n https://www.techradar.com/deals/live/ps5-restock-live-blog \n <@${infoObj.currentGuild.ownerID}>`,
               undefined,
               url
             );
