@@ -43,7 +43,6 @@ client.on("ready", () => {
 });
 
 client.on("message", (message) => {
-  console.log(message);
   const [channels, users, usersF] = parseUsrChan(message.content);
   const infoObj = genInfo(message, client);
   const isMom = getIsMom(users, client);

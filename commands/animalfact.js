@@ -7,7 +7,6 @@ const {
   randomWord,
   capFirst,
 } = require("../custom_nodemods/utils.js");
-const res = require("express/lib/response");
 
 exports.run = async (client, msg, args, discord) => {
   const animal = randomWord(animalApi);
