@@ -13,13 +13,17 @@ const {
   getToken,
 } = require("./custom_nodemods/utils.js");
 const { webdb } = require("./custom_nodemods/webconnect.js");
-const { changeAc, reminders } = require("./custom_nodemods/timers.js");
+const {
+  changeAc,
+  reminders,
+  playstation5,
+} = require("./custom_nodemods/timers.js");
 const allComs = getDirFiles("../commands");
-const { perms, getRoles } = require("./custom_nodemods/permissions.js");
 //Runs commands based on args
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
   try {
     const runCommand = require(`./${dir}/${select}.js`);
+
     if (message.author.bot !== true || allComs.includes(select)) {
       cmsg(`${infoObj.tag} ran '${select}.js' with args (${args})`);
       runCommand.run(client, message, args, Discord, infoObj);
@@ -35,9 +39,11 @@ client.on("ready", () => {
   console.log(`\x1b[32m`, `${client.user.tag} is online!`);
   changeAc(client);
   reminders(client);
+  playstation5(client);
 });
 
 client.on("message", (message) => {
+  console.log(message);
   const [channels, users, usersF] = parseUsrChan(message.content);
   const infoObj = genInfo(message, client);
   const isMom = getIsMom(users, client);

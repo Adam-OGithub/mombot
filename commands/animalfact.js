@@ -28,6 +28,9 @@ exports.run = async (client, msg, args, discord) => {
               res2.data.Link
             );
             sMsg(msg.channel, embed);
+          })
+          .catch((e) => {
+            console.log(e);
           });
       } else {
         console.log("hit not res");
