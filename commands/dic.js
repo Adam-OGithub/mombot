@@ -10,35 +10,42 @@ exports.run = async (client, msg, args, discord) => {
         app_key: config.oxford.key,
       },
     };
+    const lowerArg = args[1].toLowerCase();
     axios
       .get(
-        `https://od-api.oxforddictionaries.com/api/v2/entries/en-us/${args[1]}`,
+        `https://od-api.oxforddictionaries.com/api/v2/entries/en-us/${lowerArg}`,
         options
       )
       .then((res) => {
         try {
+          let mainExample = `Not found`;
+          let slangExample = `Not found`;
           const fullData = res?.data?.results;
           const result1 = fullData[0]?.lexicalEntries[0];
           const mainDef = result1?.entries[0]?.senses[0];
           const slangDef = result1?.entries[0]?.senses[1];
           const mainLongDef = mainDef?.definitions[0];
           const mainShortDef = mainDef?.shortDefinitions[0];
-          const mainExample = mainDef?.examples[0]?.text;
+          if (mainDef?.examples) {
+            mainExample = mainDef?.examples[0]?.text;
+          }
           const slangLongDef = slangDef?.definitions[0];
           const slangShortDef = slangDef?.shortDefinitions[0];
-          const slangExample = slangDef?.examples[0]?.text;
+          if (slangDef?.examples) {
+            slangExample = slangDef?.examples[0]?.text;
+          }
           const word = result1?.text;
           const description = `**Definition:** ${capFirst(
             mainLongDef
-          )}\n\n**Short definition:** ${capFirst(
+          )}.\n\n**Short definition:** ${capFirst(
             mainShortDef
-          )}\n\n**Example:** ${capFirst(
+          )}.\n\n**Example:** ${capFirst(
             mainExample
-          )}\n\n**Slang definition:** ${capFirst(
+          )}.\n\n**Slang definition:** ${capFirst(
             slangLongDef
-          )}\n\n**Slang short definition:** ${capFirst(
+          )}.\n\n**Slang short definition:** ${capFirst(
             slangShortDef
-          )}\n\n**Slang example:** ${capFirst(slangExample)}`;
+          )}.\n\n**Slang example:** ${capFirst(slangExample)}`;
 
           const embed = makeEmbed(
             `Here is info on ${capFirst(word)}`,
