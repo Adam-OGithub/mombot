@@ -32,7 +32,7 @@ exports.run = async (client, msg, args, discord) => {
     },
     {
       label: "{weather}",
-      val: "Gets weather from https://openweathermap.org/api",
+      val: "Momma gets weather from https://openweathermap.org/api",
     },
     {
       label: "{poll}",
@@ -65,6 +65,10 @@ exports.run = async (client, msg, args, discord) => {
     {
       label: "{quote}",
       val: "Momma drops some quotes in the channel.",
+    },
+    {
+      label: "{dic}",
+      val: "<word> - Momma gets you a definition from https://od-api.oxforddictionaries.com/api",
     },
   ];
 
