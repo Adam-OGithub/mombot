@@ -30,7 +30,15 @@ Version 16.13.1 is recommended
 "url": "url",
 "port": portnum,
 "dburl": "dburl/url"
+},
+"ps5": {
+"guildId": "guildId which is also mainchannelid"
+},
+"oxford": {
+"appid": "appid",
+"key": "appkey"
 }
+
 }
 
 # Database - Tables / Columns

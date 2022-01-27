@@ -1,5 +1,11 @@
 "use strict";
-const { sMsg, getHelp, getPre } = require("../custom_nodemods/utils.js");
+const {
+  sMsg,
+  getHelp,
+  getPre,
+  parseQuote,
+  countQuote,
+} = require("../custom_nodemods/utils.js");
 const config = require("../config.json");
 const axios = require("../node_modules/axios");
 const {
@@ -9,24 +15,11 @@ const {
 } = require("../custom_nodemods/permissions.js");
 exports.run = async (client, msg, args, discord, infoObj) => {
   let isAdmin = false;
-  let count = 0;
   let fArgs = ``;
-  const myCheck = infoObj.msg.split("");
-  myCheck.forEach((entry) => {
-    if (entry === `"` || entry === `”` || entry === `“`) {
-      count++;
-    }
-  });
+  const count = countQuote(infoObj);
 
   if (count === 2) {
-    fArgs = infoObj.msg
-      .split(`${getPre()}set`)[1]
-      .split("")
-      .map((letter) =>
-        letter === `"` || letter === `”` || letter === `“` ? `^^A^^` : letter
-      )
-      .join("")
-      .split("^^A^^");
+    fArgs = parseQuote(infoObj, "set");
   }
   getRoles(msg.guild, infoObj.userId)
     .then((obj) => {
@@ -43,8 +36,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           let run = true;
           const arg = arg1.toLowerCase();
           let momMsg = ``;
-          console.log(arg);
-          console.log(args[2]);
           switch (arg) {
             case "prison":
               myReq.query = `REPLACE INTO prison SET guildid = ${infoObj.guildID}, prisonid = ${infoObj.channelId}`;

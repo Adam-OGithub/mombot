@@ -6,6 +6,8 @@ const {
   getPre,
   parseUsrChan,
   exceptions,
+  parseQuote,
+  countQuote,
 } = require("../custom_nodemods/utils.js");
 const { getRoles } = require("../custom_nodemods/permissions.js");
 const config = require("../config.json");
@@ -38,24 +40,10 @@ exports.run = async (client, msg, args, discord, infoObj) => {
             //check if entry is user or channel
             const [channels, users, usersF] = parseUsrChan(infoObj.msg);
             reminder.users = `${usersF.join(" ")}`;
-            const myCheck = infoObj.msg.split("");
-            myCheck.forEach((entry) => {
-              if (entry === `"` || entry === `”` || entry === `“`) {
-                count++;
-              }
-            });
+            const count = countQuote(infoObj);
 
             if (count === 4) {
-              const fArgs = infoObj.msg
-                .split(`${getPre()}remind`)[1]
-                .split("")
-                .map((letter) =>
-                  letter === `"` || letter === `”` || letter === `“`
-                    ? `^^A^^`
-                    : letter
-                )
-                .join("")
-                .split("^^A^^");
+              const fArgs = parseQuote(infoObj, "remind");
               reminder.timetemp = fArgs[1];
               reminder.msg = fArgs[3];
             }

@@ -5,29 +5,16 @@ const {
   sMsg,
   makeEmbed,
   getHelp,
-  getPre,
+  parseQuote,
+  countQuote,
 } = require("../custom_nodemods/utils.js");
 
 exports.run = async (client, msg, args, discord, infoObj) => {
-  let count = 0;
-  const myCheck = infoObj.msg.split("");
-  myCheck.forEach((entry) => {
-    if (entry === `"` || entry === `”` || entry === `“`) {
-      count++;
-    }
-  });
-
+  const count = countQuote(infoObj);
   //Makes sure there are only 4 quotes
   if (count === 4) {
     //easier split for quates
-    const fArgs = infoObj.msg
-      .split(`${getPre()}poll`)[1]
-      .split("")
-      .map((letter) =>
-        letter === `"` || letter === `”` || letter === `“` ? `^^A^^` : letter
-      )
-      .join("")
-      .split("^^A^^");
+    const fArgs = parseQuote(infoObj, "poll");
     const question = fArgs[1];
     const options = fArgs[3].split(",");
     let str = ``;

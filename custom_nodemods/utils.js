@@ -343,6 +343,29 @@ const glitchApi = (msg, label, link, image = undefined) => {
       console.log(e);
     });
 };
+
+const parseQuote = (infoObj, cmd) => {
+  const fullArgs = infoObj.msg
+    .split(`${getPre()}${cmd}`)[1]
+    .split("")
+    .map((letter) =>
+      letter === `"` || letter === `”` || letter === `“` ? `^^A^^` : letter
+    )
+    .join("")
+    .split("^^A^^");
+  return fullArgs;
+};
+
+const countQuote = (infoObj) => {
+  let count = 0;
+  const myCheck = infoObj.msg.split("");
+  myCheck.forEach((entry) => {
+    if (entry === `"` || entry === `”` || entry === `“`) {
+      count++;
+    }
+  });
+  return count;
+};
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
@@ -368,3 +391,5 @@ exports.getToken = getToken;
 exports.getGuild = getGuild;
 exports.exceptions = exceptions;
 exports.glitchApi = glitchApi;
+exports.parseQuote = parseQuote;
+exports.countQuote = countQuote;
