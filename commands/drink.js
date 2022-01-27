@@ -22,7 +22,7 @@ exports.run = async (client, msg, args, discord) => {
           const ranD = randomWord(drinks);
           const ingredients = [];
           const amounts = [];
-          let str = `${ranD.strInstructions}\n`;
+          let str = `${ranD.strInstructions}\n\n__Ingredients__\n`;
           for (const entry in ranD) {
             if (ranD[entry] !== null && entry.startsWith("strIngredient")) {
               //
