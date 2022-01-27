@@ -57,7 +57,10 @@ exports.run = async (client, msg, args, discord) => {
         }
       })
       .catch((e) => {
-        console.error(e);
+        if (e?.response?.data?.error) {
+          console.log(e?.response?.data?.error);
+          sMsg(msg.channel, "Word not found!");
+        }
       });
   } else {
     sMsg(msg.channel, "Please use a single word.");
