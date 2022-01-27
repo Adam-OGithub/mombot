@@ -16,11 +16,14 @@ const meterToMile = (M) =>
 const milToIn = (M) => (M !== undefined ? (M * 0.03937).toFixed(2) : 0);
 
 //Converts milliliters to oz
-const millToOz = (mil) => (mil !== undefined ? mil * 0.033814 : mil);
+const millToOz = (mil) =>
+  mil !== undefined ? (mil * 0.033814).toFixed(2) : mil;
 //converts grams to oz
-const gramToOz = (gram) => (gram !== undefined ? gram * 0.03527396195 : gram);
+const gramToOz = (gram) =>
+  gram !== undefined ? (gram * 0.03527396195).toFixed(2) : gram;
 //converts kilos to lbs
-const kiloToLb = (kilo) => (kilo !== undefined ? kilo * 2.20462262185 : kilo);
+const kiloToLb = (kilo) =>
+  kilo !== undefined ? (kilo * 2.20462262185).toFixed(2) : kilo;
 
 exports.convertKToF = convertKToF;
 exports.meterToMile = meterToMile;

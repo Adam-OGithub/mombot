@@ -35,10 +35,12 @@ exports.run = async (client, msg, args, discord) => {
           ingredients.forEach((ingredient, i) => {
             let getAmount = ``;
             if (amounts[i] !== undefined) {
-              if (amounts[i].endsWith("cl")) {
+              console.log(`(${amounts[i]})`);
+              const amtSplit = amounts[i].split(" ");
+              if (amtSplit.includes("cl") || amtSplit.includes("ml")) {
                 const number = millToOz(amounts[i].split(" ")[0]);
-                getAmount = `${number} oz`;
-              } else {
+                getAmount = `${amounts[i]} - (${number} oz)`;
+              } else if (amounts[i] !== null && amounts[i] !== "") {
                 getAmount = amounts[i];
               }
             }
