@@ -16,41 +16,45 @@ exports.run = async (client, msg, args, discord) => {
     )
     .then((res) => {
       //
-      const drinks = res?.data?.drinks;
-      if (res?.data?.drinks) {
-        const ranD = randomWord(drinks);
-        const ingredients = [];
-        const amounts = [];
-        let str = `${ranD.strInstructions}\n`;
-        for (const entry in ranD) {
-          if (ranD[entry] !== null && entry.startsWith("strIngredient")) {
-            //
-            ingredients.push(ranD[entry]);
-          } else if (ranD[entry] !== null && entry.startsWith("strMeasure")) {
-            //
-            amounts.push(ranD[entry]);
-          }
-        }
-        ingredients.forEach((ingredient, i) => {
-          let getAmount = ``;
-          if (amounts[i] !== undefined) {
-            if (amounts[i].endsWith("cl")) {
-              const number = millToOz(amounts[i].split(" ")[0]);
-              getAmount = `${number} oz`;
-            } else {
-              getAmount = amounts[i];
+      try {
+        const drinks = res?.data?.drinks;
+        if (res?.data?.drinks) {
+          const ranD = randomWord(drinks);
+          const ingredients = [];
+          const amounts = [];
+          let str = `${ranD.strInstructions}\n`;
+          for (const entry in ranD) {
+            if (ranD[entry] !== null && entry.startsWith("strIngredient")) {
+              //
+              ingredients.push(ranD[entry]);
+            } else if (ranD[entry] !== null && entry.startsWith("strMeasure")) {
+              //
+              amounts.push(ranD[entry]);
             }
           }
-          str += `${ingredient}: ${getAmount}\n`;
-        });
-        const embed = makeEmbed(
-          ranD.strDrink,
-          str,
-          undefined,
-          `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${ranD.idDrink}`,
-          ranD.strDrinkThumb
-        );
-        sMsg(msg.channel, embed);
+          ingredients.forEach((ingredient, i) => {
+            let getAmount = ``;
+            if (amounts[i] !== undefined) {
+              if (amounts[i].endsWith("cl")) {
+                const number = millToOz(amounts[i].split(" ")[0]);
+                getAmount = `${number} oz`;
+              } else {
+                getAmount = amounts[i];
+              }
+            }
+            str += `${ingredient}: ${getAmount}\n`;
+          });
+          const embed = makeEmbed(
+            ranD.strDrink,
+            str,
+            undefined,
+            `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${ranD.idDrink}`,
+            ranD.strDrinkThumb
+          );
+          sMsg(msg.channel, embed);
+        }
+      } catch (e) {
+        console.log(e);
       }
     })
     .catch((e) => {
