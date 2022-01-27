@@ -23,20 +23,14 @@ exports.run = async (client, msg, args, discord) => {
         const amounts = [];
         let str = `${ranD.strInstructions}\n`;
         for (const entry in ranD) {
-          console.log(`Entry=${entry}`);
-          console.log(`valis=${ranD[entry]}`);
           if (ranD[entry] !== null && entry.startsWith("strIngredient")) {
             //
             ingredients.push(ranD[entry]);
-            console.log(`add ingredients`);
           } else if (ranD[entry] !== null && entry.startsWith("strMeasure")) {
             //
             amounts.push(ranD[entry]);
-            console.log(`add amount`);
           }
         }
-        console.log(`ingredients =${ingredients}`);
-        console.log(`amounts =${amounts}`);
         ingredients.forEach((ingredient, i) => {
           let getAmount = ``;
           if (amounts[i] !== undefined) {
