@@ -366,6 +366,35 @@ const countQuote = (infoObj) => {
   });
   return count;
 };
+
+const letters = [
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
+];
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
@@ -393,3 +422,4 @@ exports.exceptions = exceptions;
 exports.glitchApi = glitchApi;
 exports.parseQuote = parseQuote;
 exports.countQuote = countQuote;
+exports.letters = letters;

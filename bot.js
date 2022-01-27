@@ -59,5 +59,4 @@ client.on("message", (message) => {
     alt("hello", "momcommands", client, message, args, Discord, infoObj);
   }
 });
-
 client.login(getToken());

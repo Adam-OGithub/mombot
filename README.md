@@ -6,7 +6,7 @@ A discord bot for mom
 
 Version 16.13.1 is recommended
 
-# config file - config.js
+# Config file - config.js
 
 {
 "prefix": "$",
