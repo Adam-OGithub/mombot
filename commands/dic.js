@@ -26,26 +26,37 @@ exports.run = async (client, msg, args, discord) => {
           const slangDef = result1?.entries[0]?.senses[1];
           const mainLongDef = mainDef?.definitions[0];
           const mainShortDef = mainDef?.shortDefinitions[0];
-          if (mainDef?.examples) {
-            mainExample = mainDef?.examples[0]?.text;
-          }
           const slangLongDef = slangDef?.definitions[0];
           const slangShortDef = slangDef?.shortDefinitions[0];
+          let example1 = ``;
+          let example2 = `\n`;
+          let slangDef1 = ``;
+          let slangDef2 = `\n`;
+          if (mainDef?.examples) {
+            mainExample = mainDef?.examples[0]?.text;
+            example1 = `\n**Example:** ${capFirst(mainExample)}.\n`;
+          }
           if (slangDef?.examples) {
             slangExample = slangDef?.examples[0]?.text;
+            example2 = `\n**Slang example:** ${capFirst(slangExample)}`;
           }
+
+          if (slangDef?.definitions) {
+            slangDef1 = `**Slang definition:** ${capFirst(slangLongDef)}.`;
+          }
+
+          if (slangDef?.shortDefinitions) {
+            slangDef2 = `\n**Slang short definition:** ${capFirst(
+              slangShortDef
+            )}.`;
+          }
+
           const word = result1?.text;
           const description = `**Definition:** ${capFirst(
             mainLongDef
           )}.\n\n**Short definition:** ${capFirst(
             mainShortDef
-          )}.\n\n**Example:** ${capFirst(
-            mainExample
-          )}.\n\n**Slang definition:** ${capFirst(
-            slangLongDef
-          )}.\n\n**Slang short definition:** ${capFirst(
-            slangShortDef
-          )}.\n\n**Slang example:** ${capFirst(slangExample)}`;
+          )}.\n${example1}\n${slangDef1}\n${slangDef2}\n${example2}`;
 
           const embed = makeEmbed(
             `Here is info on ${capFirst(word)}`,
