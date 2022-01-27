@@ -86,7 +86,8 @@ const playstation5 = async (client) => {
   let info = [];
   let count = 0;
   let sendMsg = true;
-  setInterval(() => {
+
+  const getInfo = () => {
     axios
       .get("https://www.techradar.com/deals/live/ps5-restock-live-blog")
       .then((res) => {
@@ -146,6 +147,11 @@ const playstation5 = async (client) => {
       .catch((e) => {
         console.log(e);
       });
+  };
+  //get info right away
+  getInfo();
+  setInterval(() => {
+    getInfo(); //delay info
   }, setTimoutMin(240));
 };
 exports.changeAc = changeAc;

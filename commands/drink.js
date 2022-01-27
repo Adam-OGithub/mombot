@@ -55,6 +55,7 @@ exports.run = async (client, msg, args, discord) => {
         }
       } catch (e) {
         console.log(e);
+        sMsg(msg.channel, "Unable to get you a drink..");
       }
     })
     .catch((e) => {
