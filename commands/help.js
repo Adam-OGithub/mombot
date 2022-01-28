@@ -148,6 +148,7 @@ exports.run = async (client, msg, args, discord) => {
         out = `{help}\n#Get main menu for help.`;
         break;
       default:
+        out = `Sweety you sure you have that right? Try (${pre}help mainCommand) instead.`;
         break;
     }
 
