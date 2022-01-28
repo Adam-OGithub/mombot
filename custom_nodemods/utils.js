@@ -326,7 +326,7 @@ const getCommand = (infoObj, allComs) => {
   });
   return cmd;
 };
-
+//Characters not allowed in sqldb or ones I  added
 const exceptions = [
   `||`,
   `-`,
@@ -350,6 +350,7 @@ const exceptions = [
   `#`,
 ];
 
+//used for many of the fun functions to interact with the gltichapi website
 const glitchApi = (msg, label, link, image = undefined) => {
   axios
     .get(link)
@@ -370,6 +371,7 @@ const glitchApi = (msg, label, link, image = undefined) => {
     });
 };
 
+//Parses quote replacing with ^^A^^ for easier manipulation
 const parseQuote = (infoObj, cmd) => {
   const fullArgs = infoObj.msg
     .split(`${getPre()}${cmd}`)[1]
@@ -382,6 +384,7 @@ const parseQuote = (infoObj, cmd) => {
   return fullArgs;
 };
 
+//Counts the number of quotes in a message
 const countQuote = (infoObj) => {
   let count = 0;
   const myCheck = infoObj.msg.split("");
@@ -421,7 +424,7 @@ const letters = [
   "y",
   "z",
 ];
-
+//Parses uses and channels from a string and replacedwith the name
 const parseRplc = (str, client, infoObj) => {
   const sQ = str.split(" ");
   const arr = [];
@@ -450,12 +453,11 @@ const parseRplc = (str, client, infoObj) => {
   });
 
   return arr.join(" ");
-};
-
+}; //Replays to a message object
 const replyMsg = (messageObj, message) => {
   messageObj.reply(message);
 };
-
+//Emotes to a message Object
 const emoteMsg = (messageObj, emote) => {
   messageObj.react(emote);
 };
