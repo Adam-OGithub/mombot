@@ -415,6 +415,37 @@ const letters = [
   "y",
   "z",
 ];
+
+const parseRplc = (str, client, infoObj) => {
+  const sQ = str.split(" ");
+  const arr = [];
+  sQ.forEach((word, i) => {
+    if (word.startsWith("<@") && word.endsWith(">")) {
+      let id;
+      if (word.split("")[2] === "!") {
+        id = word.split("").slice(3, word.length - 1);
+      } else {
+        id = word.split("").slice(2, word.length - 1);
+      }
+      const user = getUser(id.join(""), client);
+      arr.push(`${user.username}#${user.discriminator}`);
+    } else if (word.startsWith("<#") && word.endsWith(">")) {
+      let id;
+      if (word.split("")[2] === "!") {
+        id = word.split("").slice(3, word.length - 1);
+      } else {
+        id = word.split("").slice(2, word.length - 1);
+      }
+      const channel = getChannel(id.join(""), infoObj);
+      arr.push(channel.name);
+    } else {
+      arr.push(word);
+    }
+  });
+
+  return arr.join(" ");
+};
+
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
@@ -443,3 +474,4 @@ exports.glitchApi = glitchApi;
 exports.parseQuote = parseQuote;
 exports.countQuote = countQuote;
 exports.letters = letters;
+exports.parseRplc = parseRplc;
