@@ -5,6 +5,7 @@ const {
   getHelp,
   makeEmbed,
   getPre,
+  tryFail,
 } = require("../custom_nodemods/utils.js");
 
 const roll = (die) => randomInt(0, die);
@@ -89,43 +90,47 @@ const cycleRoll = (die, multi, notSingle = false, overTen) => {
 };
 
 exports.run = async (client, msg, args, discord, infoObj) => {
-  if (args[1] !== undefined) {
-    const lower = infoObj.msg.toLowerCase().split(" ").join("").split("d");
-    const multi = lower[0].split(`${getPre()}roll`)[1];
-    const die = Number.parseInt(lower[1], 10);
-    const multiDie = Number.parseInt(multi, 10);
+  try {
+    if (args[1] !== undefined) {
+      const lower = infoObj.msg.toLowerCase().split(" ").join("").split("d");
+      const multi = lower[0].split(`${getPre()}roll`)[1];
+      const die = Number.parseInt(lower[1], 10);
+      const multiDie = Number.parseInt(multi, 10);
 
-    //MAkes sure die is a number and within range
-    if (typeof die === "number" && die <= 90071992547409) {
-      let str = ``;
-      if (multiDie !== undefined && multiDie <= 9000000) {
-        if (multiDie > 0 && multiDie <= 10) {
-          str = cycleRoll(die, multi, true);
-        } else if (multiDie > 10) {
-          str = cycleRoll(die, multi, true, true);
+      //MAkes sure die is a number and within range
+      if (typeof die === "number" && die <= 90071992547409) {
+        let str = ``;
+        if (multiDie !== undefined && multiDie <= 9000000) {
+          if (multiDie > 0 && multiDie <= 10) {
+            str = cycleRoll(die, multi, true);
+          } else if (multiDie > 10) {
+            str = cycleRoll(die, multi, true, true);
+          }
+        } else {
+          str = cycleRoll(die);
         }
-      } else {
-        str = cycleRoll(die);
-      }
 
-      const t = (overOne) => (overOne > 0 ? `s!` : `!`);
-      const embed = makeEmbed(`Dice Roll${t(multi)}`, str);
-      sMsg(msg.channel, embed);
-    } else if (die > 90071992547409) {
-      sMsg(
-        msg.channel,
-        `Whoa there honey slow down your roll, that is too big of a number.`
-      );
-    } else if (multiDie > 9000000) {
-      sMsg(
-        msg.channel,
-        `Whoa there honey slow down your roll, that is too big of a number.`
-      );
+        const t = (overOne) => (overOne > 0 ? `s!` : `!`);
+        const embed = makeEmbed(`Dice Roll${t(multi)}`, str);
+        sMsg(msg.channel, embed);
+      } else if (die > 90071992547409) {
+        sMsg(
+          msg.channel,
+          `Whoa there honey slow down your roll, that is too big of a number.`
+        );
+      } else if (multiDie > 9000000) {
+        sMsg(
+          msg.channel,
+          `Whoa there honey slow down your roll, that is too big of a number.`
+        );
+      } else {
+        getHelp(msg.channel, "roll");
+      }
     } else {
-      getHelp(msg.channel, "roll");
+      const embed = makeEmbed(`Dice Roll!`, `${randomInt(0, 100)}`);
+      sMsg(msg.channel, embed);
     }
-  } else {
-    const embed = makeEmbed(`Dice Roll!`, `${randomInt(0, 100)}`);
-    sMsg(msg.channel, embed);
+  } catch (e) {
+    tryFail(msg.channel, e);
   }
 };

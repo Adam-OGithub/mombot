@@ -60,7 +60,7 @@ exports.run = async (client, msg, args, discord) => {
           sMsg(msg.channel, embed);
         }
       } catch (e) {
-        console.log(e);
+        tryFail(msg.channel, e);
         sMsg(msg.channel, "Unable to get you a drink..");
       }
     })

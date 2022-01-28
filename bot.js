@@ -11,6 +11,7 @@ const {
   cmsg,
   getDirFiles,
   getToken,
+  momReact,
 } = require("./custom_nodemods/utils.js");
 const { webdb } = require("./custom_nodemods/webconnect.js");
 const {
@@ -26,6 +27,10 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
 
     if (message.author.bot !== true || allComs.includes(select)) {
       cmsg(`${infoObj.tag} ran '${select}.js' with args (${args})`);
+
+      if (dir !== "momcommands") {
+        momReact(message, client, infoObj);
+      }
       runCommand.run(client, message, args, Discord, infoObj);
     }
   } catch (e) {

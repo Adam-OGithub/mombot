@@ -1,33 +1,37 @@
 "use strict";
 const axios = require("../node_modules/axios");
-const { sMsg, makeEmbed } = require("../custom_nodemods/utils.js");
+const { sMsg, makeEmbed, tryFail } = require("../custom_nodemods/utils.js");
 const config = require("../config.json");
 exports.run = async (client, msg, args, discord) => {
-  const options = {
-    headers: {
-      "x-rapidapi-host": config.getproxy.host,
-      "x-rapidapi-key": config.getproxy.key,
-    },
-  };
+  try {
+    const options = {
+      headers: {
+        "x-rapidapi-host": config.getproxy.host,
+        "x-rapidapi-key": config.getproxy.key,
+      },
+    };
 
-  axios
-    .get(`https://proxy-orbit1.p.rapidapi.com/v1/`, options)
-    .then((res) => {
-      try {
-        const data = res.data;
-        let str;
-        for (const entry in data) {
-          if (entry !== "websites") {
-            str += `${entry}: ${data[entry]}\n`;
+    axios
+      .get(`https://proxy-orbit1.p.rapidapi.com/v1/`, options)
+      .then((res) => {
+        try {
+          const data = res.data;
+          let str;
+          for (const entry in data) {
+            if (entry !== "websites") {
+              str += `${entry}: ${data[entry]}\n`;
+            }
           }
+          const embed = makeEmbed("Proxy Info", str);
+          sMsg(msg.channel, embed);
+        } catch (e) {
+          console.log(e);
         }
-        const embed = makeEmbed("Proxy Info", str);
-        sMsg(msg.channel, embed);
-      } catch (e) {
+      })
+      .catch((e) => {
         console.log(e);
-      }
-    })
-    .catch((e) => {
-      console.log(e);
-    });
+      });
+  } catch (e) {
+    tryFail(msg.channel, e);
+  }
 };

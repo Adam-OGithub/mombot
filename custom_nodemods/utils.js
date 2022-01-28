@@ -461,6 +461,21 @@ const replyMsg = (messageObj, message) => {
 const emoteMsg = (messageObj, emote) => {
   messageObj.react(emote);
 };
+
+const momReact = (msg, client, infoObj) => {
+  const momEmotes = [`👾`, `👻`, `👽`, `😎`, `🧠`, `👀`, `👤`, `👁`];
+  const lastMsg = getLastMsg(msg, client, infoObj);
+  const emoteChar = randomWord(momEmotes);
+  emoteMsg(lastMsg, emoteChar);
+};
+
+const tryFail = (channelObj, e) => {
+  console.log(e);
+  sMsg(
+    channelObj,
+    "Momma is having a rough day sweet,try again in a little bit."
+  );
+};
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
@@ -493,3 +508,5 @@ exports.parseRplc = parseRplc;
 exports.getLastMsg = getLastMsg;
 exports.replyMsg = replyMsg;
 exports.emoteMsg = emoteMsg;
+exports.momReact = momReact;
+exports.tryFail = tryFail;
