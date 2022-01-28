@@ -6,9 +6,15 @@ const {
   makeEmbed,
   randomWord,
   capFirst,
+  emotes,
+  getLastMsg,
+  emoteMsg,
 } = require("../custom_nodemods/utils.js");
 
-exports.run = async (client, msg, args, discord) => {
+exports.run = async (client, msg, args, discord, infoObj) => {
+  const lastMsg = getLastMsg(msg, client, infoObj);
+  const emoteChar = randomWord(emotes);
+  emoteMsg(lastMsg, emoteChar);
   const animal = randomWord(animalApi);
   let embed;
   axios

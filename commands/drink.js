@@ -37,7 +37,11 @@ exports.run = async (client, msg, args, discord) => {
             if (amounts[i] !== undefined) {
               console.log(`(${amounts[i]})`);
               const amtSplit = amounts[i].split(" ");
-              if (amtSplit.includes("cl") || amtSplit.includes("ml")) {
+              if (
+                amtSplit.includes("cl") ||
+                amtSplit.includes("cL") ||
+                amtSplit.includes("ml")
+              ) {
                 const number = millToOz(amounts[i].split(" ")[0]);
                 getAmount = `${amounts[i]} - (${number} oz)`;
               } else if (amounts[i] !== null && amounts[i] !== "") {

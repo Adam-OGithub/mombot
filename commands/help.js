@@ -61,7 +61,7 @@ exports.run = async (client, msg, args, discord) => {
       },
       {
         name: "\u2800",
-        value: `${pre}meme\n${pre}animalfacts`,
+        value: `${pre}meme\n${pre}animalfact`,
         inline: true,
       },
       {
@@ -117,8 +117,8 @@ exports.run = async (client, msg, args, discord) => {
       case "remind":
         out = `{remind} <channel/channels> <user/users> "<M>/<D>/<YYYY> <24H>:<minute>:<timezone>" "<message>" \n Example: ${pre}remind #testchannel1 #testchannel2 @MOM  @Pork  "1/21/2022 15:00:cst" "This is a test" \n#Let momma remind you!`;
         break;
-      case "animalfacts":
-        out = `{animalfacts}\n#Momma tells you some random animal facts!`;
+      case "animalfact":
+        out = `{animalfact}\n#Momma tells you some random animal facts!`;
         break;
       case "coinflip":
         out = `{coinflip}\n#Momma loves coin flips!`;

@@ -165,10 +165,11 @@ const makeEmbed = (
   mutlifield,
   footer
 ) => {
-  let embed = new Discord.MessageEmbed()
-    .setTitle(title)
-    .setColor(config.color)
-    .setDescription(description);
+  let embed = new Discord.MessageEmbed().setTitle(title).setColor(config.color);
+
+  if (description !== false) {
+    embed.setDescription(description);
+  }
 
   console.log(`-------------------`);
   if (fields !== undefined) {
@@ -246,6 +247,11 @@ const getUser = (userId, client) => client.users.cache.get(userId);
 //Gets guild obj
 const getGuild = (guildId, client) => client.guilds.cache.get(guildId);
 
+const getLastMsg = (msg, client, infoObj) => {
+  const channelCache = client.channels.cache.get(infoObj.channelId);
+  const msgCache = channelCache.messages.cache;
+  return msgCache.get(msg.author.lastMessageID);
+};
 //Gets channel and users id and objects
 const parseUserChannel = (message) => {
   const sInfo = message.split(" ");
@@ -446,6 +452,13 @@ const parseRplc = (str, client, infoObj) => {
   return arr.join(" ");
 };
 
+const replyMsg = (messageObj, message) => {
+  messageObj.reply(message);
+};
+
+const emoteMsg = (messageObj, emote) => {
+  messageObj.react(emote);
+};
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
@@ -475,3 +488,6 @@ exports.parseQuote = parseQuote;
 exports.countQuote = countQuote;
 exports.letters = letters;
 exports.parseRplc = parseRplc;
+exports.getLastMsg = getLastMsg;
+exports.replyMsg = replyMsg;
+exports.emoteMsg = emoteMsg;
