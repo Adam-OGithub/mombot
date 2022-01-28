@@ -49,12 +49,16 @@ client.on("message", (message) => {
   const cmd = getCommand(infoObj, allComs);
   const argIndex = infoObj.msg.split(" ").indexOf(`${getPre()}${cmd}`);
   const args = infoObj.msg.split(" ").slice(argIndex, message.content.length);
+  const msgParse = infoObj.msg.split(" ");
   if (cmd !== null) {
     alt(cmd, "commands", client, message, args, Discord, infoObj);
   } else if (message.mentions.everyone) {
     alt("mentionall", "momcommands", client, message, args, Discord, infoObj);
   } else if (isMom) {
     alt("atmom", "momcommands", client, message, args, Discord, infoObj);
+  } else if (msgParse.includes("help") && msgParse.includes("mom")) {
+    const autoHelp = [`help`];
+    alt(autoHelp, "commands", client, message, args, Discord, infoObj);
   } else {
     alt("hello", "momcommands", client, message, args, Discord, infoObj);
   }

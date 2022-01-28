@@ -7,6 +7,7 @@ const {
   getHelp,
   parseQuote,
   countQuote,
+  getUser,
 } = require("../custom_nodemods/utils.js");
 
 exports.run = async (client, msg, args, discord, infoObj) => {
@@ -23,7 +24,21 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       newEmoteArr.push(emotes[i]);
       str += `${emotes[i]} - ${capFirst(obj)}\n\n`;
     });
-    const embed = makeEmbed(`${question}`, `${str}`);
+
+    const sQ = question.split(" ");
+    sQ.forEach((word, i) => {
+      if (word.startsWith("<@") && word.endsWith(">")) {
+        let id;
+        if (word.split("")[2] === "!") {
+          id = word.split("").slice(3, word.length - 1);
+        } else {
+          id = word.split("").slice(2, word.length - 1);
+        }
+        const user = getUser(id.join(""), client);
+        sQ[i] = `${user.username}#${user.discriminator}`;
+      }
+    });
+    const embed = makeEmbed(`${sQ.join(" ")}`, `${str}`);
     sMsg(msg.channel, embed, true, newEmoteArr);
   } else {
     getHelp(msg.channel, "poll");
