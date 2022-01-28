@@ -122,7 +122,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         `Whoa there honey slow down your roll, that is too big of a number.`
       );
     } else {
-      getHelp(msg.channel);
+      getHelp(msg.channel, "roll");
     }
   } else {
     const embed = makeEmbed(`Dice Roll!`, `${randomInt(0, 100)}`);

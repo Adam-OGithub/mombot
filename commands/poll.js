@@ -26,6 +26,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     const embed = makeEmbed(`${question}`, `${str}`);
     sMsg(msg.channel, embed, true, newEmoteArr);
   } else {
-    getHelp(msg.channel);
+    getHelp(msg.channel, "poll");
   }
 };

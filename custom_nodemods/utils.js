@@ -156,7 +156,15 @@ const randomInt = (min, max) =>
   Math.floor(Math.trunc(Math.random() * (max - min) + 1) + min);
 
 //Creates an embed
-const makeEmbed = (title, description, fields, url, image) => {
+const makeEmbed = (
+  title,
+  description,
+  fields,
+  url,
+  image,
+  mutlifield,
+  footer
+) => {
   let embed = new Discord.MessageEmbed()
     .setTitle(title)
     .setColor(config.color)
@@ -168,6 +176,11 @@ const makeEmbed = (title, description, fields, url, image) => {
       embed.addField(field.label, field.val);
     });
   }
+  if (mutlifield !== undefined) {
+    mutlifield.forEach((field) => {
+      embed.addFields(field);
+    });
+  }
 
   if (url !== undefined) {
     embed.setURL(url);
@@ -175,6 +188,10 @@ const makeEmbed = (title, description, fields, url, image) => {
 
   if (image !== undefined) {
     embed.setImage(image);
+  }
+
+  if (footer !== undefined) {
+    embed.setFooter(footer);
   }
   return embed;
 };
@@ -190,9 +207,12 @@ const getToken = () => {
   return token;
 };
 //Returns help menu
-const getHelp = (msg) => {
-  sMsg(msg, `${getPre()}help`);
-  console.log(`hit`);
+const getHelp = (msg, cmd) => {
+  if (cmd !== undefined) {
+    sMsg(msg, `${getPre()}help ${cmd}`);
+  } else {
+    sMsg(msg, `${getPre()}help`);
+  }
 };
 
 //returns timeouts in minutes

@@ -98,7 +98,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
             sMsg(msg.channel, momMsg);
           }
         } else {
-          getHelp(msg.channel);
+          getHelp(msg.channel, "set");
         }
       } else {
         sMsg(msg.channel, "You must get permission from Dad.");

@@ -129,10 +129,10 @@ exports.run = async (client, msg, args, discord, infoObj) => {
                     console.log(`${e}`);
                   });
               } else {
-                getHelp(msg.channel);
+                getHelp(msg.channel, "remind");
               }
             } else {
-              getHelp(msg.channel);
+              getHelp(msg.channel, "remind");
             }
           }
         })
