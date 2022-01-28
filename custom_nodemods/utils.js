@@ -473,7 +473,7 @@ const tryFail = (channelObj, e) => {
   console.log(e);
   sMsg(
     channelObj,
-    "Momma is having a rough day sweet,try again in a little bit."
+    "Momma is having a rough day sweety,try again in a little bit."
   );
 };
 exports.randomWord = randomWord;
