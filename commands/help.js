@@ -115,7 +115,7 @@ exports.run = async (client, msg, args, discord) => {
         out = `{roll} d <dice number>  or  {roll} <total dice> d <dice number>\n#Let momma roll you some dice!`;
         break;
       case "remind":
-        out = `{remind} <channel/channels> <user/users> "<M>/<D>/<YYYY> <24H>:<minute>:<timezone>" "<message>" \n Example: ${getPre()}remind #testchannel1 #testchannel2 @MOM  @Pork  "1/21/2022 15:00:cst" "This is a test" \n#Let momma remind you!`;
+        out = `{remind} <channel/channels> <user/users> "<M>/<D>/<YYYY> <24H>:<minute>:<timezone>" "<message>" \n Example: ${pre}remind #testchannel1 #testchannel2 @MOM  @Pork  "1/21/2022 15:00:cst" "This is a test" \n#Let momma remind you!`;
         break;
       case "animalfacts":
         out = `{animalfacts}\n#Momma tells you some random animal facts!`;
