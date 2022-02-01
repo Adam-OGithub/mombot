@@ -171,7 +171,6 @@ const makeEmbed = (
     embed.setDescription(description);
   }
 
-  console.log(`-------------------`);
   if (fields !== undefined) {
     fields.forEach((field) => {
       embed.addField(field.label, field.val);
