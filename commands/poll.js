@@ -56,9 +56,9 @@ exports.run = async (client, msg, args, discord, infoObj) => {
             }
           }, 5000);
 
-          //Gets results need to fix for multi winners
+          //Gets results
           setTimeout(() => {
-            let winner = 0;
+            let winner = 1;
             const winnerObj = {};
             const react = sent.reactions.cache;
             react.forEach((value, key) => {
@@ -67,16 +67,22 @@ exports.run = async (client, msg, args, discord, infoObj) => {
                 winnerObj.winner = value;
               }
             });
-            let finalMsg = ``;
-            optionMsg.forEach((msg) => {
-              if (msg.split(" ").includes(winnerObj.winner._emoji.name)) {
-                finalMsg = msg;
-              }
-            });
-
+            //Need to fix for multi winners above 1 etc..
+            let finalEmbed3;
+            if (winner === 1) {
+              finalEmbed3 = `${str} \nIt is a Draw!`;
+            } else {
+              let finalMsg = ``;
+              optionMsg.forEach((msg) => {
+                if (msg.split(" ").includes(winnerObj.winner._emoji.name)) {
+                  finalMsg = msg;
+                }
+              });
+              finalEmbed3 = `${str} \nWinner is ${winnerObj.winner._emoji.name}\n${finalMsg}`;
+            }
             const embed3 = makeEmbed(
               parseRplc(question, client, infoObj),
-              `Winner is ${winnerObj.winner._emoji.name}\n${finalMsg}`
+              finalEmbed3
             );
             sent.edit(embed3);
           }, i * 1000 + 2000);

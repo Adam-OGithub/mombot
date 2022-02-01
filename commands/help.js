@@ -111,7 +111,7 @@ exports.run = async (client, msg, args, discord) => {
           out = `{weather}\nMomma gets weather from https://openweathermap.org/api`;
           break;
         case "poll":
-          out = `{poll} "question" "option 1,option 2,option 3, option 4"\n#Momma creates you a  poll.`;
+          out = `{poll} "question" "option 1,option 2,option 3, option 4" #Momma creates you a  poll. \n{poll} "question" "option 1,option 2,option 3, option 4" "time in seconds" #Momma creates you a poll with a timer.`;
           break;
         case "roll":
           out = `{roll} d <dice number>  or  {roll} <total dice> d <dice number>\n#Let momma roll you some dice!`;
