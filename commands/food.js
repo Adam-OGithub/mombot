@@ -5,6 +5,8 @@ const {
   makeEmbed,
   tryFail,
   randomInt,
+  category,
+  country,
 } = require("../custom_nodemods/utils.js");
 const {
   millToOz,
@@ -79,31 +81,25 @@ const sendFood = (msg, mealObj, str) => {
 };
 exports.run = async (client, msg, args, discord) => {
   let url = `https://www.themealdb.com/api/json/v1/1/random.php`;
-  if (args[1] !== undefined) {
-    const country = [
-      "mexican",
-      "canadian",
-      "american",
-      "spanish",
-      "chinese",
-      "indian",
-      "british",
-      "portuguese",
-      "french",
-      "egyptian",
-    ];
-    if (country.includes(args[1])) {
-      url = `https://www.themealdb.com/api/json/v1/1/filter.php?a=${args[1]}`;
-    } else {
-      url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${args[1]}`;
+  let arg1 = args[1];
+  let hasInclude = false;
+  if (arg1 !== undefined) {
+    arg1 = arg1.toLowerCase();
+
+    if (country.includes(arg1)) {
+      url = `https://www.themealdb.com/api/json/v1/1/filter.php?a=${arg1}`;
+      hasInclude = true;
+    } else if (category.includes(arg1)) {
+      url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${arg1}`;
+      hasInclude = true;
     }
   }
-  console.log(url);
+
   axios
     .get(url)
     .then((response) => {
       try {
-        if (args[1] !== undefined) {
+        if (args[1] !== undefined && hasInclude) {
           const mealData =
             response.data.meals[randomInt(0, response.data.meals.length)];
           axios
@@ -111,10 +107,11 @@ exports.run = async (client, msg, args, discord) => {
               `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealData.idMeal}`
             )
             .then((response) => {
-              console.log(response.data);
               const [mealObj, str] = parseData(response);
               sendFood(msg, mealObj, str);
             });
+        } else if (args[1] !== undefined) {
+          sMsg(msg.channel, `Unable to find ${arg1}`);
         } else {
           const [mealObj, str] = parseData(response);
           sendFood(msg, mealObj, str);

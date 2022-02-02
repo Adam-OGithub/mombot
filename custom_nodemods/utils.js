@@ -475,6 +475,52 @@ const tryFail = (channelObj, e) => {
     "Momma is having a rough day sweety,try again in a little bit."
   );
 };
+
+const country = [
+  "american",
+  "british",
+  "canadian",
+  "chinese",
+  "croatian",
+  "dutch",
+  "egyptian",
+  "french",
+  "greek",
+  "indian",
+  "irish",
+  "italian",
+  "jamaican",
+  "japanese",
+  "kenyan",
+  "malaysian",
+  "mexican",
+  "moroccan",
+  "polish",
+  "portuguese",
+  "russian",
+  "spanish",
+  "thai",
+  "tunisian",
+  "turkish",
+  "unknown",
+  "vietnamese",
+];
+const category = [
+  "beef",
+  "breakfast",
+  "chicken",
+  "dessert",
+  "goat",
+  "lamb",
+  "miscellaneous",
+  "pasta",
+  "pork",
+  "seafood",
+  "side",
+  "starter",
+  "vegan",
+  "vegetarian",
+];
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
@@ -509,3 +555,5 @@ exports.replyMsg = replyMsg;
 exports.emoteMsg = emoteMsg;
 exports.momReact = momReact;
 exports.tryFail = tryFail;
+exports.country = country;
+exports.category = category;
