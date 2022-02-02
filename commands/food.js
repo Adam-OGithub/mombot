@@ -106,11 +106,32 @@ exports.run = async (client, msg, args, discord, infoObj) => {
   let url = `${baseUrl}/random.php`;
   let arg1 = args[1];
   let hasInclude = false;
+  let argInvalid = false;
+  let arr = [];
   const multiArgs = getMulti(infoObj);
   if (arg1 !== undefined) {
     arg1 = arg1.toLowerCase();
 
     if (multiArgs !== undefined) {
+      //for each ingredient in multi argument
+      multiArgs.forEach((entry) => {
+        //check if ingredient  is in list if not proceed
+        console.log(entry);
+        if (ingredients.includes(entry) !== true) {
+          arr.push(`___Below options for ${entry}___`);
+          //split enrty to create regix
+          const entrySplit = entry.split("");
+          const reg = new RegExp(
+            `[${entrySplit[0]}][${entrySplit[1]}][${entrySplit[2]}]`
+          );
+          ingredients.forEach((ing) => {
+            if (reg.test(ing)) {
+              arr.push(ing);
+            }
+          });
+          argInvalid = true;
+        }
+      });
       url = `${baseUrl}/filter.php?i=${multiArgs.join(`,`)}`;
       hasInclude = true;
     } else if (country.includes(arg1)) {
@@ -151,10 +172,21 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           tryFail(msg.channel, e);
         }
       } else {
-        sMsg(
-          msg.channel,
-          `Momma can not find a recipe with all the options: ${multiArgs}`
-        );
+        if (argInvalid) {
+          let outStr = ``;
+          arr.forEach((entry) => {
+            outStr += `${entry}\n`;
+          });
+          sMsg(
+            msg.channel,
+            `Momma suggest trying to replace your options with:\n${outStr}`
+          );
+        } else {
+          sMsg(
+            msg.channel,
+            `Momma can not find a recipe with all the options: ${multiArgs}`
+          );
+        }
       }
     })
     .catch((e) => {
