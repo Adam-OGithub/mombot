@@ -179,12 +179,12 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           });
           sMsg(
             msg.channel,
-            `Momma suggest trying to replace your options with:\n${outStr}`
+            `Momma suggest trying to replace your ingredients with:\n${outStr}`
           );
         } else {
           sMsg(
             msg.channel,
-            `Momma can not find a recipe with all the options: ${multiArgs}`
+            `Momma can not find a recipe with all the ingredients: ${multiArgs}`
           );
         }
       }
