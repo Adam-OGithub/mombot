@@ -99,7 +99,7 @@ exports.run = async (client, msg, args, discord) => {
     .get(url)
     .then((response) => {
       try {
-        if (args[1] !== undefined && hasInclude) {
+        if (arg1 !== undefined && hasInclude) {
           const mealData =
             response.data.meals[randomInt(0, response.data.meals.length)];
           axios
@@ -110,7 +110,7 @@ exports.run = async (client, msg, args, discord) => {
               const [mealObj, str] = parseData(response);
               sendFood(msg, mealObj, str);
             });
-        } else if (args[1] !== undefined) {
+        } else if (arg1 !== undefined) {
           sMsg(msg.channel, `Unable to find ${arg1}`);
         } else {
           const [mealObj, str] = parseData(response);
