@@ -5,6 +5,8 @@ const {
   getPre,
   getCommand,
   tryFail,
+  country,
+  category,
 } = require("../custom_nodemods/utils");
 exports.run = async (client, msg, args, discord) => {
   try {
@@ -102,7 +104,12 @@ exports.run = async (client, msg, args, discord) => {
           out = `{mom}\n#Momma pep talk.Sometimes pep down.`;
           break;
         case "food":
-          out = `{food} #Momma gonna make you some random food.\n{food} {type} #ie: ${pre}food seafood , momma gets you some food.`;
+          out = `{food} #Momma gonna make you some random food.\n{food} {type} #ie: ${pre}food seafood , momma gets you some food.\nfoodall #Gets all avaiable food types`;
+          break;
+        case "foodall":
+          out = `COUNTRY:\n${country.join(`\n`)}\n\nCATEGORY:\n${category.join(
+            `\n`
+          )}`;
           break;
         case "drink":
           out = `{drink}\n#Momma gonna make you a strong drink.`;
