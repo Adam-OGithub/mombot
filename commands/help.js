@@ -102,7 +102,7 @@ exports.run = async (client, msg, args, discord) => {
           out = `{mom}\n#Momma pep talk.Sometimes pep down.`;
           break;
         case "food":
-          out = `{food}\n#Momma gonna make you some food.`;
+          out = `{food} #Momma gonna make you some random food.\n{food} {type} #ie: ${pre}food seafood , momma gets you some food.`;
           break;
         case "drink":
           out = `{drink}\n#Momma gonna make you a strong drink.`;
