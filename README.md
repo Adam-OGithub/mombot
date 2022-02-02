@@ -37,6 +37,13 @@ Version 16.13.1 is recommended
 "oxford": {
 "appid": "appid",
 "key": "appkey"
+},
+"getproxy": {
+"host": "hostname",
+"key": "key"
+},
+"mealdb": {
+"key": "key"
 }
 
 }
