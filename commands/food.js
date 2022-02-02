@@ -17,7 +17,7 @@ const {
   ingredients,
 } = require("../custom_nodemods/foodlist.js");
 const config = require("../config.json");
-const key = config.mealdb.key;
+const baseUrl = `https://www.themealdb.com/api/json/v2/${config.mealdb.key}`;
 const parseData = (response) => {
   const mealObj = response.data.meals[0];
   let i = 1;
@@ -83,17 +83,17 @@ const sendFood = (msg, mealObj, str) => {
   sMsg(msg.channel, embed);
 };
 exports.run = async (client, msg, args, discord) => {
-  let url = `https://www.themealdb.com/api/json/v2/${key}/random.php`;
+  let url = `${baseUrl}/random.php`;
   let arg1 = args[1];
   let hasInclude = false;
   if (arg1 !== undefined) {
     arg1 = arg1.toLowerCase();
 
     if (country.includes(arg1)) {
-      url = `https://www.themealdb.com/api/json/v2/${key}/filter.php?a=${arg1}`;
+      url = `${baseUrl}/filter.php?a=${arg1}`;
       hasInclude = true;
     } else if (category.includes(arg1)) {
-      url = `https://www.themealdb.com/api/json/v2/${key}/filter.php?c=${arg1}`;
+      url = `${baseUrl}/filter.php?c=${arg1}`;
       hasInclude = true;
     }
   }
@@ -106,9 +106,7 @@ exports.run = async (client, msg, args, discord) => {
           const mealData =
             response.data.meals[randomInt(0, response.data.meals.length)];
           axios
-            .get(
-              `https://www.themealdb.com/api/json/v2/${key}/lookup.php?i=${mealData.idMeal}`
-            )
+            .get(`${baseUrl}/lookup.php?i=${mealData.idMeal}`)
             .then((response) => {
               const [mealObj, str] = parseData(response);
               sendFood(msg, mealObj, str);
