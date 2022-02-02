@@ -11,6 +11,7 @@ const {
   gramToOz,
   kiloToLb,
 } = require("../custom_nodemods/conversions.js");
+const { CLIENT_LOCAL_FILES } = require("mysql/lib/protocol/constants/client");
 
 const parseData = (response) => {
   const mealObj = response.data.meals[0];
@@ -38,25 +39,27 @@ const parseData = (response) => {
   //puts ingredients and amounts together api fix
   let str = ``;
   for (let i = 0; i < ingredients.length; i++) {
-    let toStr = amount[i].toString();
-    if (toStr.endsWith("ml") || toStr.endsWith("ml ")) {
-      const oz = millToOz(Number.parseInt(amount[i]));
-      if (oz !== "NaN") {
-        amount[i] = `${amount[i]} - (${oz} oz)`;
-      }
-    } else if (toStr.endsWith("kg") || toStr.endsWith("kg ")) {
-      const lb = kiloToLb(Number.parseInt(amount[i]));
-      if (lb !== "NaN") {
-        amount[i] = `${amount[i]}  - (${lb} lb)`;
-      }
-    } else if (
-      toStr.endsWith("g") ||
-      toStr.endsWith("Grams") ||
-      toStr.endsWith("g ")
-    ) {
-      const oz = gramToOz(Number.parseInt(amount[i]));
-      if (oz !== "NaN") {
-        amount[i] = `${amount[i]} - (${oz} oz)`;
+    if (amount[i] !== undefined) {
+      let toStr = amount[i].toString();
+      if (toStr.endsWith("ml") || toStr.endsWith("ml ")) {
+        const oz = millToOz(Number.parseInt(amount[i]));
+        if (oz !== "NaN") {
+          amount[i] = `${amount[i]} - (${oz} oz)`;
+        }
+      } else if (toStr.endsWith("kg") || toStr.endsWith("kg ")) {
+        const lb = kiloToLb(Number.parseInt(amount[i]));
+        if (lb !== "NaN") {
+          amount[i] = `${amount[i]}  - (${lb} lb)`;
+        }
+      } else if (
+        toStr.endsWith("g") ||
+        toStr.endsWith("Grams") ||
+        toStr.endsWith("g ")
+      ) {
+        const oz = gramToOz(Number.parseInt(amount[i]));
+        if (oz !== "NaN") {
+          amount[i] = `${amount[i]} - (${oz} oz)`;
+        }
       }
     }
     str += `${ingredients[i]}: ${amount[i]}\n`;
@@ -77,9 +80,21 @@ const sendFood = (msg, mealObj, str) => {
 exports.run = async (client, msg, args, discord) => {
   let url = `https://www.themealdb.com/api/json/v1/1/random.php`;
   if (args[1] !== undefined) {
-    url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${args[1]}`;
+    const country = [
+      "mexican",
+      "canadian",
+      "american",
+      "spanish",
+      "chinese",
+      "indian",
+    ];
+    if (country.includes(args[1])) {
+      url = `https://www.themealdb.com/api/json/v1/1/filter.php?a=${args[1]}`;
+    } else {
+      url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${args[1]}`;
+    }
   }
-
+  console.log(url);
   axios
     .get(url)
     .then((response) => {
@@ -92,6 +107,7 @@ exports.run = async (client, msg, args, discord) => {
               `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealData.idMeal}`
             )
             .then((response) => {
+              console.log(response.data);
               const [mealObj, str] = parseData(response);
               sendFood(msg, mealObj, str);
             });
