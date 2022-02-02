@@ -116,7 +116,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       //for each ingredient in multi argument
       multiArgs.forEach((entry) => {
         //check if ingredient  is in list if not proceed
-        console.log(entry);
         if (ingredients.includes(entry) !== true) {
           arr.push(`___Below options for ${entry}___`);
           //split enrty to create regix
@@ -142,7 +141,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       hasInclude = true;
     }
   }
-  console.log(url);
   axios
     .get(url)
     .then((response) => {
