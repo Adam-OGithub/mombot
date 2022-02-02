@@ -87,6 +87,10 @@ exports.run = async (client, msg, args, discord) => {
       "spanish",
       "chinese",
       "indian",
+      "british",
+      "portuguese",
+      "french",
+      "egyptian",
     ];
     if (country.includes(args[1])) {
       url = `https://www.themealdb.com/api/json/v1/1/filter.php?a=${args[1]}`;
