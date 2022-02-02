@@ -5,15 +5,17 @@ const {
   makeEmbed,
   tryFail,
   randomInt,
-  category,
-  country,
 } = require("../custom_nodemods/utils.js");
 const {
   millToOz,
   gramToOz,
   kiloToLb,
 } = require("../custom_nodemods/conversions.js");
-const { CLIENT_LOCAL_FILES } = require("mysql/lib/protocol/constants/client");
+const {
+  country,
+  category,
+  ingredients,
+} = require("../custom_nodemods/foodlist.js");
 
 const parseData = (response) => {
   const mealObj = response.data.meals[0];

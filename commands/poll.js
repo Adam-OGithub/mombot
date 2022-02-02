@@ -3,15 +3,12 @@ const { clearCookie } = require("express/lib/response");
 const {
   emotes,
   capFirst,
-  sMsg,
   makeEmbed,
   getHelp,
   parseQuote,
   countQuote,
   parseRplc,
   tryFail,
-  getChannel,
-  getLastMsg,
 } = require("../custom_nodemods/utils.js");
 
 exports.run = async (client, msg, args, discord, infoObj) => {

@@ -5,9 +5,8 @@ const {
   getPre,
   getCommand,
   tryFail,
-  country,
-  category,
-} = require("../custom_nodemods/utils");
+} = require("../custom_nodemods/utils.js");
+const { country, category } = require("../custom_nodemods/foodlist.js");
 exports.run = async (client, msg, args, discord) => {
   try {
     const pre = getPre();
