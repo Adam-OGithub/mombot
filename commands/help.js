@@ -103,7 +103,7 @@ exports.run = async (client, msg, args, discord) => {
           out = `{mom}\n#Momma pep talk.Sometimes pep down.`;
           break;
         case "food":
-          out = `{food} #Momma gonna make you some random food.\n{food} {type} #ie: ${pre}food seafood , momma gets you some food.\nfoodall #Gets all avaiable food types`;
+          out = `{food} #Momma gonna make you some random food.\n{food} {type} #ie: ${pre}food seafood , momma gets you some food.\nfoodall #Gets all avaiable food types\n{food} "ingredient1,ingedient2,ingedient3" #Momma checks her cookbook for those ingredients`;
           break;
         case "foodall":
           out = `COUNTRY:\n${country.join(`\n`)}\n\nCATEGORY:\n${category.join(

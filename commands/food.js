@@ -5,6 +5,8 @@ const {
   makeEmbed,
   tryFail,
   randomInt,
+  parseQuote,
+  countQuote,
 } = require("../custom_nodemods/utils.js");
 const {
   millToOz,
@@ -82,14 +84,36 @@ const sendFood = (msg, mealObj, str) => {
   );
   sMsg(msg.channel, embed);
 };
-exports.run = async (client, msg, args, discord) => {
+
+const getMulti = (infoObj) => {
+  const multiArgs = parseQuote(infoObj, "food")[1];
+  const counts = countQuote(infoObj);
+  if (counts === 2 && multiArgs !== undefined) {
+    const mutliArgSplit = multiArgs.split(",");
+    const multiArgsMod = mutliArgSplit.map((entry) => {
+      if (entry.startsWith(" ")) {
+        const entrySlice = entry.slice(1, entry.length);
+        return entrySlice.split(" ").join("_");
+      } else {
+        return entry.split(" ").join("_");
+      }
+    });
+    return multiArgsMod;
+  }
+};
+
+exports.run = async (client, msg, args, discord, infoObj) => {
   let url = `${baseUrl}/random.php`;
   let arg1 = args[1];
   let hasInclude = false;
+  const multiArgs = getMulti(infoObj);
   if (arg1 !== undefined) {
     arg1 = arg1.toLowerCase();
 
-    if (country.includes(arg1)) {
+    if (multiArgs !== undefined) {
+      url = `${baseUrl}/filter.php?i=${multiArgs.join(`,`)}`;
+      hasInclude = true;
+    } else if (country.includes(arg1)) {
       url = `${baseUrl}/filter.php?a=${arg1}`;
       hasInclude = true;
     } else if (category.includes(arg1)) {
@@ -97,28 +121,40 @@ exports.run = async (client, msg, args, discord) => {
       hasInclude = true;
     }
   }
-
+  console.log(url);
   axios
     .get(url)
     .then((response) => {
-      try {
-        if (arg1 !== undefined && hasInclude) {
-          const mealData =
-            response.data.meals[randomInt(0, response.data.meals.length)];
-          axios
-            .get(`${baseUrl}/lookup.php?i=${mealData.idMeal}`)
-            .then((response) => {
-              const [mealObj, str] = parseData(response);
-              sendFood(msg, mealObj, str);
-            });
-        } else if (arg1 !== undefined) {
-          sMsg(msg.channel, `Unable to find ${arg1}`);
-        } else {
-          const [mealObj, str] = parseData(response);
-          sendFood(msg, mealObj, str);
+      if (response.data.meals !== null) {
+        try {
+          if (arg1 !== undefined && hasInclude) {
+            let mealData;
+            if (response.data.meals.length > 1) {
+              mealData =
+                response.data.meals[randomInt(0, response.data.meals.length)];
+            } else {
+              mealData = response.data.meals[0];
+            }
+            axios
+              .get(`${baseUrl}/lookup.php?i=${mealData.idMeal}`)
+              .then((response) => {
+                const [mealObj, str] = parseData(response);
+                sendFood(msg, mealObj, str);
+              });
+          } else if (arg1 !== undefined) {
+            sMsg(msg.channel, `Unable to find ${arg1}`);
+          } else {
+            const [mealObj, str] = parseData(response);
+            sendFood(msg, mealObj, str);
+          }
+        } catch (e) {
+          tryFail(msg.channel, e);
         }
-      } catch (e) {
-        tryFail(msg.channel, e);
+      } else {
+        sMsg(
+          msg.channel,
+          `Momma can not find a recipe with all the options: ${multiArgs}`
+        );
       }
     })
     .catch((e) => {
