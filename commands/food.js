@@ -116,10 +116,11 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       //for each ingredient in multi argument
       multiArgs.forEach((entry) => {
         //check if ingredient  is in list if not proceed
-        if (ingredients.includes(entry) !== true) {
-          arr.push(`___Below options for ${entry}___`);
+        const enLower = entry.toLowerCase();
+        if (ingredients.includes(enLower) !== true) {
+          arr.push(`___Below options for ${enLower}___`);
           //split enrty to create regix
-          const entrySplit = entry.split("");
+          const entrySplit = enLower.split("");
           const reg = new RegExp(
             `[${entrySplit[0]}][${entrySplit[1]}][${entrySplit[2]}]`
           );
