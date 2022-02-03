@@ -5,25 +5,19 @@ const {
   capFirst,
   randomWord,
 } = require("../custom_nodemods/utils.js");
+const regex = new RegExp(`[<][@]|[<][#]`);
+
 exports.run = async (client, message, args, discord, infoObj) => {
   const channelCache = client.channels.cache.get(infoObj.channelId);
   const msgCache = channelCache.messages.cache;
-  let str = ``;
+  const content = [];
   for (const [key, value] of msgCache) {
-    let val = value.content;
-    let valSplit = val.split(" ");
-    valSplit.forEach((word, i) => {
-      if (
-        (word.startsWith("<@") && word.endsWith(">")) ||
-        (word.startsWith("<#") && word.endsWith(">"))
-      ) {
-        valSplit[i] = `\n`;
-      }
-      str += ` ${valSplit.join(" ")}`;
-    });
+    if (regex.test(value.content) !== true) {
+      content.push(value.content);
+      console.log(value.content);
+    }
   }
   //
-  const sentence = markovChain(str);
-  const pick = sentence.split("\n");
-  sMsg(message.channel, `${capFirst(randomWord(pick))}.`);
+  const sentence = `${capFirst(markovChain(content.join(" ")))}.`;
+  sMsg(message.channel, sentence);
 };

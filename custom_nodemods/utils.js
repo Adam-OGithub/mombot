@@ -37,6 +37,7 @@ const markovMe = (input) => {
   const words = Object.keys(markovChain);
   let word = words[Math.floor(Math.random() * words.length)];
   let result = "";
+  console.log(words);
   for (let i = 0; i < words.length; i++) {
     result += word + " ";
     let newWord =
@@ -45,7 +46,7 @@ const markovMe = (input) => {
     if (!word || !markovChain.hasOwnProperty(word))
       word = words[Math.floor(Math.random() * words.length)];
   }
-  return result;
+  return result.split(" ").slice(0, 30).join(" ");
 };
 
 //Capitalises first letter in a string
