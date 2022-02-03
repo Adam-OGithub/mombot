@@ -78,6 +78,8 @@ exports.run = async (client, msg, args, discord) => {
         .then((res) => {
           const loc = res.data;
           const weatherDes = loc?.weather[0]?.description;
+          const lon = loc?.coord?.lon;
+          const lat = loc?.coord?.lat;
           const m = loc?.main;
           const temp = m?.temp;
           const feelsLike = m?.feels_like;
@@ -95,9 +97,10 @@ exports.run = async (client, msg, args, discord) => {
           const feelsLikeF = convertKToF(feelsLike);
           const minTempF = convertKToF(minTemp);
           const maxTempF = convertKToF(maxTemp);
+          console.log(loc);
           let isRainOrSnow = ``;
           let mommaInput = ``;
-
+          const googleMap = `https://www.google.com/maps/search/?api=1&query=${lat}%2C${lon}`;
           //Sets rain if there is rain
           if (typeOfPrecip !== undefined) {
             isRainOrSnow = `Curently ${typeOfPrecip} with ${precip} in last hour.`;
@@ -141,7 +144,9 @@ exports.run = async (client, msg, args, discord) => {
           )} Miles \n Wind direction is ${windDirection} at Speed of ${windSpeed} and gust of ${windGust} \n ${isRainOrSnow}\n ${mommaInput}`;
           const embed = makeEmbed(
             `Weather for ${city} - ${weatherDes} :${emote}:`,
-            inner
+            inner,
+            undefined,
+            googleMap
           );
 
           if (city !== undefined && m !== undefined) {
