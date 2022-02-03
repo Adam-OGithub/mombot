@@ -462,9 +462,9 @@ const emoteMsg = (messageObj, emote) => {
 };
 
 const momReact = (msg, client, infoObj) => {
-  const momEmotes = [`👾`, `👻`, `👽`, `😎`, `🧠`, `👀`, `👤`, `👁`];
+  // const momEmotes = [`👾`, `👻`, `👽`, `😎`, `🧠`, `👀`, `👤`, `👁`];
   const lastMsg = getLastMsg(msg, client, infoObj);
-  const emoteChar = randomWord(momEmotes);
+  const emoteChar = `🦸‍♀️`; //randomWord(momEmotes);
   emoteMsg(lastMsg, emoteChar);
 };
 
@@ -510,4 +510,3 @@ exports.replyMsg = replyMsg;
 exports.emoteMsg = emoteMsg;
 exports.momReact = momReact;
 exports.tryFail = tryFail;
-
