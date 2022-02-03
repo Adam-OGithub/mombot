@@ -111,7 +111,7 @@ exports.run = async (client, msg, args, discord) => {
           )}`;
           break;
         case "drink":
-          out = `{drink}\n#Momma gonna make you a strong drink.`;
+          out = `{drink} #Momma gonna make you a strong random drink.\n{drink} type #ie: ${pre}drink margarita, momma gets you a type of strong drink\n{drink} "ingredient1,ingredient2" #Momma checks her cabinet for those ingredients`;
           break;
         case "weather":
           out = `{weather}\nMomma gets weather from https://openweathermap.org/api`;
