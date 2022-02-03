@@ -76,6 +76,9 @@ const parseData = (msg, ranD) => {
   sendDrink(msg, ranD, str);
 };
 
+const error = (msg) => {
+  sMsg(msg.channel, "Unable to get you a drink..");
+};
 exports.run = async (client, msg, args, discord, infoObj) => {
   const randomLetter = randomWord(letters);
   const multiArgs = getMulti(infoObj, "drink");
@@ -94,14 +97,13 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         if (res?.data?.drinks) {
           const drinks = res?.data?.drinks;
           const ranD = randomWord(drinks);
-
           if (args[1] !== undefined && multiArgs !== undefined) {
             url = `${baseUrl}/lookup.php?i=${ranD.idDrink}`;
             axios.get(url).then((res) => {
               if (res?.data?.drinks) {
                 parseData(msg, res.data.drinks[0]);
               } else {
-                sMsg(msg.channel, "Unable to get you a drink..");
+                error(msg);
               }
             });
           } else if (args[1] !== undefined) {
@@ -110,16 +112,18 @@ exports.run = async (client, msg, args, discord, infoObj) => {
               if (res?.data?.drinks) {
                 parseData(msg, res.data.drinks[0]);
               } else {
-                sMsg(msg.channel, "Unable to get you a drink..");
+                error(msg);
               }
             });
           } else {
             parseData(msg, ranD);
           }
+        } else {
+          error(msg);
         }
       } catch (e) {
         tryFail(msg.channel, e);
-        sMsg(msg.channel, "Unable to get you a drink..");
+        error(msg);
       }
     })
     .catch((e) => {
