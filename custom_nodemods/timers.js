@@ -12,12 +12,18 @@ const config = require("../config.json");
 const axios = require("../node_modules/axios");
 
 const changeAc = async (client) => {
-  const time = setTimoutMin(5);
+  //const types = ["PLAYING", "STREAMING", "LISTENING", "WATCHING", "COMPETING"];
+  const types = ["PLAYING", "COMPETING"];
+  const time = setTimoutMin(20);
   //sets activity for bot first
-  client.user.setActivity(randomWord(botStatus));
+  client.user.setActivity(randomWord(botStatus), {
+    type: randomWord(types),
+  });
   //sets bot activity every x minutes
   setInterval(() => {
-    client.user.setActivity(randomWord(botStatus));
+    client.user.setActivity(randomWord(botStatus), {
+      type: randomWord(types),
+    });
   }, time);
 };
 

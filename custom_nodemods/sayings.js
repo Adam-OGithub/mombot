@@ -58,14 +58,51 @@ const dinner = [
   "bread",
 ];
 const games = [
-  "Halo",
-  "New Horizon",
-  "DOOM!",
-  "7 Days to Die",
-  "Among Us",
-  "ASTRONEER",
-  "Borderlands 3",
-  "Space Engineers",
+  "Street Fighter",
+  "Super Smash Bros",
+  "Marvel vs. Capcom",
+  "Tekken",
+  "Doom",
+  "Quake",
+  "Counter-Strike series",
+  "Call of Duty series",
+  "Unreal Tournament",
+  "Halo series",
+  "Painkiller",
+  "Battlefield series",
+  "CrossFire",
+  "Overwatch",
+  "Team Fortress 2",
+  "Rainbow Six: Siege",
+  "Alliance of Valiant Arms",
+  "Special Force II",
+  "StarCraft: Brood War",
+  "Warcraft III",
+  "StarCraft II",
+  "FIFA series",
+  "Madden",
+  "NBA 2K",
+  "Pro Evolution Soccer",
+  "Rocket League",
+  "iRacing",
+  "Project CARS",
+  "TrackMania",
+  "Dota 2",
+  "League of Legends",
+  "Heroes of the Storm",
+  "Heroes of Newerth",
+  "Smite",
+  "Vainglory",
+  "EndGods",
+  "Gears of War",
+  "War Thunder",
+  "World of Tanks",
+  "World of Warcraft",
+  "Hearthstone",
+  "Pokémon",
+  "Puyo Puyo",
+  "Tetris",
+  "Splatoon",
 ];
 const tvshows = ["Lifetime", "The walking dead", "The Rookie", "Dexter"];
 const people = ["Charlet", "Cheryl", "Ava", "Sophia", "Mia", "Isabella"];
@@ -78,13 +115,7 @@ const items = [
   "PUZZLES",
 ];
 
-const botStatus = [
-  "With all your data",
-  "Leave me alone",
-  "Go to your room",
-  "Candy Crush Saga",
-  ...games,
-];
+const botStatus = ["With all your data", "Candy Crush Saga", ...games];
 
 //https://and-here-is-my-code.glitch.me/
 const animalApi = [
