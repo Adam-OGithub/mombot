@@ -19,7 +19,7 @@ const sendDrink = (msg, ranD, str) => {
     ranD.strDrink,
     str,
     undefined,
-    `${baseUrl}/lookup.php?i=${ranD.idDrink}`,
+    undefined,
     ranD.strDrinkThumb
   );
   sMsg(msg.channel, embed);
