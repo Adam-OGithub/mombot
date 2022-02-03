@@ -12,6 +12,7 @@ const {
 } = require("../custom_nodemods/utils.js");
 const config = require("../config.json");
 const { millToOz } = require("../custom_nodemods/conversions.js");
+const e = require("express");
 const baseUrl = `https://www.thecocktaildb.com/api/json/v2/${config.mealdb.key}`;
 
 const sendDrink = (msg, ranD, str) => {
@@ -97,12 +98,20 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           if (args[1] !== undefined && multiArgs !== undefined) {
             url = `${baseUrl}/lookup.php?i=${ranD.idDrink}`;
             axios.get(url).then((res) => {
-              parseData(msg, res.data.drinks[0]);
+              if (res?.data?.drinks) {
+                parseData(msg, res.data.drinks[0]);
+              } else {
+                sMsg(msg.channel, "Unable to get you a drink..");
+              }
             });
           } else if (args[1] !== undefined) {
             url = `${baseUrl}/lookup.php?i=${ranD.idDrink}`;
             axios.get(url).then((res) => {
-              parseData(msg, res.data.drinks[0]);
+              if (res?.data?.drinks) {
+                parseData(msg, res.data.drinks[0]);
+              } else {
+                sMsg(msg.channel, "Unable to get you a drink..");
+              }
             });
           } else {
             parseData(msg, ranD);
