@@ -30,8 +30,8 @@ const webdb = async () => {
       const reqB = req.body;
       con.query(reqB.query, function (err, result) {
         if (err?.code) {
-          resOut.error = err;
-          cmsg(`Error=${err}`);
+          resOut.error = "Mom is broken...";
+          cmsg(`Error1=${err}`);
           //If connection is lost reset connection
           if (err.code === "PROTOCOL_CONNECTION_LOST") {
             const handleDis = () => (con = mysql.createConnection(dbConf));
@@ -45,16 +45,17 @@ const webdb = async () => {
       });
     } catch (e) {
       errmsg(e);
-      if (err?.code) {
-        resOut.error = err;
-        cmsg(`Error=${err}`);
+      resOut.error = "Mom is broken..";
+      if (e?.code) {
+        cmsg(`Error2=${e}`);
         //If connection is lost reset connection
-        if (err.code === "PROTOCOL_CONNECTION_LOST") {
+        if (e.code === "PROTOCOL_CONNECTION_LOST") {
           const handleDis = () => (con = mysql.createConnection(dbConf));
           handleDis();
           cmsg("Connection lost and reset.");
         }
       }
+      res.json(resOut);
     }
   });
 
