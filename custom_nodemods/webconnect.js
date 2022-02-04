@@ -45,6 +45,16 @@ const webdb = async () => {
       });
     } catch (e) {
       errmsg(e);
+      if (err?.code) {
+        resOut.error = err;
+        cmsg(`Error=${err}`);
+        //If connection is lost reset connection
+        if (err.code === "PROTOCOL_CONNECTION_LOST") {
+          const handleDis = () => (con = mysql.createConnection(dbConf));
+          handleDis();
+          cmsg("Connection lost and reset.");
+        }
+      }
     }
   });
 
