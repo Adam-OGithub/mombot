@@ -74,7 +74,7 @@ exports.run = async (client, msg, args, discord) => {
         },
         {
           name: "\u2800",
-          value: `${pre}momscode`,
+          value: `${pre}momscode\n${pre}getinfo`,
           inline: true,
         },
         {
@@ -151,6 +151,9 @@ exports.run = async (client, msg, args, discord) => {
           break;
         case "set":
           out = ` {set} prison #Sets prison channel.\n {set} prison_remove #Removes prison channel.\n {set} prison_role "<role name>" #Sets role used for prison.\n {set} hello #Allows to speak with other discords.\n {set} hello_remove #Removes speaking with other discords.`;
+          break;
+        case "getinfo":
+          out = `{getinfo}\n#Gets server information.`;
           break;
         case "help":
           out = `{help}\n#Get main menu for help.`;
