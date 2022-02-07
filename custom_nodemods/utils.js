@@ -322,7 +322,7 @@ const momL = (infoObj, select) => {
     end = 1;
   }
   const msgParse = (msg) => {
-    const reg = new RegExp(`[']|[$]|["]|[”]|[“]`);
+    const reg = new RegExp(`[']|[$]|["]|[”]|[“]|[;]`);
     const splitMsg = msg
       .split("")
       .map((entry) => entry.replace(reg, "^^"))
