@@ -290,7 +290,7 @@ const getIsMom = (users, client) => {
 
 //send erros message to console
 const errmsg = (e) => {
-  console.error(`\x1b[32m`, `[ERROR]: ${e.message}`);
+  console.error(`[ERROR]: ${e.message}`);
 };
 
 //Sends log to console
@@ -309,6 +309,36 @@ const getDirFiles = (dir) => {
     });
   });
   return allComs;
+};
+
+//Logging to hjelp troubleshoot issues only gets up to 7 entries of args
+const momL = (infoObj, select) => {
+  let end = 7;
+
+  if (select === "remind" || select === "set" || select === "poll") {
+    end = 100;
+  } else if (select === "weather") {
+    //removes location information by setting to 1
+    end = 1;
+  }
+  const msgParse = (msg) => {
+    const reg = new RegExp(`[']|[$]|["]|[”]|[“]`);
+    const splitMsg = msg
+      .split("")
+      .map((entry) => entry.replace(reg, "^^"))
+      .join("")
+      .split(" ")
+      .slice(0, end)
+      .join(" ");
+    return splitMsg;
+  };
+  cmsg(
+    `${infoObj.tag} ran (${select}.js) at (${new Date()}) from (${
+      infoObj.guildName
+    }.${infoObj.guildID}) in (${infoObj.channelName}.${
+      infoObj.channelId
+    }) with message (${msgParse(infoObj.msg)}).`
+  );
 };
 
 //Gets the command location and then returns the command entered
@@ -470,7 +500,7 @@ const momReact = (msg, client, infoObj) => {
 };
 
 const tryFail = (channelObj, e) => {
-  console.log(e);
+  console.log(`[TRY FAIL]: ${e}`);
   sMsg(
     channelObj,
     "Momma is having a rough day sweety,try again in a little bit."
@@ -511,3 +541,4 @@ exports.replyMsg = replyMsg;
 exports.emoteMsg = emoteMsg;
 exports.momReact = momReact;
 exports.tryFail = tryFail;
+exports.momL = momL;

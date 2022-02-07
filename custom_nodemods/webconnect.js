@@ -3,7 +3,7 @@ const mysql = require("mysql");
 const express = require("express");
 const bodyParser = require("body-parser");
 const config = require("../config.json");
-const { cmsg, errmsg } = require("../custom_nodemods/utils.js");
+const { cmsg, errmsg, tryFail } = require("../custom_nodemods/utils.js");
 const app = express();
 
 const webdb = async () => {
@@ -36,7 +36,7 @@ const webdb = async () => {
           if (err.code === "PROTOCOL_CONNECTION_LOST") {
             const handleDis = () => (con = mysql.createConnection(dbConf));
             handleDis();
-            cmsg("Connection lost and reset.");
+            cmsg("WARNING!! Connection lost and reset.");
           }
         } else {
           resOut.result = result;
@@ -52,7 +52,7 @@ const webdb = async () => {
         if (e.code === "PROTOCOL_CONNECTION_LOST") {
           const handleDis = () => (con = mysql.createConnection(dbConf));
           handleDis();
-          cmsg("Connection lost and reset.");
+          cmsg("WARNING!! Connection lost and reset.");
         }
       }
       res.json(resOut);

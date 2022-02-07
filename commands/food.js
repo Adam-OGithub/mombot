@@ -189,6 +189,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       }
     })
     .catch((e) => {
-      console.log(e);
+      tryFail(msg.channel, e);
     });
 };

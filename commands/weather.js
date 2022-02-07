@@ -6,6 +6,7 @@ const {
   sMsg,
   makeEmbed,
   tryFail,
+  errmsg,
 } = require("../custom_nodemods/utils.js");
 const {
   convertKToF,
@@ -43,7 +44,6 @@ const degToDir = (deg) => {
 exports.run = async (client, msg, args, discord) => {
   try {
     //prevents weather from crashing
-    console.log(args);
     let type = ``;
     let zipcode = ``;
     let cc = ``;
@@ -97,7 +97,6 @@ exports.run = async (client, msg, args, discord) => {
           const feelsLikeF = convertKToF(feelsLike);
           const minTempF = convertKToF(minTemp);
           const maxTempF = convertKToF(maxTemp);
-          console.log(loc);
           let isRainOrSnow = ``;
           let mommaInput = ``;
           const googleMap = `https://www.google.com/maps/search/?api=1&query=${lat}%2C${lon}`;
@@ -165,6 +164,7 @@ exports.run = async (client, msg, args, discord) => {
               `Momma is going to have to find you a new home,because ${arg1} can not be found.`
             );
           }
+          errmsg(e);
         });
     } else {
       sMsg(message, `Darling you have to tell me a location.`);

@@ -6,6 +6,7 @@ const {
   parseQuote,
   countQuote,
   tryFail,
+  errmsg,
 } = require("../custom_nodemods/utils.js");
 const config = require("../config.json");
 const axios = require("../node_modules/axios");
@@ -94,7 +95,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
                   }
                 })
                 .catch((e) => {
-                  console.log(`${e}`);
+                  errmsg(e);
                 });
             } else {
               sMsg(msg.channel, momMsg);
@@ -107,7 +108,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         }
       })
       .catch((e) => {
-        console.log(e);
+        errmsg(e);
       });
   } catch (e) {
     tryFail(msg.channel, e);

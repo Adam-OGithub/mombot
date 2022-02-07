@@ -9,6 +9,7 @@ const {
   parseQuote,
   countQuote,
   tryFail,
+  errmsg,
 } = require("../custom_nodemods/utils.js");
 const { getRoles } = require("../custom_nodemods/permissions.js");
 const config = require("../config.json");
@@ -128,7 +129,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
                       }
                     })
                     .catch((e) => {
-                      console.log(`${e}`);
+                      tryFail(msg.channel, e);
                     });
                 } else {
                   getHelp(msg.channel, "remind");
@@ -139,11 +140,11 @@ exports.run = async (client, msg, args, discord, infoObj) => {
             }
           })
           .catch((e) => {
-            console.log(e);
+            errmsg(e);
           });
       })
       .catch((e) => {
-        console.log(e);
+        errmsg(e);
       });
   } catch (e) {
     tryFail(msg.channel, e);
