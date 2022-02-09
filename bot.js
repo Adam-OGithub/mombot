@@ -27,7 +27,11 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
     const runCommand = require(`./${dir}/${select}.js`);
 
     if (message.author.bot !== true || allComs.includes(select)) {
-      momL(infoObj, select);
+      //Does not log hello as it causes to much spam in logs
+      if (select !== "hello") {
+        momL(infoObj, select);
+      }
+
       if (dir !== "momcommands") {
         momReact(message, client, infoObj);
       }
@@ -44,7 +48,7 @@ client.on("ready", () => {
   console.log(`\x1b[32m`, `${client.user.tag} is online!`);
   changeAc(client);
   reminders(client);
-  playstation5(client);
+  // playstation5(client);
 });
 
 client.on("message", (message) => {
