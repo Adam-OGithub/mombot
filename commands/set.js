@@ -119,17 +119,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
             }
 
             if (run) {
-              // axios
-              //   .post(config.web.dburl, myReq)
-              //   .then((res) => {
-              //     if (res?.data !== undefined) {
-              //       sMsg(msg.channel, momMsg);
-              //     }
-              //   })
-              //   .catch((e) => {
-              //     errmsg(e);
-              //   });
-
               if (command === "set") {
                 //
                 mongoQuery({ guildId: infoObj.guildID }, collection).then(

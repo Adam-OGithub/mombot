@@ -14,12 +14,7 @@ const {
   momReact,
   momL,
 } = require("./custom_nodemods/utils.js");
-const { webdb } = require("./custom_nodemods/webconnect.js");
-const {
-  changeAc,
-  reminders,
-  playstation5,
-} = require("./custom_nodemods/timers.js");
+const { changeAc, reminders } = require("./custom_nodemods/timers.js");
 const allComs = getDirFiles("../commands");
 //Runs commands based on args
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
@@ -44,7 +39,6 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
 
 //Start Bot and database
 client.on("ready", () => {
-  webdb();
   console.log(`\x1b[32m`, `${client.user.tag} is online!`);
   changeAc(client);
   reminders(client);
