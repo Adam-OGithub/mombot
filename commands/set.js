@@ -15,6 +15,13 @@ const {
   getRoles,
   checkRoles,
 } = require("../custom_nodemods/permissions.js");
+const {
+  mongoInsert,
+  mongoQuery,
+  mongoUpdate,
+  mongoDelete,
+} = require("../custom_nodemods/mongoCon.js");
+const { Collection } = require("discord.js");
 exports.run = async (client, msg, args, discord, infoObj) => {
   try {
     let isAdmin = false;
@@ -33,7 +40,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           }
         }
         if (isAdmin && msg.author.bot !== true) {
-          const myReq = {};
+          let query, command, collection;
           const arg1 = args[1];
           if (arg1 !== undefined) {
             let run = true;
@@ -41,11 +48,21 @@ exports.run = async (client, msg, args, discord, infoObj) => {
             let momMsg = ``;
             switch (arg) {
               case "prison":
-                myReq.query = `REPLACE INTO prison SET guildid = ${infoObj.guildID}, prisonid = ${infoObj.channelId}`;
+                query = {
+                  guildId: infoObj.guildID,
+                  prisonId: infoObj.channelId,
+                };
+                command = "set";
+                collection = "prison";
                 momMsg = `Momma has updated this channel to be the prison!`;
                 break;
               case "prison_remove":
-                myReq.query = `REPLACE INTO prison SET guildid = ${infoObj.guildID}`;
+                query = {
+                  guildId: infoObj.guildID,
+                  prisonId: infoObj.channelId,
+                };
+                command = "remove";
+                collection = "prison";
                 momMsg = `Momma has removed the prison!`;
                 break;
               case "prison_role":
@@ -56,7 +73,12 @@ exports.run = async (client, msg, args, discord, infoObj) => {
                       fArgs[1].split(" ").join("").toLowerCase() ===
                       value?.name.split(" ").join("").toLowerCase()
                     ) {
-                      myReq.query = `REPLACE INTO prison_role SET guildid = ${infoObj.guildID}, prisonRole = ${value.id}`;
+                      query = {
+                        guildId: infoObj.guildID,
+                        prisonRole: value.id,
+                      };
+                      command = "update";
+                      collection = "prison";
                       hasVal = true;
                     }
                   });
@@ -73,11 +95,21 @@ exports.run = async (client, msg, args, discord, infoObj) => {
                 }
                 break;
               case "hello":
-                myReq.query = `REPLACE INTO hello SET guildid = ${infoObj.guildID}, helloid = ${infoObj.channelId}`;
+                query = {
+                  guildId: infoObj.guildID,
+                  helloId: infoObj.channelId,
+                };
+                command = "set";
+                collection = "hello";
                 momMsg = `Momma has updated this channel to be able to speak with other discords.`;
                 break;
               case "hello_remove":
-                myReq.query = `REPLACE INTO hello SET guildid = ${infoObj.guildID}`;
+                query = {
+                  guildId: infoObj.guildID,
+                  helloId: infoObj.channelId,
+                };
+                command = "remove";
+                collection = "hello";
                 momMsg = `Momma will no longer allow other discords to speak here.`;
                 break;
               default:
@@ -87,16 +119,84 @@ exports.run = async (client, msg, args, discord, infoObj) => {
             }
 
             if (run) {
-              axios
-                .post(config.web.dburl, myReq)
-                .then((res) => {
-                  if (res?.data !== undefined) {
-                    sMsg(msg.channel, momMsg);
+              // axios
+              //   .post(config.web.dburl, myReq)
+              //   .then((res) => {
+              //     if (res?.data !== undefined) {
+              //       sMsg(msg.channel, momMsg);
+              //     }
+              //   })
+              //   .catch((e) => {
+              //     errmsg(e);
+              //   });
+
+              if (command === "set") {
+                //
+                mongoQuery({ guildId: infoObj.guildID }, collection).then(
+                  (res) => {
+                    if (res.length === 0) {
+                      mongoInsert(query, collection).then((res) => {
+                        console.log(res);
+                        if (res.acknowledged) {
+                          sMsg(msg.channel, momMsg);
+                        } else {
+                          sMsg(msg.channel, `Unable to set ${arg}.`);
+                        }
+                      });
+                    } else if (res.length > 0) {
+                      sMsg(
+                        msg.channel,
+                        `${arg} already exists please remove before setting.`
+                      );
+                    }
                   }
-                })
-                .catch((e) => {
-                  errmsg(e);
-                });
+                );
+              } else if (command === "remove") {
+                mongoQuery({ guildId: infoObj.guildID }, collection).then(
+                  (res) => {
+                    if (res.length === 0) {
+                      sMsg(
+                        msg.channel,
+                        `${arg}  does exists please create before removing`
+                      );
+                    } else {
+                      mongoDelete(
+                        { guildId: infoObj.guildID },
+                        collection
+                      ).then((res) => {
+                        if (res.acknowledged) {
+                          sMsg(msg.channel, momMsg);
+                        } else {
+                          sMsg(msg.channel, `Unable to remove ${arg}.`);
+                        }
+                      });
+                    }
+                  }
+                );
+              } else if (command === "update") {
+                mongoQuery({ guildId: infoObj.guildID }, collection).then(
+                  (res) => {
+                    if (res.length === 0) {
+                      sMsg(
+                        msg.channel,
+                        `${arg}  does exists please create before removing`
+                      );
+                    } else {
+                      mongoUpdate(
+                        { guildId: infoObj.guildID },
+                        { $set: query },
+                        collection
+                      ).then((res) => {
+                        if (res.acknowledged) {
+                          sMsg(msg.channel, momMsg);
+                        } else {
+                          sMsg(msg.channel, `Unable to update ${arg}.`);
+                        }
+                      });
+                    }
+                  }
+                );
+              }
             } else {
               sMsg(msg.channel, momMsg);
             }
