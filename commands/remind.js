@@ -3,7 +3,6 @@ const {
   sMsg,
   getHelp,
   getChannel,
-  getPre,
   parseUsrChan,
   exceptions,
   parseQuote,
@@ -12,7 +11,6 @@ const {
   errmsg,
 } = require("../custom_nodemods/utils.js");
 const { getRoles } = require("../custom_nodemods/permissions.js");
-const config = require("../config.json");
 const { mongoQuery, mongoInsert } = require("../custom_nodemods/mongoCon.js");
 
 exports.run = async (client, msg, args, discord, infoObj) => {
@@ -23,8 +21,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         const reminder = {};
         let query;
         let count = 0;
-
-        myReq.query = `SELECT prisonRole FROM prison_role WHERE guildid = ${infoObj.guildID}`;
         mongoQuery({ guildId: infoObj.guildID }, "prison").then((res) => {
           console.log(res[0].prisonRole);
           if (res[0].prisonRole !== undefined) {
@@ -114,24 +110,22 @@ exports.run = async (client, msg, args, discord, infoObj) => {
                     .join("");
                   return msgArr;
                 };
-                myReq.query = `INSERT INTO remind (guildid,userid,names,channels,message,time) VALUES (${
-                  infoObj.guildID
-                },"${infoObj.tag}","${cleanMsg(reminder.users)}","${cleanMsg(
-                  reminder.channels
-                )}","${cleanMsg(reminder.msg)}",${reminder.future}) `;
+                query = {
+                  guildId: infoObj.guildID,
+                  posterId: infoObj.tag,
+                  users: cleanMsg(reminder.users),
+                  channels: cleanMsg(reminder.channels),
+                  message: cleanMsg(reminder.msg),
+                  time: reminder.future,
+                };
 
-                query = axios
-                  .post(config.web.dburl, myReq)
-                  .then((res) => {
-                    if (res?.data !== undefined) {
-                      sMsg(msg.channel, "Reminder added!");
-                    } else {
-                      sMsg(msg.channel, "Reminder not added.");
-                    }
-                  })
-                  .catch((e) => {
-                    tryFail(msg.channel, e);
-                  });
+                mongoInsert(query, "reminders").then((res) => {
+                  if (res.acknowledged) {
+                    sMsg(msg.channel, "Reminder added!");
+                  } else {
+                    sMsg(msg.channel, "Reminder not added.");
+                  }
+                });
               } else {
                 getHelp(msg.channel, "remind");
               }
