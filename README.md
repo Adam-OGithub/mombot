@@ -48,37 +48,9 @@ Version 16.13.1 is recommended
 
 }
 
-# Database - Tables / Columns
+# Database - Mongo
 
-guild {
-guildid
-name
-owner  
-PRIMARY KEY (guildid)
-}
-
-prison {
-guildid
-prisonid  
-PRIMARY KEY (guildid)  
-}
-
-hello {
-guildid
-helloid
-PRIMARY KEY (guildid)  
-}
-
-remind {
-id  
- guildid  
- userid  
- names  
- channels  
- message  
- time  
- PRIMARY KEY (id)
-}
+- Mongo auto creates collections and inserts info.
 
 # Add MOM without the hassel
 

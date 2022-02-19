@@ -14,7 +14,6 @@ exports.run = async (client, message, args, discord, infoObj) => {
   for (const [key, value] of msgCache) {
     if (regex.test(value.content) !== true) {
       content.push(value.content);
-      console.log(value.content);
     }
   }
   //

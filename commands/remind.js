@@ -22,11 +22,8 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         let query;
         let count = 0;
         mongoQuery({ guildId: infoObj.guildID }, "prison").then((res) => {
-          console.log(res[0].prisonRole);
           if (res[0].prisonRole !== undefined) {
-            console.log(res[0].prisonRole);
             roleObj.roles.forEach((role) => {
-              console.log(role);
               if (role === res[0].prisonRole) {
                 isInPrison = true;
               }

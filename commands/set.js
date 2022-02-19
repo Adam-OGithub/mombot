@@ -8,8 +8,6 @@ const {
   tryFail,
   errmsg,
 } = require("../custom_nodemods/utils.js");
-const config = require("../config.json");
-const axios = require("../node_modules/axios");
 const {
   perms,
   getRoles,
@@ -21,7 +19,6 @@ const {
   mongoUpdate,
   mongoDelete,
 } = require("../custom_nodemods/mongoCon.js");
-const { Collection } = require("discord.js");
 exports.run = async (client, msg, args, discord, infoObj) => {
   try {
     let isAdmin = false;
@@ -125,7 +122,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
                   (res) => {
                     if (res.length === 0) {
                       mongoInsert(query, collection).then((res) => {
-                        console.log(res);
                         if (res.acknowledged) {
                           sMsg(msg.channel, momMsg);
                         } else {

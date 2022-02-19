@@ -1,25 +1,35 @@
 "use strict";
-const config = require("../config.json");
 const { sMsg, makeEmbed } = require("../custom_nodemods/utils.js");
 const { mongoQuery } = require("../custom_nodemods/mongoCon.js");
-const axios = require("../node_modules/axios");
+
 exports.run = async (client, message, args, discord, infoObj) => {
-  let query;
   const guildIds = [];
   const channelsObj = [];
-  mongoQuery({ guildId: infoObj.guildID }, "hello").then((res) => {
-    if (res.length === 0) {
+  //checks if current guild has hello enabled
+  mongoQuery({ guildId: infoObj.guildID }, "hello").then((res1) => {
+    if (res1.length === 0) {
       //do nothing as channel does not exist for hello
     } else {
       //
-      if (res[0].helloId === infoObj.channelId && message.author.bot !== true) {
-        for (const [key, value] of client.guilds.cache) {
-          guildIds.push(client.guilds.cache.get(key));
-        }
-        mongoQuery({ getAll: undefined }, "hello").then((res) => {
-          res.forEach((result, i) => {
-            channelsObj.push(guildIds[i].channels.cache.get(result.helloId));
+      if (
+        res1[0].helloId === infoObj.channelId &&
+        message.author.bot !== true
+      ) {
+        //search all hello guilds
+        mongoQuery({ getAll: undefined }, "hello").then((res2) => {
+          for (const [key, value] of client.guilds.cache) {
+            guildIds.push(client.guilds.cache.get(key));
+          }
+          //for each guild in cache check if channel is in that guild
+          guildIds.forEach((guild) => {
+            res2.forEach((entry) => {
+              let check = guild.channels.cache.get(entry.helloId);
+              if (check !== undefined) {
+                channelsObj.push(check);
+              }
+            });
           });
+          //for each channels found send message but not in the same channel originated from
           channelsObj.forEach((channelObj) => {
             if (channelObj?.id && channelObj?.id !== infoObj?.channelId) {
               const embeded = makeEmbed(
