@@ -15,10 +15,10 @@ const { millToOz } = require("../custom_nodemods/conversions.js");
 const e = require("express");
 const baseUrl = `https://www.thecocktaildb.com/api/json/v2/${config.mealdb.key}`;
 
-const sendDrink = (msg, ranD, str) => {
+const sendDrink = (msg, ranD, str, allDrinksArr) => {
   const embed = makeEmbed(
     ranD.strDrink,
-    str,
+    str + `\n#of results ${allDrinksArr.length}`,
     undefined,
     undefined,
     ranD.strDrinkThumb
@@ -43,7 +43,7 @@ const getMulti = (infoObj, cmd) => {
   }
 };
 
-const parseData = (msg, ranD) => {
+const parseData = (msg, ranD, allDrinksArr) => {
   const ingredients = [];
   const amounts = [];
   let str = `${ranD.strInstructions}\n\n__Ingredients__\n`;
@@ -73,7 +73,7 @@ const parseData = (msg, ranD) => {
     }
     str += `${ingredient}: ${getAmount}\n`;
   });
-  sendDrink(msg, ranD, str);
+  sendDrink(msg, ranD, str, allDrinksArr);
 };
 
 const error = (msg) => {
@@ -101,7 +101,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
             url = `${baseUrl}/lookup.php?i=${ranD.idDrink}`;
             axios.get(url).then((res) => {
               if (res?.data?.drinks) {
-                parseData(msg, res.data.drinks[0]);
+                parseData(msg, res.data.drinks[0], res.data.drinks);
               } else {
                 error(msg);
               }
@@ -110,13 +110,13 @@ exports.run = async (client, msg, args, discord, infoObj) => {
             url = `${baseUrl}/lookup.php?i=${ranD.idDrink}`;
             axios.get(url).then((res) => {
               if (res?.data?.drinks) {
-                parseData(msg, res.data.drinks[0]);
+                parseData(msg, res.data.drinks[0], res.data.drinks);
               } else {
                 error(msg);
               }
             });
           } else {
-            parseData(msg, ranD);
+            parseData(msg, ranD, res.data.drinks);
           }
         } else {
           error(msg);
