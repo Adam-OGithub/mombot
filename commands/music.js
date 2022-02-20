@@ -86,6 +86,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         queue.set(infoObj.guildID, queueContruct);
         play(infoObj.guildID, queueContruct.songs[0]);
         //removes mom from channel if queue is empty
+        console.log(queueContruct);
         const checkQueue = setInterval(() => {
           if (serverQueue === undefined || serverQueue.songs.length === 0) {
             clearInterval(checkQueue);
