@@ -1,6 +1,7 @@
 "use strict";
 const ytdl = require(`../node_modules/ytdl-core`);
 const fT = require("ffmpeg-static");
+console.log(fT);
 const { tryFail, sMsg, errmsg } = require("../custom_nodemods/utils.js");
 const queue = new Map();
 const play = (guildid, song) => {
