@@ -6,6 +6,8 @@ const queue = new Map();
 const play = (guildid, song) => {
   try {
     const serverQueue = queue.get(guildid);
+    console.log(`===============PLAY===============`);
+    console.log(serverQueue);
     const dispatcher = serverQueue.connection
       .play(
         ytdl(song.url, {
@@ -30,6 +32,7 @@ const play = (guildid, song) => {
     serverQueue.textChannel.send(`🎵 Playing: **${song.title}**`);
   } catch (e) {
     //nothing
+    errmsg(e);
   }
 };
 
