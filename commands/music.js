@@ -1,13 +1,11 @@
 "use strict";
 const ytdl = require(`../node_modules/ytdl-core`);
-const fStatic = require("ffmpeg-static");
+require("ffmpeg-static");
 const { tryFail, sMsg, errmsg } = require("../custom_nodemods/utils.js");
 const queue = new Map();
 const play = (guildid, song) => {
   try {
     const serverQueue = queue.get(guildid);
-    console.log(`===============PLAY===============`);
-    console.log(serverQueue);
     const dispatcher = serverQueue.connection
       .play(
         ytdl(song.url, {
@@ -89,7 +87,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         queue.set(infoObj.guildID, queueContruct);
         play(infoObj.guildID, queueContruct.songs[0]);
         //removes mom from channel if queue is empty
-        console.log(queueContruct);
         const checkQueue = setInterval(() => {
           if (serverQueue === undefined || serverQueue.songs.length === 0) {
             clearInterval(checkQueue);
