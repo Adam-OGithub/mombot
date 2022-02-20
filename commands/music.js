@@ -61,16 +61,12 @@ const getSong = (info) => {
   return song;
 };
 
-const stopMom = (serverQueue, voiceChannel) => {
+const stopMom = (serverQueue) => {
   try {
-    if (serverQ === undefined) {
-      voiceChannel.leave();
-    } else {
-      serverQueue.voiceChannel.leave();
-      serverQueue.songs = [];
-      queue.delete(serverQueue.guild);
-      serverQueue.connection.dispatcher.end();
-    }
+    serverQueue.voiceChannel.leave();
+    serverQueue.songs = [];
+    queue.delete(serverQueue.guild);
+    serverQueue.connection.dispatcher.end();
   } catch (e) {
     errmsg(e);
   }
