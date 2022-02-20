@@ -6,6 +6,13 @@ const queue = new Map();
 const play = (guildid, song) => {
   try {
     const serverQueue = queue.get(guildid);
+    console.log(
+      ytdl(song.url, {
+        filter: "audioonly",
+        type: "opus",
+        audioQuality: "highestaudio",
+      })
+    );
     const dispatcher = serverQueue.connection
       .play(
         ytdl(song.url, {
