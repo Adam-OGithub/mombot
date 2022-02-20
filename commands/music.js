@@ -22,6 +22,7 @@ const play = (guildid, song, msg) => {
       .on("finish", () => {
         serverQueue.songs.shift();
         if (serverQueue.songs.length === 0) {
+          sMsg(msg.channel, `No songs in queue mom is leaving.`);
           serverQueue.voiceChannel.leave();
           queue.delete(guildid);
         } else {
