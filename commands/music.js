@@ -4,20 +4,33 @@ const fStatic = require("ffmpeg-static");
 const { tryFail, sMsg, errmsg } = require("../custom_nodemods/utils.js");
 const queue = new Map();
 const play = (guildid, song) => {
-  const serverQueue = queue.get(guildid);
-  const dispatcher = serverQueue.connection
-    .play(
-      ytdl(song.url, {
-        filter: "audioonly",
-        type: "opus",
-        audioQuality: "highestaudio",
+  try {
+    const serverQueue = queue.get(guildid);
+    const dispatcher = serverQueue.connection
+      .play(
+        ytdl(song.url, {
+          filter: "audioonly",
+          type: "opus",
+          audioQuality: "highestaudio",
+        })
+      )
+      .on("finish", () => {
+        serverQueue.songs.shift();
+        if (serverQueue.songs.length === 0) {
+          queue.delete(guildid);
+        } else {
+          play(guildid, serverQueue.songs[0]);
+        }
       })
-    )
-    .on("error", (err) => {
-      return errmsg(err);
-    });
-  dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-  serverQueue.textChannel.send(`🎵 Playing: **${song.title}**`);
+      .on("error", (err) => {
+        stopMom(serverQueue);
+        return errmsg(err);
+      });
+    dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+    serverQueue.textChannel.send(`🎵 Playing: **${song.title}**`);
+  } catch (e) {
+    //nothing
+  }
 };
 
 const getSong = (info) => {
@@ -31,6 +44,13 @@ const getSong = (info) => {
     category: vD?.category,
   };
   return song;
+};
+
+const stopMom = (serverQueue) => {
+  serverQueue.songs = [];
+  serverQueue.connection.dispatcher.end();
+  serverQueue.voiceChannel.leave();
+  queue.delete(serverQueue.guild);
 };
 
 exports.run = async (client, msg, args, discord, infoObj) => {
@@ -56,23 +76,32 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           voiceChannel: voiceChannel,
           connection: null,
           songs: [],
-          volume: 5,
+          volume: 3,
           playing: true,
+          guild: infoObj.guildID,
         };
         queueContruct.songs.push(song);
         const connection = await voiceChannel.join();
         queueContruct.connection = connection;
         queue.set(infoObj.guildID, queueContruct);
         play(infoObj.guildID, queueContruct.songs[0]);
+        //removes mom from channel if queue is empty
+        const checkQueue = setInterval(() => {
+          if (serverQueue === undefined || serverQueue.songs.length === 0) {
+            clearInterval(checkQueue);
+          }
+        }, 60 * 1000);
       } else if (arg === "skip" && serverQueue !== undefined) {
         serverQueue.connection.dispatcher.end();
         serverQueue.songs.shift();
-        play(infoObj.guildID, serverQueue.songs[0]);
+        if (serverQueue.songs.length === 0) {
+          sMsg(msg.channel, `No songs in queue mom is leaving.`);
+          serverQueue.voiceChannel.leave();
+        } else {
+          play(infoObj.guildID, serverQueue.songs[0]);
+        }
       } else if (arg === "stop" && serverQueue !== undefined) {
-        serverQueue.songs = [];
-        serverQueue.connection.dispatcher.end();
-        serverQueue.voiceChannel.leave();
-        queue.delete(infoObj.guildID);
+        stopMom(serverQueue);
       } else if (arg === "add" && serverQueue !== undefined) {
         const info = await ytdl.getInfo(url);
         const song = getSong(info);
@@ -80,8 +109,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       }
     }
   } catch (e) {
-    serverQueue.voiceChannel.leave();
-    queue.delete(infoObj.guildID);
     tryFail(msg.channel, e);
   }
 };

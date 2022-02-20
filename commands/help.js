@@ -59,7 +59,7 @@ exports.run = async (client, msg, args, discord) => {
         },
         {
           name: "\u2800",
-          value: `${pre}drink\n${pre}joke`,
+          value: `${pre}drink\n${pre}joke\n${pre}music`,
           inline: true,
         },
         {
@@ -155,9 +155,13 @@ exports.run = async (client, msg, args, discord) => {
         case "getinfo":
           out = `{getinfo}\n#Gets server information.`;
           break;
+        case "music":
+          out = `{play} youtubeUrl #Plays a video from youtube.\n{add} youtubeUrl #Adds a song to queue list\n{skip} #Skips to the next song in the queue\n {stop} #Clears queue and stops mom\n\n#MOMS music is AD FREE!`;
+          break;
         case "help":
           out = `{help}\n#Get main menu for help.`;
           break;
+
         default:
           out = `Sweety you sure you have that right? Try (${pre}help mainCommand) instead.`;
           break;
