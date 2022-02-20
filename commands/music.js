@@ -1,10 +1,14 @@
 "use strict";
 const ytdl = require(`../node_modules/ytdl-core`);
 const fT = require("ffmpeg-static");
-console.log(fT);
-const { tryFail, sMsg, errmsg } = require("../custom_nodemods/utils.js");
+const {
+  tryFail,
+  sMsg,
+  errmsg,
+  makeEmbed,
+} = require("../custom_nodemods/utils.js");
 const queue = new Map();
-const play = (guildid, song) => {
+const play = (guildid, song, msg) => {
   try {
     const serverQueue = queue.get(guildid);
     const dispatcher = serverQueue.connection
@@ -18,6 +22,7 @@ const play = (guildid, song) => {
       .on("finish", () => {
         serverQueue.songs.shift();
         if (serverQueue.songs.length === 0) {
+          serverQueue.voiceChannel.leave();
           queue.delete(guildid);
         } else {
           play(guildid, serverQueue.songs[0]);
@@ -28,7 +33,14 @@ const play = (guildid, song) => {
         return errmsg(err);
       });
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-    serverQueue.textChannel.send(`🎵 Playing: **${song.title}**`);
+    const embed = makeEmbed(
+      `**${song.title}**`,
+      `🎵 🎵 🎵 🎵 `,
+      undefined,
+      song.url
+    );
+    serverQueue.textChannel.send(embed);
+    msg.delete();
   } catch (e) {
     //nothing
     errmsg(e);
@@ -48,11 +60,19 @@ const getSong = (info) => {
   return song;
 };
 
-const stopMom = (serverQueue) => {
-  serverQueue.songs = [];
-  serverQueue.connection.dispatcher.end();
-  serverQueue.voiceChannel.leave();
-  queue.delete(serverQueue.guild);
+const stopMom = (serverQueue, voiceChannel) => {
+  try {
+    if (serverQ === undefined) {
+      voiceChannel.leave();
+    } else {
+      serverQueue.voiceChannel.leave();
+      serverQueue.songs = [];
+      queue.delete(serverQueue.guild);
+      serverQueue.connection.dispatcher.end();
+    }
+  } catch (e) {
+    errmsg(e);
+  }
 };
 
 exports.run = async (client, msg, args, discord, infoObj) => {
@@ -86,13 +106,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         const connection = await voiceChannel.join();
         queueContruct.connection = connection;
         queue.set(infoObj.guildID, queueContruct);
-        play(infoObj.guildID, queueContruct.songs[0]);
-        //removes mom from channel if queue is empty
-        const checkQueue = setInterval(() => {
-          if (serverQueue === undefined || serverQueue.songs.length === 0) {
-            clearInterval(checkQueue);
-          }
-        }, 60 * 1000);
+        play(infoObj.guildID, queueContruct.songs[0], msg);
       } else if (arg === "skip" && serverQueue !== undefined) {
         serverQueue.connection.dispatcher.end();
         serverQueue.songs.shift();
