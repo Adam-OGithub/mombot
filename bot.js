@@ -9,7 +9,6 @@ const {
   getCommand,
   getIsMom,
   errmsg,
-  cmsg,
   getDirFiles,
   getToken,
   momReact,
@@ -21,7 +20,7 @@ const allComs = getDirFiles("../commands");
 //Runs commands based on args
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
   try {
-    const disabled = ["music"];
+    const disabled = [];
     if (
       disabled.includes(select.toLowerCase()) &&
       config.testing.usedev !== true

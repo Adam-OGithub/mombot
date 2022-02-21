@@ -6,13 +6,14 @@ const {
   sMsg,
   errmsg,
   makeEmbed,
+  getPre,
 } = require("../custom_nodemods/utils.js");
 const queue = new Map();
 
-const embedFormat = (song) => {
+const embedFormat = (song, custom = "Playing song..") => {
   const embed = makeEmbed(
     `**${song.title}**`,
-    `🎵 🎵 🎵 🎵 `,
+    `🎵 🎵 ***${custom}*** 🎵 🎵 \n `,
     undefined,
     song.url
   );
@@ -32,37 +33,38 @@ const play = (guildid, song, msg) => {
       .on("finish", () => {
         serverQueue.songs.shift();
         if (serverQueue.songs.length === 0) {
-          sMsg(msg.channel, `No songs in queue mom is leaving.`);
+          sMsg(serverQueue.textChannel, `No songs in queue mom is leaving.`);
           serverQueue.voiceChannel.leave();
-          queue.delete(guildid);
+          queue.delete(serverQueue.guild);
         } else {
-          play(guildid, serverQueue.songs[0]);
-          const embed = embedFormat(songs[0].song);
+          play(serverQueue.guild, serverQueue.songs[0]);
+          const embed = embedFormat(serverQueue.songs[0], `Now Playing...`);
           serverQueue.textChannel.send(embed);
         }
       })
       .on("error", (err) => {
         console.log(err);
-        // const reg = new RegExp(`[a][b][o][r][t]`);
-        // const aborted = err.toLowerCase();
-        // if (reg.test(aborted)) {
-        //   serverQueue.songs.shift();
-        //   if (serverQueue.songs.length === 0) {
-        //     sMsg(msg.channel, `No songs in queue mom is leaving.`);
-        //     serverQueue.voiceChannel.leave();
-        //     queue.delete(guildid);
-        //   } else {
-        //     play(guildid, serverQueue.songs[0]);
-        //   }
-        // } else {
-        //   stopMom(serverQueue);
-        //   return errmsg(err);
-        // }
+        if (err.code === `ECONNRESET`) {
+          serverQueue.songs.shift();
+          if (serverQueue.songs.length === 0) {
+            sMsg(serverQueue.textChannel, `No songs in queue mom is leaving.`);
+            serverQueue.voiceChannel.leave();
+            queue.delete(serverQueue.guild);
+          } else {
+            play(serverQueue.guild, serverQueue.songs[0]);
+          }
+        } else {
+          stopMom(serverQueue);
+          return errmsg(err);
+        }
       });
+
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
     const embed = embedFormat(song);
     serverQueue.textChannel.send(embed);
-    msg.delete();
+    if (msg !== undefined) {
+      msg.delete();
+    }
   } catch (e) {
     //nothing
     errmsg(e);
@@ -145,12 +147,21 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         const info = await ytdl.getInfo(url);
         const song = getSong(info);
         serverQueue.songs.push(song);
-        const embed = embedFormat(song);
+        const embed = embedFormat(song, `Added to queue!`);
         sMsg(msg.channel, embed);
         msg.delete();
+      } else {
+        sMsg(msg.channel, `Must use play before ${arg} ${getPre()}help music `);
       }
     }
   } catch (e) {
-    tryFail(msg.channel, e);
+    const eSplit = e.toString().toLowerCase().split(" ");
+    if (eSplit.includes("no") && eSplit.includes("video")) {
+      sMsg(msg.channel, `No video id found`);
+    } else if (eSplit.includes("not") && eSplit.includes("youtube")) {
+      sMsg(msg.channel, `Not a Youtube domain`);
+    } else {
+      tryFail(msg.channel, e);
+    }
   }
 };
