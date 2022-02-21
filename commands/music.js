@@ -22,6 +22,7 @@ const embedFormat = (song, custom = "Playing song..") => {
 const play = (guildid, song, msg) => {
   try {
     const serverQueue = queue.get(guildid);
+
     const dispatcher = serverQueue.connection
       .play(
         ytdl(song.url, {
@@ -38,8 +39,6 @@ const play = (guildid, song, msg) => {
           queue.delete(serverQueue.guild);
         } else {
           play(serverQueue.guild, serverQueue.songs[0]);
-          const embed = embedFormat(serverQueue.songs[0], `Now Playing...`);
-          serverQueue.textChannel.send(embed);
         }
       })
       .on("error", (err) => {
@@ -60,7 +59,7 @@ const play = (guildid, song, msg) => {
       });
 
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-    const embed = embedFormat(song);
+    const embed = embedFormat(serverQueue.songs[0], `Now Playing...`);
     serverQueue.textChannel.send(embed);
     if (msg !== undefined) {
       //msg.delete();
