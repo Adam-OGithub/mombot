@@ -63,7 +63,7 @@ const play = (guildid, song, msg) => {
     const embed = embedFormat(song);
     serverQueue.textChannel.send(embed);
     if (msg !== undefined) {
-      msg.delete();
+      //msg.delete();
     }
   } catch (e) {
     //nothing
@@ -149,7 +149,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         serverQueue.songs.push(song);
         const embed = embedFormat(song, `Added to queue!`);
         sMsg(msg.channel, embed);
-        msg.delete();
+        //msg.delete();
       } else {
         sMsg(msg.channel, `Must use play before ${arg} ${getPre()}help music `);
       }
