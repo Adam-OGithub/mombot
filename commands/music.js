@@ -8,6 +8,16 @@ const {
   makeEmbed,
 } = require("../custom_nodemods/utils.js");
 const queue = new Map();
+
+const embedFormat = (song) => {
+  const embed = makeEmbed(
+    `**${song.title}**`,
+    `🎵 🎵 🎵 🎵 `,
+    undefined,
+    song.url
+  );
+  return embed;
+};
 const play = (guildid, song, msg) => {
   try {
     const serverQueue = queue.get(guildid);
@@ -27,19 +37,30 @@ const play = (guildid, song, msg) => {
           queue.delete(guildid);
         } else {
           play(guildid, serverQueue.songs[0]);
+          const embed = embedFormat(songs[0].song);
+          serverQueue.textChannel.send(embed);
         }
       })
       .on("error", (err) => {
-        stopMom(serverQueue);
-        return errmsg(err);
+        console.log(err);
+        // const reg = new RegExp(`[a][b][o][r][t]`);
+        // const aborted = err.toLowerCase();
+        // if (reg.test(aborted)) {
+        //   serverQueue.songs.shift();
+        //   if (serverQueue.songs.length === 0) {
+        //     sMsg(msg.channel, `No songs in queue mom is leaving.`);
+        //     serverQueue.voiceChannel.leave();
+        //     queue.delete(guildid);
+        //   } else {
+        //     play(guildid, serverQueue.songs[0]);
+        //   }
+        // } else {
+        //   stopMom(serverQueue);
+        //   return errmsg(err);
+        // }
       });
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-    const embed = makeEmbed(
-      `**${song.title}**`,
-      `🎵 🎵 🎵 🎵 `,
-      undefined,
-      song.url
-    );
+    const embed = embedFormat(song);
     serverQueue.textChannel.send(embed);
     msg.delete();
   } catch (e) {
@@ -77,14 +98,19 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     //
     const serverQueue = queue.get(infoObj.guildID);
     const arg = args[1];
-
     //If no queue exists go through process of creating one
     const voiceChannel = msg.member.voice.channel;
+    const perms = voiceChannel.permissionsFor(msg.client.user);
     const url = args[2];
     if (!voiceChannel) {
       sMsg(
         msg.channel,
         "Honey, Momma ain't gunna play you music if you do not want to hear it.So get your rear in a voice channel."
+      );
+    } else if (!perms.has("CONNECT") || !perms.has("SPEAK")) {
+      sMsg(
+        msg.channel,
+        "I need the permissions to join and speak in your voice channel!"
       );
     } else {
       if (arg === "play" && serverQueue === undefined) {
@@ -119,6 +145,9 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         const info = await ytdl.getInfo(url);
         const song = getSong(info);
         serverQueue.songs.push(song);
+        const embed = embedFormat(song);
+        sMsg(msg.channel, embed);
+        msg.delete();
       }
     }
   } catch (e) {
