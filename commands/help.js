@@ -156,7 +156,7 @@ exports.run = async (client, msg, args, discord) => {
           out = `{getinfo}\n#Gets server information.`;
           break;
         case "music":
-          out = `{play} youtubeUrl #Plays a video from youtube.\n{add} youtubeUrl #Adds a song to queue list\n{skip} #Skips to the next song in the queue\n {stop} #Clears queue and stops mom\n\n#MOMS music is AD FREE!`;
+          out = `{play} youtubeUrl #Plays a video from youtube.\n{add} youtubeUrl #Adds a song to queue list\n{skip} #Skips to the next song in the queue\n{stop} #Clears queue and stops mom\n{repeat} #Adds current song to next song\n\n#MOMS music is AD FREE!`;
           break;
         case "help":
           out = `{help}\n#Get main menu for help.`;

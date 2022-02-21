@@ -32,6 +32,7 @@ const play = (guildid, song, msg) => {
         })
       )
       .on("finish", () => {
+        serverQueue.lastsong = serverQueue.songs[0];
         serverQueue.songs.shift();
         if (serverQueue.songs.length === 0) {
           sMsg(serverQueue.textChannel, `No songs in queue mom is leaving.`);
@@ -60,6 +61,7 @@ const play = (guildid, song, msg) => {
 
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
     const embed = embedFormat(serverQueue.songs[0], `Now Playing...`);
+    serverQueue.currentsong = serverQueue.songs[0];
     serverQueue.textChannel.send(embed);
     if (msg !== undefined) {
       //msg.delete();
@@ -125,6 +127,8 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           volume: 3,
           playing: true,
           guild: infoObj.guildID,
+          lastsong: null,
+          currentsong: null,
         };
         queueContruct.songs.push(song);
         const connection = await voiceChannel.join();
@@ -149,6 +153,13 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         const embed = embedFormat(song, `Added to queue!`);
         sMsg(msg.channel, embed);
         //msg.delete();
+      } else if (arg === "repeat" && serverQueue !== undefined) {
+        serverQueue.songs.unshift(serverQueue.currentsong);
+        const embed = embedFormat(
+          serverQueue.currentsong,
+          `Repeat added to queue!`
+        );
+        sMsg(msg.channel, embed);
       } else {
         sMsg(msg.channel, `Must use play before ${arg} ${getPre()}help music `);
       }
