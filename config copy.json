@@ -1,0 +1,27 @@
+{
+  "prefix": "$",
+  "color": "RANDOM",
+  "testing": {
+    "usedev": false,
+    "prefix": "!"
+  },
+  "tokens": {
+    "dev": "xxxxx",
+    "prod": "xxxxx",
+    "weather": "xxxxx"
+  },
+  "oxford": {
+    "appid": "xxxxx",
+    "key": "xxxxx"
+  },
+  "getproxy": {
+    "host": "xxxxx",
+    "key": "xxxxx"
+  },
+  "mealdb": {
+    "key": "xxxxx"
+  },
+  "database": {
+    "name": "xxxxx"
+  }
+}
