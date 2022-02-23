@@ -8,36 +8,7 @@ Version 16.13.1 is recommended
 
 # Config file - config.json
 
-- Location is main directory
-- Name: config.json
-
-  {
-  "prefix": "$",
-  "color": "RANDOM",
-  "testing": {
-  "usedev": false,
-  "prefix": "!"
-  },
-  "tokens": {
-  "dev": "xxxxx",
-  "prod": "xxxxx",
-  "weather": "xxxx"
-  },
-  "oxford": {
-  "appid": "xxxx",
-  "key": "xxxx"
-  },
-  "getproxy": {
-  "host": "xxxx",
-  "key": "xxxxxx"
-  },
-  "mealdb": {
-  "key": "xxxx"
-  },
-  "database": {
-  "name": "xxxx"
-  }
-  }
+- Need to rename "config copy.json" to "config.json"
 
 # Database - Mongo
 
