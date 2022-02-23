@@ -140,7 +140,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         serverQueue.songs.shift();
         if (serverQueue.songs.length === 0) {
           sMsg(msg.channel, `No songs in queue mom is leaving.`);
-          serverQueue.voiceChannel.leave();
+          stopMom(serverQueue);
         } else {
           play(infoObj.guildID, serverQueue.songs[0]);
         }
