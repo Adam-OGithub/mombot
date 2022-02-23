@@ -6,47 +6,38 @@ A discord bot for mom
 
 Version 16.13.1 is recommended
 
-# Config file - config.js
+# Config file - config.json
 
-{
-"prefix": "$",
-"color": "RANDOM",
-"testing": {
-"usedev": true,
-"prefix": "!"
-},
-"tokens": {
-"dev": "botdevtoken",
-"prod": "botprodtoken",
-"weather": "weathertoken"
-},
-"sql": {
-"host": "localhost",
-"username": "username",
-"password": "password",
-"database": "database"
-},
-"web": {
-"url": "url",
-"port": portnum,
-"dburl": "dburl/url"
-},
-"ps5": {
-"guildId": "guildId which is also mainchannelid"
-},
-"oxford": {
-"appid": "appid",
-"key": "appkey"
-},
-"getproxy": {
-"host": "hostname",
-"key": "key"
-},
-"mealdb": {
-"key": "key"
-}
+- Location is main directory
+- Name: config.json
 
-}
+  {
+  "prefix": "$",
+  "color": "RANDOM",
+  "testing": {
+  "usedev": false,
+  "prefix": "!"
+  },
+  "tokens": {
+  "dev": "xxxxx",
+  "prod": "xxxxx",
+  "weather": "xxxx"
+  },
+  "oxford": {
+  "appid": "xxxx",
+  "key": "xxxx"
+  },
+  "getproxy": {
+  "host": "xxxx",
+  "key": "xxxxxx"
+  },
+  "mealdb": {
+  "key": "xxxx"
+  },
+  "database": {
+  "name": "xxxx"
+  }
+  }
 
 # Database - Mongo
 

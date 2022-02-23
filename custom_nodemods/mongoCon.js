@@ -1,7 +1,11 @@
 const mongo = require("mongodb").MongoClient;
 const url = "mongodb://localhost:27017/";
-
-const mongoInsert = async (search, collection, database = "momdb") => {
+const config = require(`../config.json`);
+const mongoInsert = async (
+  search,
+  collection,
+  database = config.database.name
+) => {
   const prom = new Promise((result, errors) => {
     mongo.connect(url, (err, db) => {
       if (err) throw errors(err);
@@ -16,7 +20,11 @@ const mongoInsert = async (search, collection, database = "momdb") => {
   return prom;
 };
 
-const mongoQuery = async (search, collection, database = "momdb") => {
+const mongoQuery = async (
+  search,
+  collection,
+  database = config.database.name
+) => {
   const prom = new Promise((result, errors) => {
     mongo.connect(url, (err, db) => {
       if (err) throw errors(err);
@@ -38,7 +46,7 @@ const mongoUpdate = async (
   search,
   updatedSearch,
   collection,
-  database = "momdb"
+  database = config.database.name
 ) => {
   const prom = new Promise((result, errors) => {
     mongo.connect(url, (err, db) => {
@@ -56,7 +64,11 @@ const mongoUpdate = async (
   return prom;
 };
 
-const mongoDelete = async (search, collection, database = "momdb") => {
+const mongoDelete = async (
+  search,
+  collection,
+  database = config.database.name
+) => {
   const prom = new Promise((result, errors) => {
     mongo.connect(url, (err, db) => {
       if (err) throw errors(err);
