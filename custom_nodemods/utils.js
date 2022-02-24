@@ -324,8 +324,7 @@ const momL = (infoObj, select) => {
     //removes location information by setting to 1
     end = 1;
   }
-  const regArr = [];
-  const makeReg = () => {
+  const makeClean = (theMsg) => {
     const bannedArr = [
       "use",
       "show",
@@ -343,31 +342,29 @@ const momL = (infoObj, select) => {
       "insert",
       "set",
       "stats",
-      "$",
-      "()",
-      ".",
-      ":",
     ];
-    let str = ``;
-    bannedArr.forEach((word) => {
-      const letters = word.split("");
-      letters.forEach((letter, i) => {
-        str += `[${letter}]`;
-        if (i === letters.length - 1) {
-          regArr.push(str);
-          str = ``;
-        }
-      });
+    let cleanMsg = theMsg;
+    bannedArr.forEach((entry) => {
+      const reg = new RegExp(`${entry}`, "g");
+      console.log("Before:", cleanMsg);
+      cleanMsg = cleanMsg.replace(reg, "");
+      console.log("After:", cleanMsg);
     });
-    return str;
+    const cleanRemove = cleanMsg
+      .split("")
+      .map((entry) => {
+        if (entry === "$") {
+          return "";
+        } else {
+          return entry;
+        }
+      })
+      .join("");
+    return cleanRemove;
   };
   //console.log(makeReg());
-  makeReg();
-  let cleanMsg = msg;
-  regArr.forEach((reg) => {
-    const newReg = new RegExp(reg);
-    cleanMsg = cleanMsg.replace(newReg, "");
-  });
+  const cleanMsg = makeClean(msg);
+
   const logObj = {
     username: infoObj.tag,
     command: select,
