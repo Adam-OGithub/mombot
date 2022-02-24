@@ -379,7 +379,7 @@ const momL = (infoObj, select) => {
     message: cleanMsg,
     errors: "none",
   };
-  mongoInsert(logObj, "momlog");
+  mongoInsert(logObj, config.database.log);
 };
 
 //Gets the command location and then returns the command entered
