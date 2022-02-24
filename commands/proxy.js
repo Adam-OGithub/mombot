@@ -1,8 +1,8 @@
 "use strict";
 const axios = require("../node_modules/axios");
-const { sMsg, makeEmbed, tryFail } = require("../custom_nodemods/utils.js");
+const { sMsg, makeEmbed, errHandler } = require("../custom_nodemods/utils.js");
 const config = require("../config.json");
-exports.run = async (client, msg, args, discord) => {
+exports.run = async (client, msg, args, discord, infoObj) => {
   try {
     const options = {
       headers: {
@@ -25,13 +25,13 @@ exports.run = async (client, msg, args, discord) => {
           const embed = makeEmbed("Proxy Info", str);
           sMsg(msg.channel, embed);
         } catch (e) {
-          console.log(e);
+          errHandler(e, infoObj);
         }
       })
       .catch((e) => {
-        console.log(e);
+        errHandler(e, infoObj);
       });
   } catch (e) {
-    tryFail(msg.channel, e);
+    errHandler(e, infoObj, true, msg.channel);
   }
 };

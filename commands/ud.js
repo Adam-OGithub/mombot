@@ -1,7 +1,7 @@
 "use strict";
 const ud = require("relevant-urban");
-const { sMsg, makeEmbed, tryFail } = require("../custom_nodemods/utils");
-exports.run = async (client, msg, args, discord) => {
+const { sMsg, makeEmbed, errHandler } = require("../custom_nodemods/utils");
+exports.run = async (client, msg, args, discord, infoObj) => {
   try {
     console.log(`args=${args[1]}`);
     let worder = args[1];
@@ -22,6 +22,6 @@ exports.run = async (client, msg, args, discord) => {
       sMsg(msg.channel, embed);
     }
   } catch (e) {
-    tryFail(msg.channel, e);
+    errHandler(e, infoObj, true, msg.channel);
   }
 };

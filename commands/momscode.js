@@ -1,7 +1,7 @@
 "use strict";
-const { sMsg, makeEmbed, tryFail } = require("../custom_nodemods/utils.js");
+const { sMsg, makeEmbed, errHandler } = require("../custom_nodemods/utils.js");
 
-exports.run = async (client, msg, args, discord) => {
+exports.run = async (client, msg, args, discord, infoObj) => {
   try {
     const embed = makeEmbed(
       "Moms Code",
@@ -12,6 +12,6 @@ exports.run = async (client, msg, args, discord) => {
     );
     sMsg(msg.channel, embed);
   } catch (e) {
-    tryFail(msg.channel, e);
+    errHandler(e, infoObj, true, msg.channel);
   }
 };

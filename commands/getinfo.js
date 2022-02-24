@@ -1,10 +1,5 @@
 "use strict";
-const {
-  tryFail,
-  sMsg,
-  makeEmbed,
-  errmsg,
-} = require("../custom_nodemods/utils.js");
+const { errHandler, sMsg, makeEmbed } = require("../custom_nodemods/utils.js");
 const {
   perms,
   getRoles,
@@ -34,10 +29,10 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         }
       })
       .catch((e) => {
-        errmsg(e);
-        sMsg(msg.channel, "Something went wrong");
+        errHandler(e, infoObj, true, msg.channel);
       });
   } catch (e) {
-    tryFail(msg.channel, e);
+    errHandler(e, infoObj, true, msg.channel);
+    v;
   }
 };

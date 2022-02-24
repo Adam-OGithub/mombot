@@ -8,12 +8,12 @@ const {
   parseUsrChan,
   getCommand,
   getIsMom,
-  errmsg,
   getDirFiles,
   getToken,
   momReact,
   momL,
   sMsg,
+  errHandler,
 } = require("./custom_nodemods/utils.js");
 const { changeAc, reminders } = require("./custom_nodemods/timers.js");
 const allComs = getDirFiles("../commands");
@@ -42,7 +42,10 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
       }
     }
   } catch (e) {
-    errmsg(e);
+    if (select !== "hello") {
+      momL(infoObj, select);
+    }
+    errHandler(e, infoObj);
   }
 };
 

@@ -1,10 +1,5 @@
 "use strict";
-const {
-  sMsg,
-  markovChain,
-  capFirst,
-  randomWord,
-} = require("../custom_nodemods/utils.js");
+const { sMsg, markovChain, capFirst } = require("../custom_nodemods/utils.js");
 const regex = new RegExp(`[<][@]|[<][#]`);
 
 exports.run = async (client, message, args, discord, infoObj) => {

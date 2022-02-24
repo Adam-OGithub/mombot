@@ -3,11 +3,10 @@ const {
   sMsg,
   makeEmbed,
   getPre,
-  getCommand,
-  tryFail,
+  errHandler,
 } = require("../custom_nodemods/utils.js");
 const { country, category } = require("../custom_nodemods/foodlist.js");
-exports.run = async (client, msg, args, discord) => {
+exports.run = async (client, msg, args, discord, infoObj) => {
   try {
     const pre = getPre();
     const codeB = "```";
@@ -171,6 +170,6 @@ exports.run = async (client, msg, args, discord) => {
       sMsg(msg.channel, embed);
     }
   } catch (e) {
-    tryFail(msg.channel, e);
+    errHandler(e, infoObj, true, msg.channel);
   }
 };

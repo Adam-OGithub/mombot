@@ -15,7 +15,7 @@ const {
   capFirst,
   sMsg,
   randomInt,
-  tryFail,
+  errHandler,
 } = require("../custom_nodemods/utils.js");
 const axios = require("../node_modules/axios");
 //Replaces all words with random word that meet criteria
@@ -51,7 +51,7 @@ const loopVars = (sArr) => {
 };
 
 let sentArr = [];
-exports.run = async (client, msg, args, discord) => {
+exports.run = async (client, msg, args, discord, infoObj) => {
   try {
     const ranInt = randomInt(0, 10);
     let loop = true;
@@ -92,6 +92,6 @@ exports.run = async (client, msg, args, discord) => {
       });
     }
   } catch (e) {
-    tryFail(msg.channel, e);
+    errHandler(e, infoObj, true, msg.channel);
   }
 };

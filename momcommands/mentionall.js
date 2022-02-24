@@ -1,8 +1,6 @@
 "use strict";
-const config = require("../config.json");
 const { sMsg, getChannel } = require("../custom_nodemods/utils.js");
 const { mongoQuery } = require("../custom_nodemods/mongoCon.js");
-const axios = require("../node_modules/axios");
 exports.run = async (client, message, args, discord, infoObj) => {
   mongoQuery({ guildId: infoObj.guildID }, "prison").then((res) => {
     if (res.length === 0) {

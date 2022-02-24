@@ -8,7 +8,7 @@ const {
   parseQuote,
   countQuote,
   parseRplc,
-  tryFail,
+  errHandler,
 } = require("../custom_nodemods/utils.js");
 
 exports.run = async (client, msg, args, discord, infoObj) => {
@@ -89,6 +89,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       getHelp(msg.channel, "poll");
     }
   } catch (e) {
-    tryFail(msg.channel, e);
+    errHandler(e, infoObj, true, msg.channel);
   }
 };

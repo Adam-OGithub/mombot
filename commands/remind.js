@@ -7,8 +7,7 @@ const {
   makeClean,
   parseQuote,
   countQuote,
-  tryFail,
-  errmsg,
+  errHandler,
 } = require("../custom_nodemods/utils.js");
 const { getRoles } = require("../custom_nodemods/permissions.js");
 const { mongoQuery, mongoInsert } = require("../custom_nodemods/mongoCon.js");
@@ -124,10 +123,10 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         });
       })
       .catch((e) => {
-        errmsg(e);
+        errHandler(e, infoObj);
       });
   } catch (e) {
-    tryFail(msg.channel, e);
+    errHandler(e, infoObj, true, msg.channel);
   }
 };
 //DELETE FROM remind WHERE id = "1";

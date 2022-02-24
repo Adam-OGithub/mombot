@@ -6,7 +6,7 @@ const {
   makeEmbed,
   randomWord,
   capFirst,
-  tryFail,
+  errHandler,
 } = require("../custom_nodemods/utils.js");
 
 exports.run = async (client, msg, args, discord, infoObj) => {
@@ -31,18 +31,17 @@ exports.run = async (client, msg, args, discord, infoObj) => {
               sMsg(msg.channel, embed);
             })
             .catch((e) => {
-              console.log(e);
+              errHandler(e, infoObj);
             });
         } else {
-          console.log("hit not res");
           embed = makeEmbed(`${capFirst(animal)} Fact`, res1.data.Link);
           sMsg(msg.channel, embed);
         }
       })
       .catch((e) => {
-        console.log(e);
+        errHandler(e, infoObj);
       });
   } catch (e) {
-    tryFail(msg.channel, e);
+    errHandler(e, infoObj, true, msg.channel);
   }
 };

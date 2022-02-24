@@ -5,7 +5,7 @@ const {
   getHelp,
   makeEmbed,
   getPre,
-  tryFail,
+  errHandler,
 } = require("../custom_nodemods/utils.js");
 
 const roll = (die) => randomInt(0, die);
@@ -131,6 +131,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       sMsg(msg.channel, embed);
     }
   } catch (e) {
-    tryFail(msg.channel, e);
+    errHandler(e, infoObj, true, msg.channel);
   }
 };

@@ -3,7 +3,7 @@ const axios = require("../node_modules/axios");
 const {
   sMsg,
   makeEmbed,
-  tryFail,
+  errHandler,
   randomInt,
   parseQuote,
   countQuote,
@@ -168,7 +168,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
             sendFood(msg, mealObj, str);
           }
         } catch (e) {
-          tryFail(msg.channel, e);
+          errHandler(e, infoObj, true, msg.channel);
         }
       } else {
         if (argInvalid) {
@@ -189,6 +189,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       }
     })
     .catch((e) => {
-      tryFail(msg.channel, e);
+      errHandler(e, infoObj, true, msg.channel);
     });
 };

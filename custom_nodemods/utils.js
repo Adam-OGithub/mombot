@@ -5,7 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const axios = require("../node_modules/axios");
 const { mkactivity } = require("snekfetch");
-const { mongoInsert } = require("./mongoCon");
+const { mongoInsert, mongoQuery, mongoUpdate } = require("./mongoCon");
 const { log } = require("util");
 //Gets prefix for command from config
 const getPre = () => {
@@ -130,6 +130,7 @@ const genInfo = (msg, client) => {
   myObj.channelName = msg.channel.name;
   myObj.nsfw = msg.channel.nsfw;
   myObj.lastMsg = msg.channel.lastMessageID;
+  myObj.messageId = msg.id;
   myObj.guildID = msg.guild.id;
   myObj.guildName = msg.guild.name;
   myObj.afkId = msg.guild.afkChannelID;
@@ -290,14 +291,52 @@ const getIsMom = (users, client) => {
   return isMom;
 };
 
-//send erros message to console
-const errmsg = (e) => {
-  console.error(`[ERROR]: ${e.message}`);
-};
+const errHandler = (error, infoObj = {}, message, channelObj) => {
+  let getline = [];
+  if (error?.stack) {
+    const reg = new RegExp(`[.][j][s][:]`);
+    const errArr = error.stack.split("at");
+    errArr.forEach((entry) => {
+      if (reg.test(entry)) {
+        getline.push(entry);
+      }
+    });
+  }
 
-//Sends log to console
-const cmsg = (str) => {
-  console.log(str);
+  if (infoObj?.msgId === undefined) {
+    infoObj.msgId = 1;
+  }
+  const errorObj = {
+    message: message,
+    stack: error?.requireStack,
+    code: error?.code,
+    lines: getline,
+    error: error,
+  };
+
+  if (infoObj.msgId !== 1) {
+    mongoQuery({ messageId: infoObj.msgId }, config.database.log).then(
+      (res) => {
+        if (res.length > 0) {
+          mongoUpdate(
+            { messageId: infoObj.msgId },
+            { $push: { errors: errorObj } },
+            config.database.log
+          );
+        }
+      }
+    );
+  } else {
+    console.log(error);
+  }
+
+  if (channelObj !== undefined && message !== undefined) {
+    let newMsg = message;
+    if (message === true) {
+      newMsg = "Momma is having a rough day sweety,try again in a little bit.";
+    }
+    sMsg(channelObj, newMsg);
+  }
 };
 
 //Gets the current files in a directory and removes .js
@@ -387,7 +426,7 @@ const momL = (infoObj, select) => {
     channelName: infoObj.channelName,
     channelId: infoObj.channelId,
     message: makeClean(msg),
-    errors: "none",
+    messageId: infoObj.msgId,
   };
   mongoInsert(logObj, config.database.log);
 };
@@ -527,14 +566,6 @@ const momReact = (msg, client, infoObj) => {
   emoteMsg(lastMsg, emoteChar);
 };
 
-const tryFail = (channelObj, e) => {
-  console.log(`[TRY FAIL]: ${e}`);
-  sMsg(
-    channelObj,
-    "Momma is having a rough day sweety,try again in a little bit."
-  );
-};
-
 exports.randomWord = randomWord;
 exports.round = round;
 exports.markovChain = markovMe;
@@ -552,8 +583,6 @@ exports.getPre = getPre;
 exports.parseUsrChan = parseUserChannel;
 exports.getIsMom = getIsMom;
 exports.setTimoutMin = setTimoutMin;
-exports.errmsg = errmsg;
-exports.cmsg = cmsg;
 exports.getDirFiles = getDirFiles;
 exports.getCommand = getCommand;
 exports.getToken = getToken;
@@ -567,6 +596,6 @@ exports.getLastMsg = getLastMsg;
 exports.replyMsg = replyMsg;
 exports.emoteMsg = emoteMsg;
 exports.momReact = momReact;
-exports.tryFail = tryFail;
 exports.momL = momL;
 exports.makeClean = makeClean;
+exports.errHandler = errHandler;

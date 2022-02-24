@@ -5,10 +5,9 @@ const {
   makeEmbed,
   letters,
   randomWord,
-  tryFail,
+  errHandler,
   parseQuote,
   countQuote,
-  randomInt,
 } = require("../custom_nodemods/utils.js");
 const config = require("../config.json");
 const { millToOz } = require("../custom_nodemods/conversions.js");
@@ -122,11 +121,11 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           error(msg);
         }
       } catch (e) {
-        tryFail(msg.channel, e);
+        errHandler(e, infoObj);
         error(msg);
       }
     })
     .catch((e) => {
-      tryFail(msg.channel, e);
+      errHandler(e, infoObj, true, msg.channel);
     });
 };

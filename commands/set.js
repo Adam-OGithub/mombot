@@ -5,8 +5,7 @@ const {
   getPre,
   parseQuote,
   countQuote,
-  tryFail,
-  errmsg,
+  errHandler,
 } = require("../custom_nodemods/utils.js");
 const {
   perms,
@@ -193,9 +192,9 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         }
       })
       .catch((e) => {
-        errmsg(e);
+        errHandler(e, infoObj);
       });
   } catch (e) {
-    tryFail(msg.channel, e);
+    errHandler(e, infoObj, true, msg.channel);
   }
 };

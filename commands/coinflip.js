@@ -1,7 +1,7 @@
 "use strict";
-const { glitchApi, capFirst, tryFail } = require("../custom_nodemods/utils.js");
+const { glitchApi, errHandler } = require("../custom_nodemods/utils.js");
 
-exports.run = async (client, msg, args, discord) => {
+exports.run = async (client, msg, args, discord, infoObj) => {
   try {
     glitchApi(
       msg,
@@ -10,6 +10,6 @@ exports.run = async (client, msg, args, discord) => {
       true
     );
   } catch (e) {
-    tryFail(msg.channel, e);
+    errHandler(e, infoObj, true, msg.channel);
   }
 };

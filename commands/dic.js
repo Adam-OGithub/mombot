@@ -1,8 +1,13 @@
 "use strict";
 const axios = require("../node_modules/axios");
-const { sMsg, makeEmbed, capFirst } = require("../custom_nodemods/utils.js");
+const {
+  sMsg,
+  makeEmbed,
+  capFirst,
+  errHandler,
+} = require("../custom_nodemods/utils.js");
 const config = require("../config.json");
-exports.run = async (client, msg, args, discord) => {
+exports.run = async (client, msg, args, discord, infoObj) => {
   try {
     if (args[1] !== undefined && args[2] === undefined) {
       const options = {
@@ -65,19 +70,23 @@ exports.run = async (client, msg, args, discord) => {
             );
             sMsg(msg.channel, embed);
           } catch (e) {
-            console.log(e);
+            errHandler(e, infoObj);
           }
         })
         .catch((e) => {
           if (e?.response?.data?.error) {
-            console.log(e?.response?.data?.error);
-            sMsg(msg.channel, "Word not found!");
+            errHandler(
+              e?.response?.data?.error,
+              infoObj,
+              "Word not found!",
+              msg.channel
+            );
           }
         });
     } else {
       sMsg(msg.channel, "Please use a single word.");
     }
   } catch (e) {
-    tryFail(msg.channel, e);
+    errHandler(e, infoObj, true, msg.channel);
   }
 };

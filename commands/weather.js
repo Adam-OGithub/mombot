@@ -5,8 +5,7 @@ const {
   round,
   sMsg,
   makeEmbed,
-  tryFail,
-  errmsg,
+  errHandler,
 } = require("../custom_nodemods/utils.js");
 const {
   convertKToF,
@@ -41,7 +40,7 @@ const degToDir = (deg) => {
   }
   return dir;
 };
-exports.run = async (client, msg, args, discord) => {
+exports.run = async (client, msg, args, discord, infoObj) => {
   try {
     //prevents weather from crashing
     let type = ``;
@@ -164,12 +163,12 @@ exports.run = async (client, msg, args, discord) => {
               `Momma is going to have to find you a new home,because ${arg1} can not be found.`
             );
           }
-          errmsg(e);
+          errHandler(e, infoObj);
         });
     } else {
       sMsg(message, `Darling you have to tell me a location.`);
     }
   } catch (e) {
-    tryFail(msg.channel, e);
+    errHandler(e, infoObj, true, msg.channel);
   }
 };

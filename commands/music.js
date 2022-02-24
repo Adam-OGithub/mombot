@@ -2,9 +2,8 @@
 const ytdl = require(`../node_modules/ytdl-core`);
 const fT = require("ffmpeg-static");
 const {
-  tryFail,
+  errHandler,
   sMsg,
-  errmsg,
   makeEmbed,
   getPre,
 } = require("../custom_nodemods/utils.js");
@@ -19,7 +18,7 @@ const embedFormat = (song, custom = "Playing song..") => {
   );
   return embed;
 };
-const play = (guildid, song, msg) => {
+const play = (guildid, song, msg, infoObj) => {
   try {
     const serverQueue = queue.get(guildid);
 
@@ -54,8 +53,8 @@ const play = (guildid, song, msg) => {
             play(serverQueue.guild, serverQueue.songs[0]);
           }
         } else {
-          stopMom(serverQueue);
-          return errmsg(err);
+          stopMom(serverQueue, infoObj);
+          errHandler(err, infoObj);
         }
       });
 
@@ -68,7 +67,7 @@ const play = (guildid, song, msg) => {
     }
   } catch (e) {
     //nothing
-    errmsg(e);
+    errHandler(e, infoObj);
   }
 };
 
@@ -85,14 +84,14 @@ const getSong = (info) => {
   return song;
 };
 
-const stopMom = (serverQueue) => {
+const stopMom = (serverQueue, infoObj) => {
   try {
     serverQueue.voiceChannel.leave();
     serverQueue.songs = [];
     queue.delete(serverQueue.guild);
     serverQueue.connection.dispatcher.end();
   } catch (e) {
-    errmsg(e);
+    errHandler(e, infoObj);
   }
 };
 
@@ -134,18 +133,18 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         const connection = await voiceChannel.join();
         queueContruct.connection = connection;
         queue.set(infoObj.guildID, queueContruct);
-        play(infoObj.guildID, queueContruct.songs[0], msg);
+        play(infoObj.guildID, queueContruct.songs[0], msg, infoObj);
       } else if (arg === "skip" && serverQueue !== undefined) {
         serverQueue.connection.dispatcher.end();
         serverQueue.songs.shift();
         if (serverQueue.songs.length === 0) {
           sMsg(msg.channel, `No songs in queue mom is leaving.`);
-          stopMom(serverQueue);
+          stopMom(serverQueue, infoObj);
         } else {
-          play(infoObj.guildID, serverQueue.songs[0]);
+          play(infoObj.guildID, serverQueue.songs[0], infoObj);
         }
       } else if (arg === "stop" && serverQueue !== undefined) {
-        stopMom(serverQueue);
+        stopMom(serverQueue, infoObj);
       } else if (arg === "add" && serverQueue !== undefined) {
         const info = await ytdl.getInfo(url);
         const song = getSong(info);
@@ -171,7 +170,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     } else if (eSplit.includes("not") && eSplit.includes("youtube")) {
       sMsg(msg.channel, `Not a Youtube domain`);
     } else {
-      tryFail(msg.channel, e);
+      errHandler(e, infoObj, true, msg.channel);
     }
   }
 };
