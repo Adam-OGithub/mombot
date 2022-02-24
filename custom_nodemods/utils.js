@@ -313,58 +313,71 @@ const getDirFiles = (dir) => {
   return allComs;
 };
 
+const makeClean = (theMsg) => {
+  const bannedChars = [
+    `||`,
+    `-`,
+    `*`,
+    `-`,
+    `<>`,
+    `<`,
+    `>`,
+    `,`,
+    `=`,
+    `<=`,
+    `>=`,
+    `~=`,
+    `!=`,
+    `^=`,
+    `(`,
+    `)`,
+    `@`,
+    `!`,
+    `/`,
+    `#`,
+    `.`,
+  ];
+
+  const bannedArr = [
+    "use",
+    "show",
+    "auth",
+    "drop",
+    "update",
+    "delete",
+    "get",
+    "hello",
+    "find",
+    "from",
+    "create",
+    "rename",
+    "db",
+    "insert",
+    "set",
+    "stats",
+  ];
+  let cleanMsg = theMsg;
+  bannedArr.forEach((entry) => {
+    const reg = new RegExp(`${entry}`, "g");
+    cleanMsg = cleanMsg.replace(reg, "");
+  });
+  const cleanRemove = cleanMsg
+    .split("")
+    .map((entry) => {
+      if (bannedChars.includes(entry)) {
+        return "";
+      } else {
+        return entry;
+      }
+    })
+    .join("");
+  return cleanRemove;
+};
+
 //Logging to hjelp troubleshoot issues only gets up to 7 entries of args
 const momL = (infoObj, select) => {
   const msg = infoObj.msg.toLowerCase();
-  let end = 7;
-
-  if (select === "remind" || select === "set" || select === "poll") {
-    end = 100;
-  } else if (select === "weather") {
-    //removes location information by setting to 1
-    end = 1;
-  }
-  const makeClean = (theMsg) => {
-    const bannedArr = [
-      "use",
-      "show",
-      "auth",
-      "drop",
-      "update",
-      "delete",
-      "get",
-      "hello",
-      "find",
-      "from",
-      "create",
-      "rename",
-      "db",
-      "insert",
-      "set",
-      "stats",
-    ];
-    let cleanMsg = theMsg;
-    bannedArr.forEach((entry) => {
-      const reg = new RegExp(`${entry}`, "g");
-      console.log("Before:", cleanMsg);
-      cleanMsg = cleanMsg.replace(reg, "");
-      console.log("After:", cleanMsg);
-    });
-    const cleanRemove = cleanMsg
-      .split("")
-      .map((entry) => {
-        if (entry === "$") {
-          return "";
-        } else {
-          return entry;
-        }
-      })
-      .join("");
-    return cleanRemove;
-  };
   //console.log(makeReg());
-  const cleanMsg = makeClean(msg);
-
   const logObj = {
     username: infoObj.tag,
     command: select,
@@ -373,7 +386,7 @@ const momL = (infoObj, select) => {
     guildid: infoObj.guildID,
     channelName: infoObj.channelName,
     channelId: infoObj.channelId,
-    message: cleanMsg,
+    message: makeClean(msg),
     errors: "none",
   };
   mongoInsert(logObj, config.database.log);
@@ -394,29 +407,6 @@ const getCommand = (infoObj, allComs) => {
   });
   return cmd;
 };
-//Characters not allowed in sqldb or ones I  added
-const exceptions = [
-  `||`,
-  `-`,
-  `*`,
-  `-`,
-  `<>`,
-  `<`,
-  `>`,
-  `,`,
-  `=`,
-  `<=`,
-  `>=`,
-  `~=`,
-  `!=`,
-  `^=`,
-  `(`,
-  `)`,
-  `@`,
-  `!`,
-  `/`,
-  `#`,
-];
 
 //used for many of the fun functions to interact with the gltichapi website
 const glitchApi = (msg, label, link, image = undefined) => {
@@ -568,7 +558,6 @@ exports.getDirFiles = getDirFiles;
 exports.getCommand = getCommand;
 exports.getToken = getToken;
 exports.getGuild = getGuild;
-exports.exceptions = exceptions;
 exports.glitchApi = glitchApi;
 exports.parseQuote = parseQuote;
 exports.countQuote = countQuote;
@@ -580,3 +569,4 @@ exports.emoteMsg = emoteMsg;
 exports.momReact = momReact;
 exports.tryFail = tryFail;
 exports.momL = momL;
+exports.makeClean = makeClean;

@@ -4,7 +4,7 @@ const {
   getHelp,
   getChannel,
   parseUsrChan,
-  exceptions,
+  makeClean,
   parseQuote,
   countQuote,
   tryFail,
@@ -22,7 +22,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         let query;
         let count = 0;
         mongoQuery({ guildId: infoObj.guildID }, "prison").then((res) => {
-          if (res[0].prisonRole !== undefined) {
+          if (res[0]?.prisonRole !== undefined) {
             roleObj.roles.forEach((role) => {
               if (role === res[0].prisonRole) {
                 isInPrison = true;
@@ -98,21 +98,12 @@ exports.run = async (client, msg, args, discord, infoObj) => {
                     0 //mil seconds
                   ) / 1000;
 
-                const cleanMsg = (msg) => {
-                  const msgArr = msg
-                    .split("")
-                    .map((char) => {
-                      return exceptions.includes(char) ? `` : char;
-                    })
-                    .join("");
-                  return msgArr;
-                };
                 query = {
                   guildId: infoObj.guildID,
                   posterId: infoObj.tag,
-                  users: cleanMsg(reminder.users),
-                  channels: cleanMsg(reminder.channels),
-                  message: cleanMsg(reminder.msg),
+                  users: makeClean(reminder.users),
+                  channels: makeClean(reminder.channels),
+                  message: makeClean(reminder.msg),
                   time: reminder.future,
                 };
 
