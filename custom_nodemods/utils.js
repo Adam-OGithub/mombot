@@ -4,6 +4,9 @@ const config = require("../config.json");
 const path = require("path");
 const fs = require("fs");
 const axios = require("../node_modules/axios");
+const { mkactivity } = require("snekfetch");
+const { mongoInsert } = require("./mongoCon");
+const { log } = require("util");
 //Gets prefix for command from config
 const getPre = () => {
   let prefix;
@@ -312,6 +315,7 @@ const getDirFiles = (dir) => {
 
 //Logging to hjelp troubleshoot issues only gets up to 7 entries of args
 const momL = (infoObj, select) => {
+  const msg = infoObj.msg.toLowerCase();
   let end = 7;
 
   if (select === "remind" || select === "set" || select === "poll") {
@@ -320,24 +324,62 @@ const momL = (infoObj, select) => {
     //removes location information by setting to 1
     end = 1;
   }
-  const msgParse = (msg) => {
-    const reg = new RegExp(`[']|[$]|["]|[”]|[“]|[;]`);
-    const splitMsg = msg
-      .split("")
-      .map((entry) => entry.replace(reg, "^^"))
-      .join("")
-      .split(" ")
-      .slice(0, end)
-      .join(" ");
-    return splitMsg;
+  const regArr = [];
+  const makeReg = () => {
+    const bannedArr = [
+      "use",
+      "show",
+      "auth",
+      "drop",
+      "update",
+      "delete",
+      "get",
+      "hello",
+      "find",
+      "from",
+      "create",
+      "rename",
+      "db",
+      "insert",
+      "set",
+      "stats",
+      "$",
+      "()",
+      ".",
+      ":",
+    ];
+    let str = ``;
+    bannedArr.forEach((word) => {
+      const letters = word.split("");
+      letters.forEach((letter, i) => {
+        str += `[${letter}]`;
+        if (i === letters.length - 1) {
+          regArr.push(str);
+          str = ``;
+        }
+      });
+    });
+    return str;
   };
-  cmsg(
-    `${infoObj.tag} ran (${select}.js) at (${new Date()}) from (${
-      infoObj.guildName
-    }.${infoObj.guildID}) in (${infoObj.channelName}.${
-      infoObj.channelId
-    }) with message (${msgParse(infoObj.msg)}).`
-  );
+  //console.log(makeReg());
+  makeReg();
+  let cleanMsg = msg;
+  regArr.forEach((reg) => {
+    const newReg = new RegExp(reg);
+    cleanMsg = cleanMsg.replace(newReg, "");
+  });
+  const logObj = {
+    username: infoObj.tag,
+    command: select,
+    date: new Date(),
+    guildName: infoObj.guildName,
+    guildid: infoObj.guildID,
+    channelName: infoObj.channelName,
+    channelId: infoObj.channelId,
+    message: cleanMsg,
+    errors: "none",
+  };
+  mongoInsert(logObj, "momlog");
 };
 
 //Gets the command location and then returns the command entered
