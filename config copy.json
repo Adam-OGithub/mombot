@@ -23,6 +23,10 @@
   },
   "database": {
     "name": "xxx",
-    "log": "xxx"
+    "user": "xxx",
+    "password": "xxx",
+    "port": "xx",
+    "ip": "xx",
+    "log": "xx"
   }
 }

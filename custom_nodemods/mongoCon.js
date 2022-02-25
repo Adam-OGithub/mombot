@@ -1,6 +1,6 @@
 const mongo = require("mongodb").MongoClient;
-const url = "mongodb://localhost:27017/";
 const config = require(`../config.json`);
+const url = `mongodb://${config.database.user}:${config.database.password}@${config.database.ip}:${config.database.port}/?authSource=${config.database.name}`;
 const mongoInsert = async (
   search,
   collection,
