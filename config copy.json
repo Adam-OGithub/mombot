@@ -5,7 +5,8 @@
     "usedev": false,
     "prefix": "!",
     "database": {
-      "name": "xxxxx"
+      "name": "xxxxx",
+      "ip": "xxxxx"
     }
   },
   "tokens": {

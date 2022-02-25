@@ -3,7 +3,7 @@ const config = require(`../config.json`);
 let databaseName = ``;
 let url = ``;
 if (config.testing.usedev) {
-  url = `mongodb://${config.database.user}:${config.database.password}@${config.database.ip}:${config.database.port}/?authSource=${config.testing.database.name}`;
+  url = `mongodb://${config.database.user}:${config.database.password}@${config.testing.database.ip}:${config.database.port}/?authSource=${config.testing.database.name}`;
   databaseName = config.testing.database.name;
 } else {
   url = `mongodb://${config.database.user}:${config.database.password}@${config.database.ip}:${config.database.port}/?authSource=${config.database.name}`;
