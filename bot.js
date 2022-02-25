@@ -72,8 +72,7 @@ client.on("message", (message) => {
   } else if (isMom) {
     alt("atmom", "momcommands", client, message, args, Discord, infoObj);
   } else if (msgParse.includes("help") && msgParse.includes("mom")) {
-    const autoHelp = [`help`];
-    alt(autoHelp, "commands", client, message, args, Discord, infoObj);
+    alt("help", "commands", client, message, args, Discord, infoObj);
   } else {
     alt("hello", "momcommands", client, message, args, Discord, infoObj);
   }
