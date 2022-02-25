@@ -1,15 +1,15 @@
+"use strict";
 const mongo = require("mongodb").MongoClient;
 const config = require(`../config.json`);
-let databaseName = ``;
-let url = ``;
+let dbIp, databaseName;
 if (config.testing.usedev) {
-  url = `mongodb://${config.database.user}:${config.database.password}@${config.testing.database.ip}:${config.database.port}/?authSource=${config.testing.database.name}`;
+  dbIp = config.testing.database.ip;
   databaseName = config.testing.database.name;
 } else {
-  url = `mongodb://${config.database.user}:${config.database.password}@${config.database.ip}:${config.database.port}/?authSource=${config.database.name}`;
+  dbIp = config.database.ip;
   databaseName = config.database.name;
 }
-
+const url = `mongodb://${config.database.user}:${config.database.password}@${dbIp}:${config.database.port}/?authSource=${databaseName}`;
 const mongoInsert = async (search, collection, database = databaseName) => {
   const prom = new Promise((result, errors) => {
     mongo.connect(url, (err, db) => {
