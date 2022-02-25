@@ -1,11 +1,16 @@
 const mongo = require("mongodb").MongoClient;
 const config = require(`../config.json`);
-const url = `mongodb://${config.database.user}:${config.database.password}@${config.database.ip}:${config.database.port}/?authSource=${config.database.name}`;
-const mongoInsert = async (
-  search,
-  collection,
-  database = config.database.name
-) => {
+let databaseName = ``;
+let url = ``;
+if (config.testing.usedev) {
+  url = `mongodb://${config.database.user}:${config.database.password}@${config.database.ip}:${config.database.port}/?authSource=${config.testing.database.name}`;
+  databaseName = config.testing.database.name;
+} else {
+  url = `mongodb://${config.database.user}:${config.database.password}@${config.database.ip}:${config.database.port}/?authSource=${config.database.name}`;
+  databaseName = config.database.name;
+}
+
+const mongoInsert = async (search, collection, database = databaseName) => {
   const prom = new Promise((result, errors) => {
     mongo.connect(url, (err, db) => {
       if (err) throw errors(err);
@@ -20,11 +25,7 @@ const mongoInsert = async (
   return prom;
 };
 
-const mongoQuery = async (
-  search,
-  collection,
-  database = config.database.name
-) => {
+const mongoQuery = async (search, collection, database = databaseName) => {
   const prom = new Promise((result, errors) => {
     mongo.connect(url, (err, db) => {
       if (err) throw errors(err);
@@ -46,7 +47,7 @@ const mongoUpdate = async (
   search,
   updatedSearch,
   collection,
-  database = config.database.name
+  database = databaseName
 ) => {
   const prom = new Promise((result, errors) => {
     mongo.connect(url, (err, db) => {
@@ -64,11 +65,7 @@ const mongoUpdate = async (
   return prom;
 };
 
-const mongoDelete = async (
-  search,
-  collection,
-  database = config.database.name
-) => {
+const mongoDelete = async (search, collection, database = databaseName) => {
   const prom = new Promise((result, errors) => {
     mongo.connect(url, (err, db) => {
       if (err) throw errors(err);

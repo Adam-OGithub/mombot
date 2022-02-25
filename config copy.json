@@ -3,7 +3,10 @@
   "color": "RANDOM",
   "testing": {
     "usedev": false,
-    "prefix": "!"
+    "prefix": "!",
+    "database": {
+      "name": "xxxxx"
+    }
   },
   "tokens": {
     "dev": "xxxxx",
@@ -22,11 +25,11 @@
     "key": "xxxxx"
   },
   "database": {
-    "name": "xxx",
-    "user": "xxx",
-    "password": "xxx",
-    "port": "xx",
-    "ip": "xx",
-    "log": "xx"
+    "name": "xxxxx",
+    "user": "xxxxx",
+    "password": "xxxxx",
+    "port": "xxxxxx",
+    "ip": "xxxxx",
+    "log": "xxxxx"
   }
 }
