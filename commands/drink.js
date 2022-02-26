@@ -4,7 +4,7 @@ const {
   sMsg,
   makeEmbed,
   letters,
-  randomWord,
+  randomIndex,
   errHandler,
   parseQuote,
   countQuote,
@@ -79,7 +79,7 @@ const error = (msg) => {
   sMsg(msg.channel, "Unable to get you a drink..");
 };
 exports.run = async (client, msg, args, discord, infoObj) => {
-  const randomLetter = randomWord(letters);
+  const randomLetter = randomIndex(letters);
   const multiArgs = getMulti(infoObj, "drink");
   let url = `${baseUrl}/search.php?f=${randomLetter}`;
 
@@ -95,7 +95,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       try {
         if (res?.data?.drinks) {
           const drinks = res?.data?.drinks;
-          const ranD = randomWord(drinks);
+          const ranD = randomIndex(drinks);
           if (args[1] !== undefined && multiArgs !== undefined) {
             url = `${baseUrl}/lookup.php?i=${ranD.idDrink}`;
             axios.get(url).then((res) => {

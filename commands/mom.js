@@ -10,7 +10,7 @@ const {
   people,
 } = require("../custom_nodemods/sayings.js");
 const {
-  randomWord,
+  randomIndex,
   markovChain,
   capFirst,
   sMsg,
@@ -23,25 +23,25 @@ const loopVars = (sArr) => {
   sArr.forEach((word, i) => {
     switch (word) {
       case "inGame":
-        sArr[i] = randomWord(games);
+        sArr[i] = randomIndex(games);
         break;
       case "inDinner":
-        sArr[i] = randomWord(dinner);
+        sArr[i] = randomIndex(dinner);
         break;
       case "inColdFood":
-        sArr[i] = randomWord(foods);
+        sArr[i] = randomIndex(foods);
         break;
       case "inCloths":
-        sArr[i] = randomWord(clothing);
+        sArr[i] = randomIndex(clothing);
         break;
       case "inPeople":
-        sArr[i] = randomWord(people);
+        sArr[i] = randomIndex(people);
         break;
       case "inShow":
-        sArr[i] = randomWord(tvshows);
+        sArr[i] = randomIndex(tvshows);
         break;
       case "inItems":
-        sArr[i] = randomWord(items);
+        sArr[i] = randomIndex(items);
         break;
 
       default:
@@ -60,7 +60,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     if (ranInt < 6) {
       //loops until a unique sentence is found if no unique sentence is found uses markov chain
       while (loop) {
-        let select = randomWord(momSayings);
+        let select = randomIndex(momSayings);
         let sArr = select.split(" ");
         str = loopVars(sArr);
         if (sentArr.includes(str)) {
@@ -69,7 +69,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         } else if (i > 75) {
           //tried 20 times just send it
           const mark = markovChain(sentArr.join(" "));
-          const ran = randomWord(mark.split(".").join("").split("!"));
+          const ran = randomIndex(mark.split(".").join("").split("!"));
           const str = `${capFirst(ran)}.`;
           sMsg(msg.channel, str);
           sentArr = [];

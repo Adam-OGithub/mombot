@@ -4,14 +4,14 @@ const { animalApi, animalImageaApi } = require("../custom_nodemods/sayings.js");
 const {
   sMsg,
   makeEmbed,
-  randomWord,
+  randomIndex,
   capFirst,
   errHandler,
 } = require("../custom_nodemods/utils.js");
 
 exports.run = async (client, msg, args, discord, infoObj) => {
   try {
-    const animal = randomWord(animalApi);
+    const animal = randomIndex(animalApi);
     let embed;
     axios
       .get(`https://and-here-is-my-code.glitch.me/facts/${animal}`)

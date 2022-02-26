@@ -17,7 +17,7 @@ const getPre = () => {
 };
 
 //Selects a random word from an array
-const randomWord = (arr) => arr[Math.trunc(Math.random() * arr.length)];
+const randomIndex = (arr) => arr[Math.trunc(Math.random() * arr.length)];
 
 //Rounds intergers
 const round = (myInt) => Math.trunc(myInt);
@@ -564,7 +564,7 @@ const momReact = (msg, client, infoObj) => {
   emoteMsg(lastMsg, emoteChar);
 };
 
-exports.randomWord = randomWord;
+exports.randomIndex = randomIndex;
 exports.round = round;
 exports.markovChain = markovMe;
 exports.capFirst = capFirst;

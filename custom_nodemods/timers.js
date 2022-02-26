@@ -1,5 +1,5 @@
 const {
-  randomWord,
+  randomIndex,
   setTimoutMin,
   dates,
   getGuild,
@@ -13,13 +13,13 @@ const changeAc = async (client) => {
   const types = ["PLAYING", "COMPETING"];
   const time = setTimoutMin(20);
   //sets activity for bot first
-  client.user.setActivity(randomWord(botStatus), {
-    type: randomWord(types),
+  client.user.setActivity(randomIndex(botStatus), {
+    type: randomIndex(types),
   });
   //sets bot activity every x minutes
   setInterval(() => {
-    client.user.setActivity(randomWord(botStatus), {
-      type: randomWord(types),
+    client.user.setActivity(randomIndex(botStatus), {
+      type: randomIndex(types),
     });
   }, time);
 };

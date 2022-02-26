@@ -9,7 +9,7 @@ const {
   countQuote,
   parseRplc,
   errHandler,
-  randomWord,
+  randomIndex,
 } = require("../custom_nodemods/utils.js");
 
 exports.run = async (client, msg, args, discord, infoObj) => {
@@ -32,7 +32,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
               return emote;
             }
           });
-          return randomWord(selectArr);
+          return randomIndex(selectArr);
         };
         const currentEmote = randomEmote();
         newEmoteArr.push(currentEmote);
