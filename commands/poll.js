@@ -9,6 +9,7 @@ const {
   countQuote,
   parseRplc,
   errHandler,
+  randomWord,
 } = require("../custom_nodemods/utils.js");
 
 exports.run = async (client, msg, args, discord, infoObj) => {
@@ -18,7 +19,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     if (count === 4 || count === 6) {
       //easier split for quates
       const fArgs = parseQuote(infoObj, "poll");
-      console.log(fArgs);
       const question = fArgs[1];
       const options = fArgs[3].split(",");
       const time = fArgs[5];
@@ -26,9 +26,18 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       const newEmoteArr = [];
       const optionMsg = [];
       options.forEach((obj, i) => {
-        newEmoteArr.push(emotes[i]);
-        str += `${emotes[i]} - ${capFirst(obj)}\n\n`;
-        optionMsg.push(`${emotes[i]} - ${capFirst(obj)}\n\n`);
+        const randomEmote = () => {
+          const selectArr = emotes.filter((emote) => {
+            if (newEmoteArr.includes(emote) !== true) {
+              return emote;
+            }
+          });
+          return randomWord(selectArr);
+        };
+        const currentEmote = randomEmote();
+        newEmoteArr.push(currentEmote);
+        str += `${currentEmote} - ${capFirst(obj)}\n\n`;
+        optionMsg.push(`${currentEmote} - ${capFirst(obj)}\n\n`);
       });
 
       const embed = makeEmbed(parseRplc(question, client, infoObj), `${str}`);
@@ -37,7 +46,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         newEmoteArr.forEach((entry) => {
           sent.react(entry);
         });
-        console.log(time);
         if (time !== "" && time !== " " && time !== undefined) {
           let i = 60;
           i = +time;
