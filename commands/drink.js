@@ -17,7 +17,7 @@ const baseUrl = `https://www.thecocktaildb.com/api/json/v2/${config.mealdb.key}`
 const sendDrink = (msg, ranD, str, allDrinksArr) => {
   const embed = makeEmbed(
     ranD.strDrink,
-    str + `\n#of results ${allDrinksArr.length}`,
+    str + `\n\n***#of results ${allDrinksArr.length}***`,
     undefined,
     undefined,
     ranD.strDrinkThumb

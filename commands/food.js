@@ -74,10 +74,10 @@ const parseData = (response) => {
   return [mealObj, str];
 };
 
-const sendFood = (msg, mealObj, str) => {
+const sendFood = (msg, mealObj, str, countFood) => {
   let embed = makeEmbed(
     `${mealObj.strMeal} - ${mealObj.strArea} - ${mealObj.strCategory}`,
-    `${mealObj.strInstructions} \n\n__Ingredients__\n ${str}`,
+    `${mealObj.strInstructions} \n\n__Ingredients__\n ${str}\n\n ***# of results ${countFood}***`,
     undefined,
     mealObj.strSource,
     mealObj.strMealThumb
@@ -103,6 +103,7 @@ const getMulti = (infoObj) => {
 };
 
 exports.run = async (client, msg, args, discord, infoObj) => {
+  let countFood;
   let url = `${baseUrl}/random.php`;
   let arg1 = args[1];
   let hasInclude = false;
@@ -146,6 +147,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     .get(url)
     .then((response) => {
       if (response.data.meals !== null) {
+        countFood = response.data.meals.length;
         try {
           if (arg1 !== undefined && hasInclude) {
             let mealData;
@@ -159,13 +161,13 @@ exports.run = async (client, msg, args, discord, infoObj) => {
               .get(`${baseUrl}/lookup.php?i=${mealData.idMeal}`)
               .then((response) => {
                 const [mealObj, str] = parseData(response);
-                sendFood(msg, mealObj, str);
+                sendFood(msg, mealObj, str, countFood);
               });
           } else if (arg1 !== undefined) {
             sMsg(msg.channel, `Unable to find ${arg1}`);
           } else {
             const [mealObj, str] = parseData(response);
-            sendFood(msg, mealObj, str);
+            sendFood(msg, mealObj, str, countFood);
           }
         } catch (e) {
           errHandler(e, infoObj, true, msg.channel);

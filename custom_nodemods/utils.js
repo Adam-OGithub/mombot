@@ -4,9 +4,7 @@ const config = require("../config.json");
 const path = require("path");
 const fs = require("fs");
 const axios = require("../node_modules/axios");
-const { mkactivity } = require("snekfetch");
 const { mongoInsert, mongoQuery, mongoUpdate } = require("./mongoCon");
-const { log } = require("util");
 //Gets prefix for command from config
 const getPre = () => {
   let prefix;
