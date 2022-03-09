@@ -31,6 +31,6 @@
     "sax": "^1.2.4",
     "snekfetch": "^4.0.4",
     "urban-dictionary": "^3.0.1",
-    "ytdl-core": "^4.10.1"
+    "ytdl-core": "^4.11.0"
   }
 }

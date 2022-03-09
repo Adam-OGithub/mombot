@@ -1,6 +1,7 @@
 "use strict";
 const ytdl = require(`../node_modules/ytdl-core`);
 const fT = require("ffmpeg-static");
+const fs = require("fs");
 const {
   errHandler,
   sMsg,
@@ -18,32 +19,22 @@ const embedFormat = (song, custom = "Playing song..") => {
   );
   return embed;
 };
-const play = (guildid, song, msg, infoObj) => {
+const play = async (guildid, song, msg, infoObj) => {
   try {
     const serverQueue = queue.get(guildid);
+    const download = `./musicbuffer/${guildid}_1.mp4`;
 
-    const dispatcher = serverQueue.connection
-      .play(
-        ytdl(song.url, {
-          filter: "audioonly",
-          type: "opus",
-          audioQuality: "highestaudio",
-        })
-      )
-      .on("finish", () => {
-        serverQueue.lastsong = serverQueue.songs[0];
-        serverQueue.songs.shift();
-        if (serverQueue.songs.length === 0) {
-          sMsg(serverQueue.textChannel, `No songs in queue mom is leaving.`);
-          serverQueue.voiceChannel.leave();
-          queue.delete(serverQueue.guild);
-        } else {
-          play(serverQueue.guild, serverQueue.songs[0]);
-        }
-      })
-      .on("error", (err) => {
-        console.log(err);
-        if (err.code === `ECONNRESET`) {
+    await ytdl(song.url, {
+      filter: "audioonly",
+      type: "opus",
+      audioQuality: "highestaudio",
+    }).pipe(fs.createWriteStream(download));
+    //timeout to make sute file has written full to OS
+    setTimeout(() => {
+      const dispatcher = serverQueue.connection
+        .play(download)
+        .on("finish", () => {
+          serverQueue.lastsong = serverQueue.songs[0];
           serverQueue.songs.shift();
           if (serverQueue.songs.length === 0) {
             sMsg(serverQueue.textChannel, `No songs in queue mom is leaving.`);
@@ -52,19 +43,35 @@ const play = (guildid, song, msg, infoObj) => {
           } else {
             play(serverQueue.guild, serverQueue.songs[0]);
           }
-        } else {
-          stopMom(serverQueue, infoObj);
-          errHandler(err, infoObj);
-        }
-      });
+        })
+        .on("error", (err) => {
+          console.log(err);
+          if (err.code === `ECONNRESET`) {
+            serverQueue.songs.shift();
+            if (serverQueue.songs.length === 0) {
+              sMsg(
+                serverQueue.textChannel,
+                `No songs in queue mom is leaving.`
+              );
+              serverQueue.voiceChannel.leave();
+              queue.delete(serverQueue.guild);
+            } else {
+              play(serverQueue.guild, serverQueue.songs[0]);
+            }
+          } else {
+            stopMom(serverQueue, infoObj);
+            errHandler(err, infoObj);
+          }
+        });
 
-    dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-    const embed = embedFormat(serverQueue.songs[0], `Now Playing...`);
-    serverQueue.currentsong = serverQueue.songs[0];
-    serverQueue.textChannel.send(embed);
-    if (msg !== undefined) {
-      //msg.delete();
-    }
+      dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+      const embed = embedFormat(serverQueue.songs[0], `Now Playing...`);
+      serverQueue.currentsong = serverQueue.songs[0];
+      serverQueue.textChannel.send(embed);
+      if (msg !== undefined) {
+        //msg.delete();
+      }
+    }, 2000);
   } catch (e) {
     //nothing
     errHandler(e, infoObj);
