@@ -12,10 +12,10 @@ const queue = new Map();
 
 const embedFormat = (song, custom = "Playing song..") => {
   const embed = makeEmbed(
-    `**${song.title}**`,
+    `**${song?.title}**`,
     `🎵 🎵 ***${custom}*** 🎵 🎵 \n `,
     undefined,
-    song.url
+    song?.url
   );
   return embed;
 };
