@@ -29,7 +29,7 @@ const play = async (guildid, song, msg, infoObj) => {
       type: "opus",
       audioQuality: "highestaudio",
     }).pipe(fs.createWriteStream(download));
-    //timeout to make sute file has written full to OS
+    //timeout to make sure file has written full to OS
     setTimeout(() => {
       const dispatcher = serverQueue.connection
         .play(download)
@@ -142,7 +142,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         queue.set(infoObj.guildID, queueContruct);
         play(infoObj.guildID, queueContruct.songs[0], msg, infoObj);
       } else if (arg === "skip" && serverQueue !== undefined) {
-        serverQueue.connection.dispatcher.end();
+        // serverQueue.connection.dispatcher.end();
         serverQueue.songs.shift();
         if (serverQueue.songs.length === 0) {
           sMsg(msg.channel, `No songs in queue mom is leaving.`);
