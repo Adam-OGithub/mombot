@@ -240,14 +240,21 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       ) {
         if (!isNaN(arg2)) {
           if (arg2 <= 12) {
-            const volumeStat = serverQueue.volume > arg2 ? `down` : `up`;
-            const embed = makeEmbed(
-              `Momma is turning that ${volumeStat} for you!`,
-              `Volume was: ${serverQueue.volume}\nChanged to: ${arg2}`
-            );
-            serverQueue.volume = arg2;
-            serverQueue.dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-            sMsg(msg.channel, embed);
+            if (serverQueue.volume === arg2) {
+              const embed = makeEmbed("Momma is keeping it the same.", `‌‌ `);
+              sMsg(msg.channel, embed);
+            } else {
+              const volumeStat = serverQueue.volume > arg2 ? `down` : `up`;
+              const embed = makeEmbed(
+                `Momma is turning that ${volumeStat} for you!`,
+                `Volume was: ${serverQueue.volume}\nChanged to: ${arg2}`
+              );
+              serverQueue.volume = arg2;
+              serverQueue.dispatcher.setVolumeLogarithmic(
+                serverQueue.volume / 5
+              );
+              sMsg(msg.channel, embed);
+            }
           } else {
             sMsg(
               msg.channel,
