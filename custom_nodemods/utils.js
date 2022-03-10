@@ -290,6 +290,7 @@ const getIsMom = (users, client) => {
 };
 
 const errHandler = (error, infoObj = {}, message, channelObj) => {
+  console.log(error);
   let getline = [];
   if (error?.stack) {
     const reg = new RegExp(`[.][j][s][:]`);

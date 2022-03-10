@@ -87,7 +87,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         const content = resArr
           .slice(resArr.indexOf(`<h2>`) + 2, resArr.indexOf(`</h2>`))
           .join(" ");
-        console.log(resArr);
+
         sMsg(msg.channel, content);
       });
     }

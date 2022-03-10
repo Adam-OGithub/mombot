@@ -2,6 +2,7 @@
 const ytdl = require(`../node_modules/ytdl-core`);
 const fT = require("ffmpeg-static");
 const fs = require("fs");
+const ytpl = require("ytpl");
 const {
   errHandler,
   sMsg,
@@ -78,17 +79,22 @@ const play = async (guildid, song, msg, infoObj) => {
   }
 };
 
-const getSong = (info) => {
-  const vD = info?.videoDetails;
-  const song = {
-    title: vD?.title,
-    url: vD?.video_url,
-    license: vD?.media?.license,
-    uploadDate: vD?.uploadDate,
-    views: vD?.viewCount,
-    category: vD?.category,
-  };
-  return song;
+const getSong = async (url) => {
+  try {
+    const info = await ytdl.getInfo(url);
+    const vD = info?.videoDetails;
+    const song = {
+      title: vD?.title,
+      url: vD?.video_url,
+      license: vD?.media?.license,
+      uploadDate: vD?.uploadDate,
+      views: vD?.viewCount,
+      category: vD?.category,
+    };
+    return song;
+  } catch (e) {
+    errHandler(e);
+  }
 };
 
 const stopMom = (serverQueue, infoObj) => {
@@ -122,20 +128,19 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         "I need the permissions to join and speak in your voice channel!"
       );
     } else {
+      const queueContruct = {
+        textChannel: msg.channel,
+        voiceChannel: voiceChannel,
+        connection: null,
+        songs: [],
+        volume: 3,
+        playing: true,
+        guild: infoObj.guildID,
+        lastsong: null,
+        currentsong: null,
+      };
       if (arg === "play" && serverQueue === undefined) {
-        const info = await ytdl.getInfo(url);
-        const song = getSong(info);
-        const queueContruct = {
-          textChannel: msg.channel,
-          voiceChannel: voiceChannel,
-          connection: null,
-          songs: [],
-          volume: 3,
-          playing: true,
-          guild: infoObj.guildID,
-          lastsong: null,
-          currentsong: null,
-        };
+        const song = await getSong(url);
         queueContruct.songs.push(song);
         const connection = await voiceChannel.join();
         queueContruct.connection = connection;
@@ -166,6 +171,29 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           `Repeat added to queue!`
         );
         sMsg(msg.channel, embed);
+      } else if (arg === "playlist" && serverQueue === undefined) {
+        const reg = new RegExp(`[l][i][s][t][=]`);
+        if (reg.test(url)) {
+          const urlSplit = url.split("list=");
+          console.log(urlSplit);
+          const batch = await ytpl(urlSplit[1]);
+          for (let i = 0; i < batch.items.length; i++) {
+            let song = await getSong(batch.items[i].url);
+            queueContruct.songs.push(song);
+            //if play list is less than 2 songs will not play
+            if (i === 1) {
+              const connection = await voiceChannel.join();
+              queueContruct.connection = connection;
+              queue.set(infoObj.guildID, queueContruct);
+              play(infoObj.guildID, queueContruct.songs[0], msg, infoObj);
+            }
+          }
+        } else {
+          sMsg(
+            msg.channel,
+            `Please include list= in the url, ${arg} ${getPre()}help music `
+          );
+        }
       } else {
         sMsg(msg.channel, `Must use play before ${arg} ${getPre()}help music `);
       }
