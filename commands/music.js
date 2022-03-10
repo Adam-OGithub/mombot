@@ -175,7 +175,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         const reg = new RegExp(`[l][i][s][t][=]`);
         if (reg.test(url)) {
           const urlSplit = url.split("list=");
-          console.log(urlSplit);
           const batch = await ytpl(urlSplit[1]);
           for (let i = 0; i < batch.items.length; i++) {
             let song = await getSong(batch.items[i].url);
