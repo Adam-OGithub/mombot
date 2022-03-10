@@ -31,19 +31,29 @@ const permCheck = (perms) => {
   });
   return [value, outArr];
 };
+const map = new Map();
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
   try {
     const channel = await getChannel(infoObj.channelId, infoObj);
     const perms = channel.permissionsFor(message.client.user);
     const [bool, permsFailed] = permCheck(perms);
+    const guildFail = map.get(infoObj.guildID);
     if (bool) {
       if (message.author.bot !== true) {
-        sMsg(
-          message.channel,
-          `Permissions required:\n${permsFailed.join("\n")}`
-        );
+        if (guildFail === undefined) {
+          map.set(infoObj.guildID, true);
+          sMsg(
+            message.channel,
+            `<@${infoObj.guildOwner}> Permissions required:\n${permsFailed.join(
+              "\n"
+            )}`
+          );
+        }
       }
     } else {
+      if (guildFail) {
+        map.delete(infoObj.guildID);
+      }
       const disabled = [];
       if (
         disabled.includes(select.toLowerCase()) &&
