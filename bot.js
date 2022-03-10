@@ -14,31 +14,56 @@ const {
   momL,
   sMsg,
   errHandler,
+  getChannel,
 } = require("./custom_nodemods/utils.js");
 const { changeAc, reminders } = require("./custom_nodemods/timers.js");
 const allComs = getDirFiles("../commands");
 //Runs commands based on args
+const permCheck = (perms) => {
+  const requiredPerms = ["CONNECT", "SPEAK"];
+  let value = false;
+  let outArr = [];
+  requiredPerms.forEach((perm) => {
+    if (!perms.has(perm)) {
+      value = true;
+      outArr.push(perm);
+    }
+  });
+  return [value, outArr];
+};
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
   try {
-    const disabled = [];
-    if (
-      disabled.includes(select.toLowerCase()) &&
-      config.testing.usedev !== true
-    ) {
-      sMsg(message.channel, `${select} is disabled for now.`);
+    const channel = await getChannel(infoObj.channelId, infoObj);
+    const perms = channel.permissionsFor(message.client.user);
+    const [bool, permsFailed] = permCheck(perms);
+    if (bool) {
+      if (message.author.bot !== true) {
+        sMsg(
+          message.channel,
+          `Permissions required:\n${permsFailed.join("\n")}`
+        );
+      }
     } else {
-      const runCommand = require(`./${dir}/${select}.js`);
+      const disabled = [];
+      if (
+        disabled.includes(select.toLowerCase()) &&
+        config.testing.usedev !== true
+      ) {
+        sMsg(message.channel, `${select} is disabled for now.`);
+      } else {
+        const runCommand = require(`./${dir}/${select}.js`);
 
-      if (message.author.bot !== true || allComs.includes(select)) {
-        //Does not log hello as it causes to much spam in logs
-        if (select !== "hello") {
-          momL(infoObj, select);
-        }
+        if (message.author.bot !== true || allComs.includes(select)) {
+          //Does not log hello as it causes to much spam in logs
+          if (select !== "hello") {
+            momL(infoObj, select);
+          }
 
-        if (dir !== "momcommands") {
-          momReact(message, client, infoObj);
+          if (dir !== "momcommands") {
+            momReact(message, client, infoObj);
+          }
+          runCommand.run(client, message, args, Discord, infoObj);
         }
-        runCommand.run(client, message, args, Discord, infoObj);
       }
     }
   } catch (e) {
