@@ -289,7 +289,7 @@ const getIsMom = (users, client) => {
   return isMom;
 };
 
-const errHandler = (error, infoObj = {}, message, channelObj) => {
+const errHandler = async (error, infoObj = {}, message, channelObj) => {
   console.log(error);
   let getline = [];
   if (error?.stack) {
@@ -314,19 +314,19 @@ const errHandler = (error, infoObj = {}, message, channelObj) => {
   };
 
   if (infoObj.msgId !== 1) {
-    mongoQuery({ messageId: infoObj.msgId }, config.database.log).then(
-      (res) => {
-        if (res.length > 0) {
-          mongoUpdate(
-            { messageId: infoObj.msgId },
-            { $push: { errors: errorObj } },
-            config.database.log
-          );
-        }
-      }
+    const res = await mongoQuery(
+      { messageId: infoObj.msgId },
+      config.database.log
     );
+    if (res.length > 0) {
+      mongoUpdate(
+        { messageId: infoObj.msgId },
+        { $push: { errors: errorObj } },
+        config.database.log
+      );
+    }
   } else {
-    console.log(error);
+    errHandler(error);
   }
 
   if (channelObj !== undefined && message !== undefined) {
