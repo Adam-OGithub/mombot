@@ -70,7 +70,7 @@ const play = async (guildid, song, msg, infoObj) => {
       serverQueue.currentsong = serverQueue.songs[0];
       serverQueue.textChannel.send(embed);
       if (msg !== undefined) {
-        //msg.delete();
+        msg.delete();
       }
     }, 2000);
   } catch (e) {
@@ -158,12 +158,16 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       } else if (arg === "stop" && serverQueue !== undefined) {
         stopMom(serverQueue, infoObj);
       } else if (arg === "add" && serverQueue !== undefined) {
-        const info = await ytdl.getInfo(url);
-        const song = getSong(info);
+        const song = await getSong(url);
         serverQueue.songs.push(song);
-        const embed = embedFormat(song, `Added to queue!`);
-        sMsg(msg.channel, embed);
-        //msg.delete();
+        if (song === undefined) {
+          sMsg(msg.channel, "unable to add song");
+        } else {
+          const embed = embedFormat(song, `Added to queue!`);
+          sMsg(msg.channel, embed);
+        }
+
+        msg.delete();
       } else if (arg === "repeat" && serverQueue !== undefined) {
         serverQueue.songs.unshift(serverQueue.currentsong);
         const embed = embedFormat(

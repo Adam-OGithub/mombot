@@ -20,7 +20,7 @@ const { changeAc, reminders } = require("./custom_nodemods/timers.js");
 const allComs = getDirFiles("../commands");
 //Runs commands based on args
 const permCheck = (perms) => {
-  const requiredPerms = ["CONNECT", "SPEAK"];
+  const requiredPerms = ["CONNECT", "SPEAK", "MANAGE_MESSAGES"];
   let value = false;
   let outArr = [];
   requiredPerms.forEach((perm) => {
