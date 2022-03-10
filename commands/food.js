@@ -164,7 +164,10 @@ exports.run = async (client, msg, args, discord, infoObj) => {
                 sendFood(msg, mealObj, str, countFood);
               });
           } else if (arg1 !== undefined) {
-            sMsg(msg.channel, `Unable to find ${arg1}`);
+            sMsg(
+              msg.channel,
+              `Unable to find ${arg1},please try quoting the ingredient.`
+            );
           } else {
             const [mealObj, str] = parseData(response);
             sendFood(msg, mealObj, str, countFood);
