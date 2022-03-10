@@ -39,14 +39,12 @@ const play = async (guildid, song, msg, infoObj) => {
           serverQueue.songs.shift();
           if (serverQueue.songs.length === 0) {
             sMsg(serverQueue.textChannel, `No songs in queue mom is leaving.`);
-            serverQueue.voiceChannel.leave();
-            queue.delete(serverQueue.guild);
+            stopMom(serverQueue);
           } else {
             play(serverQueue.guild, serverQueue.songs[0]);
           }
         })
         .on("error", (err) => {
-          console.log(err);
           if (err.code === `ECONNRESET`) {
             serverQueue.songs.shift();
             if (serverQueue.songs.length === 0) {
@@ -54,14 +52,13 @@ const play = async (guildid, song, msg, infoObj) => {
                 serverQueue.textChannel,
                 `No songs in queue mom is leaving.`
               );
-              serverQueue.voiceChannel.leave();
-              queue.delete(serverQueue.guild);
+              stopMom(serverQueue);
             } else {
               play(serverQueue.guild, serverQueue.songs[0]);
             }
           } else {
-            stopMom(serverQueue, infoObj);
-            errHandler(err, infoObj);
+            stopMom(serverQueue);
+            errHandler(err);
           }
         });
 
@@ -69,13 +66,10 @@ const play = async (guildid, song, msg, infoObj) => {
       const embed = embedFormat(serverQueue.songs[0], `Now Playing...`);
       serverQueue.currentsong = serverQueue.songs[0];
       serverQueue.textChannel.send(embed);
-      if (msg !== undefined) {
-        msg.delete();
-      }
     }, 2000);
   } catch (e) {
     //nothing
-    errHandler(e, infoObj);
+    errHandler(e);
   }
 };
 
@@ -97,14 +91,14 @@ const getSong = async (url) => {
   }
 };
 
-const stopMom = (serverQueue, infoObj) => {
+const stopMom = (serverQueue) => {
   try {
+    serverQueue.connection.dispatcher.destroy();
     serverQueue.voiceChannel.leave();
     serverQueue.songs = [];
     queue.delete(serverQueue.guild);
-    serverQueue.connection.dispatcher.end();
   } catch (e) {
-    errHandler(e, infoObj);
+    errHandler(e);
   }
 };
 
@@ -146,8 +140,8 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         queueContruct.connection = connection;
         queue.set(infoObj.guildID, queueContruct);
         play(infoObj.guildID, queueContruct.songs[0], msg, infoObj);
+        msg.delete();
       } else if (arg === "skip" && serverQueue !== undefined) {
-        // serverQueue.connection.dispatcher.end();
         serverQueue.songs.shift();
         if (serverQueue.songs.length === 0) {
           sMsg(msg.channel, `No songs in queue mom is leaving.`);
@@ -166,7 +160,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           const embed = embedFormat(song, `Added to queue!`);
           sMsg(msg.channel, embed);
         }
-
         msg.delete();
       } else if (arg === "repeat" && serverQueue !== undefined) {
         serverQueue.songs.unshift(serverQueue.currentsong);
@@ -185,6 +178,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
             queueContruct.songs.push(song);
             //if play list is less than 2 songs will not play
             if (i === 1) {
+              msg.delete();
               const connection = await voiceChannel.join();
               queueContruct.connection = connection;
               queue.set(infoObj.guildID, queueContruct);
