@@ -98,12 +98,12 @@ const stopMom = (serverQueue) => {
     // serverQueue.connection.dispatcher.destroy();
     serverQueue.voiceChannel.leave();
     serverQueue.songs = [];
-    const file = `./musicbuffer/${serverQueue.guild}.mp4`;
-    fs.unlink(file, (e) => {
-      if (e) {
-        errHandler(e);
-      }
-    });
+    // const file = `./musicbuffer/${serverQueue.guild}.mp4`;
+    // fs.unlink(file, (e) => {
+    //   if (e) {
+    //     errHandler(e);
+    //   }
+    // });
     queue.delete(serverQueue.guild);
   } catch (e) {
     errHandler(e);
