@@ -76,21 +76,17 @@ const play = async (guildid, song, msg, infoObj) => {
 };
 
 const getSong = async (url) => {
-  try {
-    const info = await ytdl.getInfo(url);
-    const vD = info?.videoDetails;
-    const song = {
-      title: vD?.title,
-      url: vD?.video_url,
-      license: vD?.media?.license,
-      uploadDate: vD?.uploadDate,
-      views: vD?.viewCount,
-      category: vD?.category,
-    };
-    return song;
-  } catch (e) {
-    errHandler(e);
-  }
+  const info = await ytdl.getInfo(url);
+  const vD = info?.videoDetails;
+  const song = {
+    title: vD?.title,
+    url: vD?.video_url,
+    license: vD?.media?.license,
+    uploadDate: vD?.uploadDate,
+    views: vD?.viewCount,
+    category: vD?.category,
+  };
+  return song;
 };
 
 const stopMom = (serverQueue) => {
@@ -279,7 +275,10 @@ exports.run = async (client, msg, args, discord, infoObj) => {
   } catch (e) {
     const eSplit = e.toString().toLowerCase().split(" ");
     if (eSplit.includes("no") && eSplit.includes("video")) {
-      sMsg(msg.channel, `No video id found`);
+      sMsg(
+        msg.channel,
+        `No video id found, please make sure the song is public.`
+      );
     } else if (eSplit.includes("not") && eSplit.includes("youtube")) {
       sMsg(msg.channel, `Not a Youtube domain`);
     } else if (eSplit.includes("unknown") && eSplit.includes("playlist")) {
