@@ -282,6 +282,8 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       sMsg(msg.channel, `No video id found`);
     } else if (eSplit.includes("not") && eSplit.includes("youtube")) {
       sMsg(msg.channel, `Not a Youtube domain`);
+    } else if (eSplit.includes("unknown") && eSplit.includes("playlist")) {
+      sMsg(msg.channel, `Unable to find that playlist.`);
     } else {
       errHandler(e, infoObj, true, msg.channel);
     }
