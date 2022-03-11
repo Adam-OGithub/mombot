@@ -23,17 +23,17 @@ const embedFormat = (song, custom = "Playing song..") => {
 const play = async (guildid, song, msg, infoObj) => {
   try {
     const serverQueue = queue.get(guildid);
-    const download = `./musicbuffer/${guildid}_1.mp4`;
+    const songBuff = `./musicbuffer/${guildid}.mp4`;
 
     await ytdl(song.url, {
       filter: "audioonly",
       type: "opus",
       audioQuality: "highestaudio",
-    }).pipe(fs.createWriteStream(download));
+    }).pipe(fs.createWriteStream(songBuff));
     //timeout to make sure file has written full to OS
     setTimeout(() => {
       const dispatcher = serverQueue.connection
-        .play(download)
+        .play(songBuff)
         .on("finish", () => {
           serverQueue.lastsong = serverQueue.songs[0];
           serverQueue.songs.shift();
@@ -97,6 +97,12 @@ const stopMom = (serverQueue) => {
     // serverQueue.connection.dispatcher.destroy();
     serverQueue.voiceChannel.leave();
     serverQueue.songs = [];
+    const file = `./musicbuffer/${serverQueue.guild}.mp4`;
+    fs.unlink(file, (err) => {
+      if (err) {
+        console.error(err);
+      }
+    });
     queue.delete(serverQueue.guild);
   } catch (e) {
     errHandler(e);
