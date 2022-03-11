@@ -37,6 +37,7 @@ const play = async (guildid, song, msg, infoObj) => {
         .on("finish", () => {
           serverQueue.lastsong = serverQueue.songs[0];
           serverQueue.songs.shift();
+          serverQueue.nextSong = serverQueue.songs[1];
           if (serverQueue.songs.length === 0) {
             sMsg(serverQueue.textChannel, `No songs in queue mom is leaving.`);
             stopMom(serverQueue);
@@ -98,9 +99,9 @@ const stopMom = (serverQueue) => {
     serverQueue.voiceChannel.leave();
     serverQueue.songs = [];
     const file = `./musicbuffer/${serverQueue.guild}.mp4`;
-    fs.unlink(file, (err) => {
-      if (err) {
-        console.error(err);
+    fs.unlink(file, (e) => {
+      if (e) {
+        errHandler(e);
       }
     });
     queue.delete(serverQueue.guild);
@@ -226,7 +227,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         const q = serverQueue;
         const a = `Song count: ${q.songs.length}`;
         const b = `Volume: ${q.volume}`;
-        const c = `***Current song:***\nTitle:${q.currentsong.title}\nUrl: ${q.currentsong.url}`;
+        const c = `***Current song:***\nTitle: ${q.currentsong.title}\nUrl: ${q.currentsong.url}`;
         const d =
           q.nextSong === null
             ? "***Next Song:*** None"
