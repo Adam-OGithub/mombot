@@ -275,16 +275,13 @@ exports.run = async (client, msg, args, discord, infoObj) => {
   } catch (e) {
     const eSplit = e.toString().toLowerCase().split(" ");
     if (eSplit.includes("no") && eSplit.includes("video")) {
-      sMsg(
-        msg.channel,
-        `No video id found, please make sure the song is public.`
-      );
+      sMsg(msg.channel, `No video id found, please make sure it is public.`);
     } else if (eSplit.includes("not") && eSplit.includes("youtube")) {
       sMsg(msg.channel, `Not a Youtube domain`);
     } else if (eSplit.includes("unknown") && eSplit.includes("playlist")) {
       sMsg(msg.channel, `Unable to find that playlist.`);
     } else if (eSplit.includes("unable") && eSplit.includes("id")) {
-      sMsg(msg.channel, `Unable to find an id`);
+      sMsg(msg.channel, `Unable to find an id, please make sure it is public.`);
     } else {
       errHandler(e, infoObj, true, msg.channel);
     }
