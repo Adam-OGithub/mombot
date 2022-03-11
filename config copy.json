@@ -32,5 +32,8 @@
     "port": "xxxxxx",
     "ip": "xxxxx",
     "log": "xxxxx"
+  },
+  "steam": {
+    "webapikey": "xxxxx"
   }
 }

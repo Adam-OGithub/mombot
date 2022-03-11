@@ -63,7 +63,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         },
         {
           name: "\u2800",
-          value: `${pre}meme\n${pre}animalfact`,
+          value: `${pre}meme\n${pre}animalfact\n${pre}steam`,
           inline: true,
         },
         {
@@ -156,6 +156,9 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           break;
         case "music":
           out = `{play} youtubeUrl #Plays a video from youtube.\n\n{playlist} youtubePlaylistUrl, with list= in the url #Gets songs from a playlist to play.\n\n{add} youtubeUrl #Adds a song to queue list.\n\n{skip} #Skips to the next song in the queue.\n\n{stop} #Clears queue and stops mom.\n\n{repeat} #Adds current song to next song.\n\n{queue} #Gets song info such as current,next and last.\n\n{volume} {number} #Changes the volume of mom.\n\n#MOMS music is AD FREE!`;
+          break;
+        case "steam":
+          out = `{game name} #Momma gets steam information`;
           break;
         case "help":
           out = `{help}\n#Get main menu for help.`;
