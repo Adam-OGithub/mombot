@@ -4,6 +4,7 @@ const {
   makeEmbed,
   getPre,
   errHandler,
+  argToReg,
 } = require("../custom_nodemods/utils.js");
 exports.run = async (client, msg, args, discord, infoObj) => {
   try {
@@ -93,7 +94,8 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       sMsg(msg.channel, embed);
     } else {
       let out;
-      switch (args[1].toLowerCase()) {
+      const newSelect = await argToReg(args[1], infoObj.allComs);
+      switch (newSelect) {
         case "ud":
           out = `{ud} <word or phrase>\n#Gets the urban dictionary definition of the word or phrase.`;
           break;

@@ -15,6 +15,7 @@ const {
   sMsg,
   errHandler,
   getChannel,
+  argToReg,
 } = require("./custom_nodemods/utils.js");
 const { changeAc, reminders } = require("./custom_nodemods/timers.js");
 const allComs = getDirFiles("../commands");
@@ -34,6 +35,7 @@ const permCheck = (perms) => {
 const map = new Map();
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
   try {
+    infoObj.allComs = allComs;
     const channel = await getChannel(infoObj.channelId, infoObj);
     const perms = channel.permissionsFor(message.client.user);
     const [bool, permsFailed] = permCheck(perms);
@@ -51,43 +53,28 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
         }
       }
     } else {
-      let newSelect = select;
-      //trys to get command matching first 2 letters
-      const selectSplit = select.split("");
-      let regStr = "";
-      selectSplit.forEach((letter) => {
-        regStr += `[${letter.toLowerCase()}]`;
-      });
-
-      const reg = new RegExp(`^${regStr}`);
-      allComs.forEach((entry) => {
-        if (reg.test(entry)) {
-          newSelect = entry;
-        }
-      });
-
+      const newSelect = await argToReg(select, allComs);
       if (guildFail) {
         map.delete(infoObj.guildID);
       }
       const disabled = [];
-      if (
-        disabled.includes(newSelect.toLowerCase()) &&
-        config.testing.usedev !== true
-      ) {
-        sMsg(message.channel, `${newSelect} is disabled for now.`);
-      } else {
-        const runCommand = require(`./${dir}/${newSelect}.js`);
+      if (newSelect !== true) {
+        if (disabled.includes(newSelect) && config.testing.usedev !== true) {
+          sMsg(message.channel, `${newSelect} is disabled for now.`);
+        } else {
+          const runCommand = require(`./${dir}/${newSelect}.js`);
 
-        if (message.author.bot !== true || allComs.includes(newSelect)) {
-          //Does not log hello as it causes to much spam in logs
-          if (newSelect !== "hello") {
-            momL(infoObj, newSelect);
-          }
+          if (message.author.bot !== true || allComs.includes(newSelect)) {
+            //Does not log hello as it causes to much spam in logs
+            if (newSelect !== "hello") {
+              momL(infoObj, newSelect);
+            }
 
-          if (dir !== "momcommands") {
-            momReact(message, client, infoObj);
+            if (dir !== "momcommands") {
+              momReact(message, client, infoObj);
+            }
+            runCommand.run(client, message, args, Discord, infoObj);
           }
-          runCommand.run(client, message, args, Discord, infoObj);
         }
       }
     }

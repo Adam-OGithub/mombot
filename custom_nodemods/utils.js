@@ -565,6 +565,26 @@ const momReact = (msg, client, infoObj) => {
   emoteMsg(lastMsg, emoteChar);
 };
 
+const argToReg = async (argument, commandArray) => {
+  const prom = new Promise((resolve, reject) => {
+    //trys to get command matching  letters
+    const argSplit = argument.toLowerCase().split("");
+    let regStr = "";
+    argSplit.forEach((letter) => {
+      regStr += `[${letter}]`;
+    });
+    //On first find return
+    const reg = new RegExp(`^${regStr}`);
+    commandArray.forEach((entry) => {
+      if (reg.test(entry)) {
+        resolve(entry);
+      }
+    });
+    resolve(true);
+  });
+  return prom;
+};
+
 exports.randomIndex = randomIndex;
 exports.round = round;
 exports.markovChain = markovMe;
@@ -598,3 +618,4 @@ exports.momReact = momReact;
 exports.momL = momL;
 exports.makeClean = makeClean;
 exports.errHandler = errHandler;
+exports.argToReg = argToReg;
