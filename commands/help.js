@@ -155,7 +155,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           out = `{getinfo}\n#Gets server information.`;
           break;
         case "music":
-          out = `{play} youtubeUrl #Plays a video from youtube.\n\n{playlist} youtubePlaylistUrl, with list= in the url #Gets songs from a playlist to play.\n\n{add} youtubeUrl #Adds a song to queue list.\n\n{skip} #Skips to the next song in the queue.\n\n{stop} #Clears queue and stops mom.\n\n{repeat} #Adds current song to next song.\n\n{queue} #Gets song info such as current,next and last.\n\n{volume} {number} #Changes the volume of mom.\n\n#MOMS music is AD FREE!`;
+          out = `Important: If playing a list make sure it does not include &index=x or it will just play one song. All playlist and songs must be public or unlisted to be able to play.\n\n  {play} youtubeUrl #Plays a video from youtube or a list from youtube. \n\n{add} youtubeUrl #Adds a song to queue list.\n\n{skip} #Skips to the next song in the queue.\n\n{stop} #Clears queue and stops mom.\n\n{repeat} #Adds current song to next song.\n\n{queue} #Gets song info such as current,next and last.\n\n{volume} {number} #Changes the volume of mom.\n\n#MOMS music is AD FREE!`;
           break;
         case "steam":
           out = `{game name} #Momma gets steam information`;

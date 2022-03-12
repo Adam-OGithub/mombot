@@ -127,7 +127,8 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         "I need the permissions to join and speak in your voice channel!"
       );
     } else {
-      const reg = new RegExp(`[l][i][s][t][=]`);
+      const reg1 = new RegExp(`[l][i][s][t][=]`);
+      const reg2 = new RegExp(`[i][n][d][e][x][=]`);
       const queueContruct = {
         textChannel: msg.channel,
         voiceChannel: voiceChannel,
@@ -142,14 +143,31 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         dispatcher: null,
       };
       if (arg === "play" && serverQueue === undefined) {
-        const song = await getSong(url);
-        queueContruct.songs.push(song);
-        const connection = await voiceChannel.join();
-        queueContruct.connection = connection;
-        queue.set(infoObj.guildID, queueContruct);
-        queueContruct.nextSong = queueContruct.songs[1];
-        play(infoObj.guildID, queueContruct.songs[0], msg, infoObj);
-        msg.delete();
+        const startPlay = async () => {
+          const connection = await voiceChannel.join();
+          queueContruct.connection = connection;
+          queue.set(infoObj.guildID, queueContruct);
+          queueContruct.nextSong = queueContruct.songs[1];
+          play(infoObj.guildID, queueContruct.songs[0], msg, infoObj);
+          msg.delete();
+        };
+
+        if (reg1.test(url) && reg2.test(url) !== true) {
+          const urlSplit = url.split("list=");
+          const batch = await ytpl(urlSplit[1]);
+          for (let i = 0; i < batch.items.length; i++) {
+            let song = await getSong(batch.items[i].url);
+            queueContruct.songs.push(song);
+            //if play list is less than 2 songs will not play
+            if (i === 1) {
+              startPlay();
+            }
+          }
+        } else {
+          const song = await getSong(url);
+          queueContruct.songs.push(song);
+          startPlay();
+        }
       } else if (arg === "skip" && serverQueue !== undefined) {
         serverQueue.lastsong = serverQueue.songs[0];
         serverQueue.songs.shift();
@@ -196,29 +214,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           `Momma loves this song, so I am playing it again.`
         );
         sMsg(msg.channel, embed);
-      } else if (arg === "playlist" && serverQueue === undefined) {
-        if (reg.test(url)) {
-          const urlSplit = url.split("list=");
-          const batch = await ytpl(urlSplit[1]);
-          for (let i = 0; i < batch.items.length; i++) {
-            let song = await getSong(batch.items[i].url);
-            queueContruct.songs.push(song);
-            //if play list is less than 2 songs will not play
-            if (i === 1) {
-              msg.delete();
-              const connection = await voiceChannel.join();
-              queueContruct.connection = connection;
-              queue.set(infoObj.guildID, queueContruct);
-              queueContruct.nextSong = queueContruct.songs[1];
-              play(infoObj.guildID, queueContruct.songs[0], msg, infoObj);
-            }
-          }
-        } else {
-          sMsg(
-            msg.channel,
-            `Momma is missing list= in the url, ${arg} ${getPre()}help music `
-          );
-        }
       } else if (arg === "queue" && serverQueue !== undefined) {
         const q = serverQueue;
         const a = `Song count: ${q.songs.length}`;
@@ -274,11 +269,15 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     }
   } catch (e) {
     const eSplit = e.toString().toLowerCase().split(" ");
+    console.log(eSplit);
     if (eSplit.includes("no") && eSplit.includes("video")) {
       sMsg(msg.channel, `No video id found, please make sure it is public.`);
     } else if (eSplit.includes("not") && eSplit.includes("youtube")) {
       sMsg(msg.channel, `Not a Youtube domain`);
-    } else if (eSplit.includes("unknown") && eSplit.includes("playlist")) {
+    } else if (
+      (eSplit.includes("unknown") && eSplit.includes("playlist")) ||
+      (eSplit.includes("playlist") && eSplit.includes("exist."))
+    ) {
       sMsg(msg.channel, `Unable to find that playlist.`);
     } else if (eSplit.includes("unable") && eSplit.includes("id")) {
       sMsg(msg.channel, `Unable to find an id, please make sure it is public.`);
