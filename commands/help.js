@@ -5,7 +5,6 @@ const {
   getPre,
   errHandler,
 } = require("../custom_nodemods/utils.js");
-const { country, category } = require("../custom_nodemods/foodlist.js");
 exports.run = async (client, msg, args, discord, infoObj) => {
   try {
     const pre = getPre();
@@ -15,7 +14,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       const ending = [
         {
           name: "\u2800",
-          value: `Say ${codeH}${pre}help <command>${codeH} to get more information on a specific command.`,
+          value: `Say ${codeH}${pre}help <command>${codeH} to get more information on a specific command. Command is in {}, sub command is in <>, please do not include these in the command.Anything in quotes " has to be quoted.`,
           inline: true,
         },
       ];
@@ -102,18 +101,13 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           out = `{mom}\n#Momma pep talk.Sometimes pep down.`;
           break;
         case "food":
-          out = `{food} #Momma gonna make you some random food.\n{food} {type} #ie: ${pre}food seafood , momma gets you some food.\nfoodall #Gets all avaiable food types\n{food} "ingredient1,ingedient2,ingedient3" #Momma checks her cookbook for those ingredients`;
-          break;
-        case "foodall":
-          out = `COUNTRY:\n${country.join(`\n`)}\n\nCATEGORY:\n${category.join(
-            `\n`
-          )}`;
+          out = `{food} #Momma gonna make you some random food.\n{food} <type> #ie: ${pre}food seafood , momma gets you some food.\n{food} "ingredient1,ingedient2,ingedient3" #Momma checks her cookbook for those ingredients`;
           break;
         case "drink":
-          out = `{drink} #Momma gonna make you a strong random drink.\n{drink} type #ie: ${pre}drink margarita, momma gets you a type of strong drink\n{drink} "ingredient1,ingredient2" #Momma checks her cabinet for those ingredients`;
+          out = `{drink} #Momma gonna make you a strong random drink.\n{drink} <type> #ie: ${pre}drink margarita, momma gets you a type of strong drink\n{drink} "ingredient1,ingredient2" #Momma checks her cabinet for those ingredients`;
           break;
         case "weather":
-          out = `{weather}\nMomma gets weather from https://openweathermap.org/api`;
+          out = `{weather} <zipcode or city name>\nMomma gets weather from https://openweathermap.org/api`;
           break;
         case "poll":
           out = `{poll} "question" "option 1,option 2,option 3, option 4" #Momma creates you a  poll. \n{poll} "question" "option 1,option 2,option 3, option 4" "time in seconds" #Momma creates you a poll with a timer.`;
@@ -149,13 +143,13 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           out = `{momscode}\n#Get moms Github code!`;
           break;
         case "set":
-          out = ` {set} prison #Sets prison channel.\n {set} prison_remove #Removes prison channel.\n {set} prison_role "<role name>" #Sets role used for prison.\n {set} hello #Allows to speak with other discords.\n {set} hello_remove #Removes speaking with other discords.`;
+          out = ` {set} <prison> #Sets prison channel.\n {set} <prison_remove> #Removes prison channel.\n {set} <prison_role> "<role name>" #Sets role used for prison.\n {set} <hello> #Allows to speak with other discords.\n {set} <hello_remove> #Removes speaking with other discords.`;
           break;
         case "getinfo":
           out = `{getinfo}\n#Gets server information.`;
           break;
         case "music":
-          out = `Important: If playing a list make sure it does not include &index=x or it will just play one song. All playlists and songs must be public or unlisted to be able to play.\n\n{play} youtubeUrl #Plays a video from YouTube or a list from YouTube. \n\n{add} YouTubeUrl #Adds a song to queue list.\n\n{skip} #Skips to the next song in the queue.\n\n{stop} #Clears queue and stops mom.\n\n{repeat} #Adds current song to next song.\n\n{queue} #Gets song info such as current,next and last.\n\n{volume} {number} #Changes the volume of mom.\n\n#MOMS music is AD FREE!`;
+          out = `Important: If playing a list make sure it does not include &index=x or it will just play one song. All playlists and songs must be public or unlisted to be able to play.\n\n{play} <youtubeUrl> #Plays a video from YouTube or a list from YouTube. \n\n{add} <YouTubeUrl> #Adds a song to queue list.\n\n{skip} #Skips to the next song in the queue.\n\n{stop} #Clears queue and stops mom.\n\n{repeat} #Adds current song to next song.\n\n{queue} #Gets song info such as current,next and last.\n\n{volume} <number> #Changes the volume of mom.\n\n#MOMS music is AD FREE!`;
           break;
         case "steam":
           out = `{game name} #Momma gets steam information`;
