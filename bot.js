@@ -56,7 +56,7 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
       const selectSplit = select.split("");
       let regStr = "";
       selectSplit.forEach((letter) => {
-        regStr += `[${letter}]`;
+        regStr += `[${letter.toLowerCase()}]`;
       });
 
       const reg = new RegExp(`^${regStr}`);
