@@ -73,7 +73,10 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
             if (dir !== "momcommands") {
               momReact(message, client, infoObj);
             }
+
+            message.channel.startTyping();
             runCommand.run(client, message, args, Discord, infoObj);
+            message.channel.stopTyping();
           }
         }
       }
@@ -82,6 +85,7 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
     if (select !== "hello") {
       momL(infoObj, select);
     }
+    message.channel.stopTyping();
     errHandler(e, infoObj);
   }
 };
