@@ -256,7 +256,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           } else {
             sMsg(
               msg.channel,
-              `Momma don't want to bust those eardrums, try a volume lower or equal to 12`
+              `Momma don't want to bust those eardrums, try a volume 0-12`
             );
           }
         }
