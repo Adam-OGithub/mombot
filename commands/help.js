@@ -14,7 +14,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       const ending = [
         {
           name: "\u2800",
-          value: `Say ${codeH}${pre}help <command>${codeH} to get more information on a specific command.\nCan also use first two letters of command #ie: ${codeH}${pre}he${codeH}, for help.\n\nCommand is in {}, sub command is in <>, please do not include these in the command.Anything in quotes " has to be quoted.`,
+          value: `Say ${codeH}${pre}help <command>${codeH} to get more information on a specific command.\nCan also use any length of a command #ie: ${codeH}${pre}hel${codeH}, for help.\n\nCommand is in {}, sub command is in <>, please do not include these in the command.Anything in quotes " has to be quoted.`,
           inline: true,
         },
       ];
