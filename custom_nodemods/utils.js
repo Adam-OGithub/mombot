@@ -290,51 +290,56 @@ const getIsMom = (users, client) => {
 };
 
 const errHandler = async (error, infoObj = {}, message, channelObj) => {
-  console.log(error);
-  let getline = [];
-  if (error?.stack) {
-    const reg = new RegExp(`[.][j][s][:]`);
-    const errArr = error.stack.split("at");
-    errArr.forEach((entry) => {
-      if (reg.test(entry)) {
-        getline.push(entry);
-      }
-    });
-  }
+  try {
+    console.log(error);
+    let getline = [];
+    if (error?.stack) {
+      const reg = new RegExp(`[.][j][s][:]`);
+      const errArr = error.stack.split("at");
+      errArr.forEach((entry) => {
+        if (reg.test(entry)) {
+          getline.push(entry);
+        }
+      });
+    }
 
-  if (infoObj?.msgId === undefined) {
-    infoObj.msgId = 1;
-  }
-  const errorObj = {
-    message: message,
-    stack: error?.requireStack,
-    code: error?.code,
-    lines: getline,
-    error: error,
-  };
+    if (infoObj?.msgId === undefined) {
+      infoObj.msgId = 1;
+    }
+    const errorObj = {
+      message: message,
+      stack: error?.requireStack,
+      code: error?.code,
+      lines: getline,
+      error: error,
+    };
 
-  if (infoObj.msgId !== 1) {
-    const res = await mongoQuery(
-      { messageId: infoObj.msgId },
-      config.database.log
-    );
-    if (res.length > 0) {
-      mongoUpdate(
+    if (infoObj.msgId !== 1) {
+      const res = await mongoQuery(
         { messageId: infoObj.msgId },
-        { $push: { errors: errorObj } },
         config.database.log
       );
+      if (res.length > 0) {
+        mongoUpdate(
+          { messageId: infoObj.msgId },
+          { $push: { errors: errorObj } },
+          config.database.log
+        );
+      }
+    } else {
+      errHandler(error);
     }
-  } else {
-    errHandler(error);
-  }
 
-  if (channelObj !== undefined && message !== undefined) {
-    let newMsg = message;
-    if (message === true) {
-      newMsg = "Momma is having a rough day sweety,try again in a little bit.";
+    if (channelObj !== undefined && message !== undefined) {
+      let newMsg = message;
+      if (message === true) {
+        newMsg =
+          "Momma is having a rough day sweety,try again in a little bit.";
+      }
+      sMsg(channelObj, newMsg);
     }
-    sMsg(channelObj, newMsg);
+  } catch (e) {
+    console.log(`error handle failed`, e);
   }
 };
 
