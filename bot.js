@@ -51,22 +51,34 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
         }
       }
     } else {
+      let newSelect = select;
+      //trys to get command matching first 2 letters
+      if (select.length === 2) {
+        const selectSplit = select.split("");
+        const reg = new RegExp(`^[${selectSplit[0]}][${selectSplit[1]}]`);
+        allComs.forEach((entry) => {
+          if (reg.test(entry)) {
+            newSelect = entry;
+          }
+        });
+      }
+
       if (guildFail) {
         map.delete(infoObj.guildID);
       }
       const disabled = [];
       if (
-        disabled.includes(select.toLowerCase()) &&
+        disabled.includes(newSelect.toLowerCase()) &&
         config.testing.usedev !== true
       ) {
-        sMsg(message.channel, `${select} is disabled for now.`);
+        sMsg(message.channel, `${newSelect} is disabled for now.`);
       } else {
-        const runCommand = require(`./${dir}/${select}.js`);
+        const runCommand = require(`./${dir}/${newSelect}.js`);
 
-        if (message.author.bot !== true || allComs.includes(select)) {
+        if (message.author.bot !== true || allComs.includes(newSelect)) {
           //Does not log hello as it causes to much spam in logs
-          if (select !== "hello") {
-            momL(infoObj, select);
+          if (newSelect !== "hello") {
+            momL(infoObj, newSelect);
           }
 
           if (dir !== "momcommands") {
