@@ -8,6 +8,7 @@ const {
   errHandler,
   parseQuote,
   countQuote,
+  getPre,
 } = require("../custom_nodemods/utils.js");
 const config = require("../config.json");
 const { millToOz } = require("../custom_nodemods/conversions.js");
@@ -80,7 +81,8 @@ const error = (msg) => {
 };
 exports.run = async (client, msg, args, discord, infoObj) => {
   const randomLetter = randomIndex(letters);
-  const multiArgs = getMulti(infoObj, "drink");
+  const arg0 = args[0].split(`${getPre()}`)[1];
+  const multiArgs = getMulti(infoObj, arg0);
   let url = `${baseUrl}/search.php?f=${randomLetter}`;
 
   if (args[1] !== undefined && multiArgs !== undefined) {

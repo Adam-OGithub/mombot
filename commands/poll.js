@@ -10,6 +10,7 @@ const {
   parseRplc,
   errHandler,
   randomIndex,
+  getPre,
 } = require("../custom_nodemods/utils.js");
 
 exports.run = async (client, msg, args, discord, infoObj) => {
@@ -18,7 +19,8 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     //Makes sure there are only 4 quotes
     if (count === 4 || count === 6) {
       //easier split for quates
-      const fArgs = parseQuote(infoObj, "poll");
+      const arg0 = args[0].split(`${getPre()}`)[1];
+      const fArgs = parseQuote(infoObj, arg0);
       const question = fArgs[1];
       const options = fArgs[3].split(",");
       const time = fArgs[5];

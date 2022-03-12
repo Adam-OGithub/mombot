@@ -7,6 +7,7 @@ const {
   randomInt,
   parseQuote,
   countQuote,
+  getPre,
 } = require("../custom_nodemods/utils.js");
 const {
   millToOz,
@@ -85,8 +86,8 @@ const sendFood = (msg, mealObj, str, countFood) => {
   sMsg(msg.channel, embed);
 };
 
-const getMulti = (infoObj) => {
-  const multiArgs = parseQuote(infoObj, "food")[1];
+const getMulti = (infoObj, arg0) => {
+  const multiArgs = parseQuote(infoObj, arg0)[1];
   const counts = countQuote(infoObj);
   if (counts === 2 && multiArgs !== undefined) {
     const mutliArgSplit = multiArgs.split(",");
@@ -109,7 +110,8 @@ exports.run = async (client, msg, args, discord, infoObj) => {
   let hasInclude = false;
   let argInvalid = false;
   let arr = [];
-  const multiArgs = getMulti(infoObj);
+  const arg0 = args[0].split(`${getPre()}`)[1];
+  const multiArgs = getMulti(infoObj, arg0);
   if (arg1 !== undefined) {
     arg1 = arg1.toLowerCase();
 

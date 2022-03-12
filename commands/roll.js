@@ -93,7 +93,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
   try {
     if (args[1] !== undefined) {
       const lower = infoObj.msg.toLowerCase().split(" ").join("").split("d");
-      const multi = lower[0].split(`${getPre()}roll`)[1];
+      const multi = lower[0].split(`${args[0]}`)[1];
       const die = Number.parseInt(lower[1], 10);
       const multiDie = Number.parseInt(multi, 10);
 

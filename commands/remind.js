@@ -8,6 +8,7 @@ const {
   parseQuote,
   countQuote,
   errHandler,
+  getPre,
 } = require("../custom_nodemods/utils.js");
 const { getRoles } = require("../custom_nodemods/permissions.js");
 const { mongoQuery, mongoInsert } = require("../custom_nodemods/mongoCon.js");
@@ -38,7 +39,8 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       const count = countQuote(infoObj);
 
       if (count === 4) {
-        const fArgs = parseQuote(infoObj, "remind");
+        const arg0 = args[0].split(`${getPre()}`)[1];
+        const fArgs = parseQuote(infoObj, arg0);
         reminder.timetemp = fArgs[1];
         reminder.msg = fArgs[3];
       }
