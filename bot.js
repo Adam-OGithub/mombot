@@ -53,15 +53,18 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
     } else {
       let newSelect = select;
       //trys to get command matching first 2 letters
-      if (select.length === 2) {
-        const selectSplit = select.split("");
-        const reg = new RegExp(`^[${selectSplit[0]}][${selectSplit[1]}]`);
-        allComs.forEach((entry) => {
-          if (reg.test(entry)) {
-            newSelect = entry;
-          }
-        });
-      }
+      const selectSplit = select.split("");
+      let regStr = "";
+      selectSplit.forEach((letter) => {
+        regStr += `[${letter}]`;
+      });
+
+      const reg = new RegExp(`^${regStr}`);
+      allComs.forEach((entry) => {
+        if (reg.test(entry)) {
+          newSelect = entry;
+        }
+      });
 
       if (guildFail) {
         map.delete(infoObj.guildID);
