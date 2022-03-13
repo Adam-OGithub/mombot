@@ -165,7 +165,10 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           break;
       }
 
-      const embed = makeEmbed(`Help for ${args[1]}`, `${codeB}${out}${codeB}`);
+      const embed = makeEmbed(
+        `Help for ${newSelect}`,
+        `${codeB}${out}${codeB}`
+      );
       sMsg(msg.channel, embed);
     }
   } catch (e) {
