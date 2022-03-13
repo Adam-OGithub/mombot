@@ -33,6 +33,7 @@ const permCheck = (perms) => {
   return [value, outArr];
 };
 const map = new Map();
+const disabled = [];
 const altMusic = ["play", "stop", "repeat", "skip", "queue", "volume", "add"];
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
   try {
@@ -65,7 +66,6 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
       if (guildFail) {
         map.delete(infoObj.guildID);
       }
-      const disabled = [];
       if (newSelect !== true) {
         if (disabled.includes(newSelect) && config.testing.usedev !== true) {
           sMsg(message.channel, `${newSelect} is disabled for now.`);
