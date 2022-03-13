@@ -33,6 +33,7 @@ const permCheck = (perms) => {
   return [value, outArr];
 };
 const map = new Map();
+const altMusic = ["play", "stop", "repeat", "skip", "queue", "volume", "add"];
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
   try {
     infoObj.allComs = allComs;
@@ -53,7 +54,14 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
         }
       }
     } else {
-      const newSelect = await argToReg(select, allComs);
+      let newSelect = await argToReg(select, allComs);
+      const altSelectMusic = await argToReg(select, altMusic);
+      if (altSelectMusic !== true) {
+        newSelect = "music";
+        args[0] = "music";
+        args[2] = args[1];
+        args[1] = altSelectMusic;
+      }
       if (guildFail) {
         map.delete(infoObj.guildID);
       }
