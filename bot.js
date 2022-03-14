@@ -55,14 +55,19 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
         }
       }
     } else {
-      let newSelect = await argToReg(select, allComs);
-      const altSelectMusic = await argToReg(select, altMusic);
-      if (altSelectMusic !== true) {
-        newSelect = "music";
-        args[0] = "music";
-        args[2] = args[1];
-        args[1] = altSelectMusic;
+      let newSelect = select;
+      let altSelectMusic = "";
+      if (select.length >= 2) {
+        newSelect = await argToReg(select, allComs);
+        altSelectMusic = await argToReg(select, altMusic);
+        if (altSelectMusic !== true) {
+          newSelect = "music";
+          args[0] = newSelect;
+          args[2] = args[1];
+          args[1] = altSelectMusic;
+        }
       }
+
       if (guildFail) {
         map.delete(infoObj.guildID);
       }
