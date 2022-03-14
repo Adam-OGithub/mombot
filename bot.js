@@ -38,6 +38,7 @@ const altMusic = ["play", "stop", "repeat", "skip", "queue", "volume", "add"];
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
   try {
     infoObj.allComs = allComs;
+    infoObj.altMusic = altMusic;
     const channel = await getChannel(infoObj.channelId, infoObj);
     const perms = channel.permissionsFor(message.client.user);
     const [bool, permsFailed] = permCheck(perms);
@@ -61,6 +62,7 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
         newSelect = await argToReg(select, allComs);
         altSelectMusic = await argToReg(select, altMusic);
         if (altSelectMusic !== true) {
+          console.log(``);
           newSelect = "music";
           args[0] = newSelect;
           args[2] = args[1];

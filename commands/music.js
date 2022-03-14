@@ -8,6 +8,7 @@ const {
   sMsg,
   makeEmbed,
   getPre,
+  argToReg,
 } = require("../custom_nodemods/utils.js");
 const queue = new Map();
 
@@ -110,11 +111,15 @@ exports.run = async (client, msg, args, discord, infoObj) => {
   try {
     //
     const serverQueue = queue.get(infoObj.guildID);
-    const arg = args[1];
+    let arg = args[1];
+    if (arg.length >= 2) {
+      arg = await argToReg(args[1], infoObj.altMusic);
+    }
+
     const arg2 = args[2];
     //If no queue exists go through process of creating one
     const voiceChannel = msg.member.voice.channel;
-    const url = args[2];
+    const url = arg2;
     if (!voiceChannel) {
       sMsg(
         msg.channel,
