@@ -62,7 +62,6 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
         newSelect = await argToReg(select, allComs);
         altSelectMusic = await argToReg(select, altMusic);
         if (altSelectMusic !== true) {
-          console.log(``);
           newSelect = "music";
           args[0] = newSelect;
           args[2] = args[1];
