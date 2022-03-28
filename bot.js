@@ -81,7 +81,6 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
         if (disabled.includes(newSelect) && config.testing.usedev !== true) {
           sMsg(message.channel, `${newSelect} is disabled for now.`);
         } else {
-          console.log(`1`, dir, `2`, newSelect);
           const runCommand = require(`./${dir}/${newSelect}.js`);
 
           if (message.author.bot !== true || allComs.includes(newSelect)) {
@@ -126,7 +125,6 @@ client.on("message", (message) => {
   const argIndex = infoObj.msg.split(" ").indexOf(`${getPre()}${cmd}`);
   const args = infoObj.msg.split(" ").slice(argIndex, message.content.length);
   const msgParse = infoObj.msg.split(" ");
-  console.log(isMom);
   if (cmd !== null) {
     alt(cmd, "commands", client, message, args, Discord, infoObj);
   } else if (message.mentions.everyone) {
