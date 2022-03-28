@@ -43,10 +43,6 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
     infoObj.altMusic = altMusic;
     infoObj.helloCount = countNum;
 
-    if (countNum === 30) {
-      countNum = 1;
-    }
-
     const channel = await getChannel(infoObj.channelId, infoObj);
     const perms = channel.permissionsFor(message.client.user);
     const [bool, permsFailed] = permCheck(perms);
@@ -103,6 +99,10 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
 
             runCommand.run(client, message, args, Discord, infoObj);
             message.channel.stopTyping();
+
+            if (countNum === 30) {
+              countNum = 1;
+            }
             countNum++;
           }
         }
