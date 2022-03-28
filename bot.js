@@ -36,10 +36,17 @@ const permCheck = (perms) => {
 const map = new Map();
 const disabled = [];
 const altMusic = ["play", "stop", "repeat", "skip", "queue", "volume", "add"];
+let countNum = 1;
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
   try {
     infoObj.allComs = allComs;
     infoObj.altMusic = altMusic;
+    infoObj.helloCount = countNum;
+
+    if (countNum === 30) {
+      countNum = 1;
+    }
+
     const channel = await getChannel(infoObj.channelId, infoObj);
     const perms = channel.permissionsFor(message.client.user);
     const [bool, permsFailed] = permCheck(perms);
@@ -96,6 +103,7 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
 
             runCommand.run(client, message, args, Discord, infoObj);
             message.channel.stopTyping();
+            countNum++;
           }
         }
       }

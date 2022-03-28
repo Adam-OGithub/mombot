@@ -1,8 +1,12 @@
 "use strict";
-const { sMsg, makeEmbed } = require("../custom_nodemods/utils.js");
-const { mongoQuery } = require("../custom_nodemods/mongoCon.js");
+const { sMsg, makeEmbed, makeClean } = require("../custom_nodemods/utils.js");
+const { mongoQuery, mongoInsert } = require("../custom_nodemods/mongoCon.js");
 
 exports.run = async (client, message, args, discord, infoObj) => {
+  if (infoObj.helloCount === 30) {
+    await mongoInsert({ sentence: makeClean(infoObj.msg) }, "savedmsgs");
+  }
+
   const guildIds = [];
   const channelsObj = [];
   //checks if current guild has hello enabled
