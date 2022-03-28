@@ -19,6 +19,7 @@ const {
 } = require("./custom_nodemods/utils.js");
 const { changeAc, reminders } = require("./custom_nodemods/timers.js");
 const allComs = getDirFiles("../commands");
+const allMomComs = getDirFiles("../momcommands");
 //Runs commands based on args
 const permCheck = (perms) => {
   const requiredPerms = ["CONNECT", "SPEAK", "MANAGE_MESSAGES"];
@@ -60,6 +61,9 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
       let altSelectMusic = "";
       if (select.length >= 2) {
         newSelect = await argToReg(select, allComs);
+        if (newSelect === true) {
+          newSelect = await argToReg(select, allMomComs);
+        }
         altSelectMusic = await argToReg(select, altMusic);
         if (altSelectMusic !== true) {
           newSelect = "music";
@@ -72,15 +76,18 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
       if (guildFail) {
         map.delete(infoObj.guildID);
       }
+
       if (newSelect !== true) {
         if (disabled.includes(newSelect) && config.testing.usedev !== true) {
           sMsg(message.channel, `${newSelect} is disabled for now.`);
         } else {
+          console.log(`1`, dir, `2`, newSelect);
           const runCommand = require(`./${dir}/${newSelect}.js`);
 
           if (message.author.bot !== true || allComs.includes(newSelect)) {
             //Does not log hello as it causes to much spam in logs
             if (newSelect !== "hello") {
+              message.channel.startTyping();
               momL(infoObj, newSelect);
             }
 
@@ -88,7 +95,6 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
               momReact(message, client, infoObj);
             }
 
-            message.channel.startTyping();
             runCommand.run(client, message, args, Discord, infoObj);
             message.channel.stopTyping();
           }
@@ -120,6 +126,7 @@ client.on("message", (message) => {
   const argIndex = infoObj.msg.split(" ").indexOf(`${getPre()}${cmd}`);
   const args = infoObj.msg.split(" ").slice(argIndex, message.content.length);
   const msgParse = infoObj.msg.split(" ");
+  console.log(isMom);
   if (cmd !== null) {
     alt(cmd, "commands", client, message, args, Discord, infoObj);
   } else if (message.mentions.everyone) {

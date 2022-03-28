@@ -2,10 +2,10 @@
   "name": "MOM",
   "version": "1.0.0",
   "description": "Mom bot",
-  "main": "index.js",
+  "main": "bot.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "node .": "node run index.js"
+    "node .": "node run bot.js"
   },
   "keywords": [
     "mom"
@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.24.0",
+    "brain.js": "^2.0.0-beta.6",
     "discord": "^0.8.2",
     "discord.js": "^12.5.3",
     "express": "^4.17.2",
