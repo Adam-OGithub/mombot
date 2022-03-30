@@ -224,15 +224,15 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           const q = serverQueue;
           const a = `Song count: ${q.songs.length}`;
           const b = `Volume: ${q.volume}`;
-          const c = `***Current song:***\nTitle: ${q.currentsong.title}\nUrl: ${q.currentsong.url}`;
+          const c = `***Current song:***\nTitle: ${q.currentsong?.title}\nUrl: ${q.currentsong?.url}`;
           const d =
             q.nextSong === null
               ? "***Next Song:*** None"
-              : `***Next Song:***\nTitle: ${q.nextSong.title}\nUrl: ${q.nextSong.url}`;
+              : `***Next Song:***\nTitle: ${q.nextSong?.title}\nUrl: ${q.nextSong?.url}`;
           const e =
             q.lastsong === null
               ? "***Last Song:*** None"
-              : `***Last Song:***\nTitle: ${q.lastsong.title}\nUrl: ${q.lastsong.url}`;
+              : `***Last Song:***\nTitle: ${q.lastsong?.title}\nUrl: ${q.lastsong?.url}`;
 
           const info = `${a}\n${b}\n${c}\n${d}\n${e}`;
           const embed = makeEmbed("🎵_Music Queue Info_🎵", info);
