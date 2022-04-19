@@ -100,7 +100,7 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
             runCommand.run(client, message, args, Discord, infoObj);
             message.channel.stopTyping();
 
-            if (countNum === 30) {
+            if (countNum === 20) {
               countNum = 1;
             }
             countNum++;

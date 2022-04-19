@@ -3,8 +3,14 @@ const { sMsg, makeEmbed, makeClean } = require("../custom_nodemods/utils.js");
 const { mongoQuery, mongoInsert } = require("../custom_nodemods/mongoCon.js");
 
 exports.run = async (client, message, args, discord, infoObj) => {
-  if (infoObj.helloCount === 30) {
-    await mongoInsert({ sentence: makeClean(infoObj.msg) }, "savedmsgs");
+  if (infoObj.helloCount === 20) {
+    const doNotSave = new RegExp(`[h][t][t][p]`);
+    const cleanStr = makeClean(infoObj.msg);
+    if (doNotSave.test(cleanStr.toLowerCase())) {
+      infoObj.helloCount = 19;
+    } else {
+      await mongoInsert({ sentence: cleanStr }, "savedmsgs");
+    }
   }
 
   const guildIds = [];
