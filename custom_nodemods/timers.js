@@ -8,6 +8,8 @@ const {
 } = require("./utils.js");
 const { botStatus } = require("./sayings.js");
 const { mongoQuery, mongoDelete } = require("../custom_nodemods/mongoCon.js");
+const axios = require("../node_modules/axios");
+const config = require("../config.json");
 const changeAc = async (client) => {
   //const types = ["PLAYING", "STREAMING", "LISTENING", "WATCHING", "COMPETING"];
   const types = ["PLAYING", "COMPETING"];
@@ -73,5 +75,39 @@ const reminders = async (client) => {
   }, time);
 };
 
+const foodObj = async () => {
+  const time = 60 * 1000 * 60 * 10;
+  const updateFood = async () => {
+    const baseUrl = `https://www.themealdb.com/api/json/v2/${config.mealdb.key}`;
+    const fType = await axios.get(baseUrl + "/list.php?i=list");
+    const fCatgory = await axios.get(baseUrl + "/list.php?c=list");
+    const fCountry = await axios.get(baseUrl + "/list.php?a=list");
+    let foodTypes = [];
+    let categorys = [];
+    let countries = [];
+
+    fType?.data?.meals.forEach((typeObj) => {
+      foodTypes.push(typeObj?.strIngredient);
+    });
+
+    fCatgory?.data?.meals.forEach((catObj) => {
+      categorys.push(catObj?.strCategory);
+    });
+
+    fCountry?.data?.meals.forEach((countObj) => {
+      countries.push(countObj?.strArea);
+    });
+    exports.ingredients = foodTypes;
+    exports.category = categorys;
+    exports.country = countries;
+  };
+
+  await updateFood();
+  setInterval(() => {
+    updateFood();
+  }, time);
+};
+
 exports.changeAc = changeAc;
 exports.reminders = reminders;
+exports.foodObj = foodObj;

@@ -2,6 +2,7 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const config = require(`./config.json`);
+const { foodObj } = require(`./custom_nodemods/timers`);
 const {
   genInfo,
   getPre,
@@ -37,6 +38,7 @@ const map = new Map();
 const disabled = [];
 const altMusic = ["play", "stop", "repeat", "skip", "queue", "volume", "add"];
 let countNum = 1;
+
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
   try {
     infoObj.allComs = allComs;
@@ -122,6 +124,7 @@ client.on("ready", () => {
   console.log(`\x1b[32m`, `${client.user.tag} is online!`);
   changeAc(client);
   reminders(client);
+  foodObj();
   // playstation5(client);
 });
 

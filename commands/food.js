@@ -14,11 +14,13 @@ const {
   gramToOz,
   kiloToLb,
 } = require("../custom_nodemods/conversions.js");
+
 const {
   country,
   category,
   ingredients,
-} = require("../custom_nodemods/foodlist.js");
+} = require("../custom_nodemods/timers.js");
+
 const config = require("../config.json");
 const baseUrl = `https://www.themealdb.com/api/json/v2/${config.mealdb.key}`;
 const parseData = (response) => {
