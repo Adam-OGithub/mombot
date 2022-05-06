@@ -1,5 +1,5 @@
 "use strict";
-const { Client, Intents, joinVoiceChannel } = require("discord.js");
+const { Client, Intents } = require("discord.js");
 const Discord = require("discord.js");
 const client = new Client({
   intents: [
