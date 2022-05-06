@@ -1,7 +1,7 @@
 {
   "name": "MOM",
-  "version": "1.0.0",
-  "description": "Mom bot",
+  "version": "2.0.0",
+  "description": "Mom is a bot that strives to do everything just like your real mom! From quizzing you at home, show you the weather, teaching you some cool words, playing some sweet tunes, showing you some memes, and much more!",
   "main": "bot.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,13 +17,11 @@
     "axios": "^0.24.0",
     "brain.js": "^2.0.0-beta.6",
     "discord.js": "^13.6.0",
-    "express": "^4.17.2",
     "ffmpeg-static": "^4.4.1",
     "js-file-download": "^0.4.12",
     "m3u8stream": "^0.8.6",
     "miniget": "^4.2.2",
     "mongodb": "^4.4.0",
-    "mysql": "^2.18.1",
     "openweather-apis": "^4.4.2",
     "opusscript": "^0.0.8",
     "prism-media": "^1.3.2",
