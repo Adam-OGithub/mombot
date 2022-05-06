@@ -162,7 +162,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         }
       }
     } else {
-      sMsg(message, `Darling you have to tell me a location.`);
+      sMsg(msg.channel, `Darling you have to tell me a location.`);
     }
   } catch (e) {
     errHandler(e, infoObj, true, msg.channel);

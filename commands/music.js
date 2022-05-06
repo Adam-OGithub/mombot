@@ -3,6 +3,7 @@ const ytdl = require(`../node_modules/ytdl-core`);
 const fT = require("ffmpeg-static");
 const fs = require("fs");
 const ytpl = require("ytpl");
+const { joinVoiceChannel } = require("@discordjs/voice");
 const {
   errHandler,
   sMsg,
@@ -118,15 +119,21 @@ exports.run = async (client, msg, args, discord, infoObj) => {
 
     const arg2 = args[2];
     //If no queue exists go through process of creating one
-    const voiceChannel = msg.member.voice.channel;
+    const voiceObj = msg.member.voice.channel;
+    const voiceChannel = {
+      channelId: voiceObj.id,
+      guildId: voiceObj.guild.id,
+      adapterCreator: msg.guild.voiceAdapterCreator,
+    };
+    console.log("my voice channel", voiceChannel);
     const url = arg2;
-    if (!voiceChannel) {
+    if (!voiceObj) {
       sMsg(
         msg.channel,
         "Honey, Momma ain't gunna play you music if you do not want to hear it.So get your rear in a voice channel."
       );
     } else {
-      const perms = voiceChannel.permissionsFor(msg.client.user);
+      const perms = voiceObj.permissionsFor(msg.client.user);
       if (!perms.has("CONNECT") || !perms.has("SPEAK")) {
         sMsg(
           msg.channel,
@@ -150,7 +157,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         };
         if (arg === "play" && serverQueue === undefined) {
           const startPlay = async () => {
-            const connection = await voiceChannel.join();
+            const connection = await joinVoiceChannel(voiceChannel);
             queueContruct.connection = connection;
             queue.set(infoObj.guildID, queueContruct);
             queueContruct.nextSong = queueContruct.songs[1];
@@ -276,7 +283,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     }
   } catch (e) {
     const eSplit = e.toString().toLowerCase().split(" ");
-    console.log(eSplit);
     if (eSplit.includes("no") && eSplit.includes("video")) {
       sMsg(msg.channel, `No video id found, please make sure it is public.`);
     } else if (eSplit.includes("not") && eSplit.includes("youtube")) {

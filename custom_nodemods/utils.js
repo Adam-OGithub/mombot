@@ -99,8 +99,12 @@ const sMsg = (
   msg
 ) => {
   // el.channel.send(arg);
+  let newMsg = mainMsg;
+  if (typeof mainMsg === "object") {
+    newMsg = { embeds: [mainMsg] };
+  }
   mainObj
-    .send(mainMsg)
+    .send(newMsg)
     .then((sent) => {
       if (react) {
         if (arr !== undefined) {
@@ -251,7 +255,7 @@ const getGuild = (guildId, client) => client.guilds.cache.get(guildId);
 const getLastMsg = (msg, client, infoObj) => {
   const channelCache = client.channels.cache.get(infoObj.channelId);
   const msgCache = channelCache.messages.cache;
-  return msgCache.get(msg.author.lastMessageID);
+  return msgCache.get(msg.id);
 };
 //Gets channel and users id and objects
 const parseUserChannel = (message) => {

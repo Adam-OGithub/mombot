@@ -1,6 +1,19 @@
 "use strict";
+const { Client, Intents, joinVoiceChannel } = require("discord.js");
 const Discord = require("discord.js");
-const client = new Discord.Client();
+const client = new Client({
+  intents: [
+    Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
+    Intents.FLAGS.GUILD_VOICE_STATES,
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+    Intents.FLAGS.GUILD_MESSAGE_TYPING,
+    Intents.FLAGS.GUILD_WEBHOOKS,
+    Intents.FLAGS.DIRECT_MESSAGE_TYPING,
+  ],
+});
 const config = require(`./config.json`);
 const { foodObj } = require(`./custom_nodemods/timers`);
 const {
@@ -91,7 +104,7 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
           if (message.author.bot !== true || allComs.includes(newSelect)) {
             //Does not log hello as it causes to much spam in logs
             if (newSelect !== "hello") {
-              message.channel.startTyping();
+              message.channel.sendTyping();
               momL(infoObj, newSelect);
             }
 
@@ -100,7 +113,6 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
             }
 
             runCommand.run(client, message, args, Discord, infoObj);
-            message.channel.stopTyping();
 
             if (countNum === 20) {
               countNum = 1;
@@ -114,7 +126,6 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
     if (select !== "hello") {
       momL(infoObj, select);
     }
-    message.channel.stopTyping();
     errHandler(e, infoObj);
   }
 };
@@ -128,7 +139,7 @@ client.on("ready", () => {
   // playstation5(client);
 });
 
-client.on("message", (message) => {
+client.on("messageCreate", (message) => {
   const [channels, users, usersF] = parseUsrChan(message.content);
   const infoObj = genInfo(message, client);
   const isMom = getIsMom(users, client);
