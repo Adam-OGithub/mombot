@@ -17,3 +17,10 @@ A discord bot for mom.
 # Discord
 
 - Using the latest version 13.6.0.
+
+# API's
+
+- MealDBL: https://www.themealdb.com/api.php
+- Oxford Dictionary: https://developer.oxforddictionaries.com/
+- Steam Web: https://partner.steamgames.com/doc/webapi_overview
+- Weather: https://openweathermap.org/api

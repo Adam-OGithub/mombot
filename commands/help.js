@@ -23,7 +23,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       const commands = [
         {
           name: "> Utilities",
-          value: `${pre}remind\n${pre}poll`,
+          value: `${pre}remind`,
           inline: true,
         },
         {
@@ -33,7 +33,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         },
         {
           name: "\u2800",
-          value: `${pre}proxy`,
+          value: `${pre}poll`,
           inline: true,
         },
         {
@@ -138,9 +138,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         case "dic":
           out = `{dic} <word>\n#Momma gets you a definition from https://od-api.oxforddictionaries.com/api`;
           break;
-        case "proxy":
-          out = `{proxy}\n#Momma gets you a proxy to hide in.`;
-          break;
+
         case "momscode":
           out = `{momscode}\n#Get moms Github code!`;
           break;

@@ -5,35 +5,31 @@
     "usedev": false,
     "prefix": "!",
     "database": {
-      "name": "xxxxx",
-      "ip": "xxxxx"
+      "name": "Database Name for dev",
+      "ip": "Remote ip address IE:10.0.0.3"
     }
   },
   "tokens": {
-    "dev": "xxxxx",
-    "prod": "xxxxx",
-    "weather": "xxxxx"
+    "dev": "Developer discord bot token",
+    "prod": "Production bot token",
+    "weather": "Waeather API token"
   },
   "oxford": {
-    "appid": "xxxxx",
-    "key": "xxxxx"
-  },
-  "getproxy": {
-    "host": "xxxxx",
-    "key": "xxxxx"
+    "appid": "Application ID",
+    "key": "Token"
   },
   "mealdb": {
-    "key": "xxxxx"
+    "key": "Token"
   },
   "database": {
-    "name": "xxxxx",
-    "user": "xxxxx",
-    "password": "xxxxx",
-    "port": "xxxxxx",
-    "ip": "xxxxx",
-    "log": "xxxxx"
+    "name": "Database name for prod",
+    "user": "Database user",
+    "password": "Database Password",
+    "port": "Port number IE: 27017",
+    "ip": "IP of database IE:127.0.0.1",
+    "log": "log name for anything mom logs"
   },
   "steam": {
-    "webapikey": "xxxxx"
+    "webapikey": "Token"
   }
 }
