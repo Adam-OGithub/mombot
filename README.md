@@ -33,4 +33,4 @@ The best part is mom is opensource!
 # Other
 
 - I am working on this project for fun and will add or remove features when I have time to do so.
-- If you do have any requests or questions please feel free to join this discord: https://discord.gg/PZqTpN9A8n.
+- If you do have any requests or questions please feel free to join this discord: https://discord.gg/PZqTpN9A8n. You can also see mom in action here as well.
