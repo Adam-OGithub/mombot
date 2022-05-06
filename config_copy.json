@@ -1,0 +1,35 @@
+{
+  "prefix": "$",
+  "color": "RANDOM",
+  "testing": {
+    "usedev": false,
+    "prefix": "!",
+    "database": {
+      "name": "Database Name for dev",
+      "ip": "Remote ip address IE:10.0.0.3"
+    }
+  },
+  "tokens": {
+    "dev": "Developer discord bot token",
+    "prod": "Production bot token",
+    "weather": "Weather API token"
+  },
+  "oxford": {
+    "appid": "Application ID",
+    "key": "Token"
+  },
+  "mealdb": {
+    "key": "Token"
+  },
+  "database": {
+    "name": "Database name for prod",
+    "user": "Database user",
+    "password": "Database Password",
+    "port": "Port number IE: 27017",
+    "ip": "IP of database IE:127.0.0.1",
+    "log": "log name for anything mom logs"
+  },
+  "steam": {
+    "webapikey": "Token"
+  }
+}

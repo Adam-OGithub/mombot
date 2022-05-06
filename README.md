@@ -1,6 +1,8 @@
 # mombot
 
-A discord bot for mom.
+Mom is a bot that strives to do everything just like your real mom! From quizzing you at home, show you the weather, teaching you some cool words, playing some sweet tunes, showing you some memes, and much more!
+
+The best part is mom is opensource!
 
 # Node
 
@@ -8,7 +10,9 @@ A discord bot for mom.
 
 # Config file
 
-- Need to rename "config copy.json" to "config.json".
+- Need to rename **config_copy.json** to **config.json** in order for the config to work correctly.
+- Please reference the API section to locate/sign up for tokens.
+- You do not need all the tokens to run mom, however certain commands will not work and crashes may occur.
 
 # Database - Mongo
 
