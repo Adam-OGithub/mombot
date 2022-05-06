@@ -17,6 +17,7 @@ The best part is mom is opensource!
 # Database - Mongo
 
 - Mongo auto creates collections and inserts info.
+- You will need to setup a database with a username and password.
 
 # Discord
 
