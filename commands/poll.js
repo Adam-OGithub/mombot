@@ -1,5 +1,4 @@
 "use strict";
-const { clearCookie } = require("express/lib/response");
 const {
   emotes,
   capFirst,
@@ -11,6 +10,8 @@ const {
   errHandler,
   randomIndex,
   getPre,
+  emObj,
+  getEmbed,
 } = require("../custom_nodemods/utils.js");
 
 exports.run = async (client, msg, args, discord, infoObj) => {
@@ -43,8 +44,8 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       });
 
       const embed = makeEmbed(parseRplc(question, client, infoObj), `${str}`);
-      // sMsg(msg.channel, embed, true, newEmoteArr);
-      msg.channel.send(embed).then((sent) => {
+
+      msg.channel.send(emObj(embed)).then((sent) => {
         newEmoteArr.forEach((entry) => {
           sent.react(entry);
         });
@@ -53,11 +54,15 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           i = +time;
           //Sets interval to update message
           const updateMsg = setInterval(() => {
-            const embed2 = makeEmbed(
-              parseRplc(question, client, infoObj),
-              `${str} \n Time Left to vote ${(i += -5)} seconds`
-            );
-            sent.edit(embed2);
+            // const embed2 = makeEmbed(
+            //   parseRplc(question, client, infoObj),
+            //   `${str} \n Time Left to vote ${(i += -5)} seconds`
+            // );
+            const embedMsg = getEmbed(sent);
+            embedMsg.description = `${str} \n Time Left to vote ${(i +=
+              -5)} seconds`;
+
+            sent.edit(emObj(embedMsg));
             if (i <= 0) {
               clearInterval(updateMsg);
             }
@@ -75,9 +80,10 @@ exports.run = async (client, msg, args, discord, infoObj) => {
               }
             });
             //Need to fix for multi winners above 1 etc..
-            let finalEmbed3;
+            const finalEmbed = getEmbed(sent);
+
             if (winner === 1) {
-              finalEmbed3 = `${str} \nIt is a Draw!`;
+              finalEmbed.description = `${str} \nIt is a Draw!`;
             } else {
               let finalMsg = ``;
               optionMsg.forEach((msg) => {
@@ -85,16 +91,13 @@ exports.run = async (client, msg, args, discord, infoObj) => {
                   finalMsg = msg;
                 }
               });
-              finalEmbed3 = `${str} \nWinner is ${winnerObj.winner._emoji.name}\n${finalMsg}`;
+              finalEmbed.description = `${str} \nWinner is ${winnerObj.winner._emoji.name}\n${finalMsg}`;
             }
-            const embed3 = makeEmbed(
-              parseRplc(question, client, infoObj),
-              finalEmbed3
-            );
-            sent.edit(embed3);
+            sent.edit(emObj(finalEmbed));
           }, i * 1000 + 2000);
         }
-      }); //end msg.send
+      });
+      //end msg.send
     } else {
       getHelp(msg.channel, "poll");
     }

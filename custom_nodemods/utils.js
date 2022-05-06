@@ -88,6 +88,11 @@ const emotes = [
   "🐟",
 ];
 
+const emObj = (embedObject) => {
+  return {
+    embeds: [embedObject],
+  };
+};
 //Sends message to respective channel or reacts to message
 const sMsg = (
   mainObj,
@@ -101,7 +106,7 @@ const sMsg = (
   // el.channel.send(arg);
   let newMsg = mainMsg;
   if (typeof mainMsg === "object") {
-    newMsg = { embeds: [mainMsg] };
+    newMsg = emObj(mainMsg);
   }
   mainObj
     .send(newMsg)
@@ -201,6 +206,9 @@ const makeEmbed = (
   }
   return embed;
 };
+
+const getEmbed = (messageWEmbed) =>
+  new Discord.MessageEmbed(messageWEmbed.embeds[0]);
 
 const getToken = () => {
   let token = ``;
@@ -628,3 +636,5 @@ exports.momL = momL;
 exports.makeClean = makeClean;
 exports.errHandler = errHandler;
 exports.argToReg = argToReg;
+exports.emObj = emObj;
+exports.getEmbed = getEmbed;
