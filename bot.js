@@ -31,6 +31,7 @@ const {
   getChannel,
   argToReg,
   dateInfo,
+  msgAuth,
 } = require("./custom_nodemods/utils.js");
 const { changeAc, reminders } = require("./custom_nodemods/timers.js");
 const allComs = getDirFiles("../commands");
@@ -94,7 +95,9 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
               mappedUser.count = 1;
               mappedUser.notifiedChannel = false;
             } else {
-              mappedUser.lockExpire = mappedUser.lockExpire + lockAddition;
+              if (select !== "hello") {
+                mappedUser.lockExpire = mappedUser.lockExpire + lockAddition;
+              }
             }
           } else {
             mappedUser.locked = true;
@@ -106,10 +109,13 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
             mappedUser.count = 1;
           }
         }
-        //addes count to user map objecct
-        let count = mappedUser.submitCount;
-        count++;
-        mappedUser.submitCount = count;
+
+        if (select !== "hello") {
+          //addes count to user map objecct
+          let count = mappedUser.submitCount;
+          count++;
+          mappedUser.submitCount = count;
+        }
       }
     } else {
       userMap.set(infoObj.tag, { bypass: true });
@@ -193,7 +199,8 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
           `User ${infoObj.tag} is blocked from commands until ${humanDate}, further messages will be sent directly.`
         );
       } else {
-        message.author.send(
+        msgAuth(
+          message,
           `You are blocked from using ${client.user.tag} until ${humanDate}`
         );
       }

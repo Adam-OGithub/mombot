@@ -130,6 +130,9 @@ const sMsg = (
     });
 };
 
+const msgAuth = (message, infoString) => {
+  message.author.send(infoString);
+};
 //Generates client and message information for easieraccess
 const genInfo = (msg, client) => {
   const myObj = {};
@@ -640,3 +643,4 @@ exports.argToReg = argToReg;
 exports.emObj = emObj;
 exports.getEmbed = getEmbed;
 exports.dateInfo = dateInfo;
+exports.msgAuth = msgAuth;
