@@ -48,8 +48,8 @@ const permCheck = (perms) => {
   return [value, outArr];
 };
 const map = new Map();
-const disabled = [];
 const altMusic = ["play", "stop", "repeat", "skip", "queue", "volume", "add"];
+const disabled = ["music", ...altMusic];
 let countNum = 1;
 
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
