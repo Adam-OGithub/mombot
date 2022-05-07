@@ -15,7 +15,7 @@ const client = new Client({
   ],
 });
 const config = require(`./config.json`);
-const { commandSpam } = require(`./custom_nodemods/spamprotect.js`);
+const { commandSpam, spamMsg } = require(`./custom_nodemods/spamprotect.js`);
 const {
   genInfo,
   getPre,
@@ -130,42 +130,7 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
         }
       }
     } else {
-      const humanDate = `${new Date(currentUserMapped.lockExpire * 1000)}`;
-      let instructions = "";
-
-      switch (currentUserMapped.block.code) {
-        case 1:
-          instructions = "use the commands with $ ";
-          break;
-        case 2:
-          instructions = "chat in any channel";
-          break;
-        default:
-          instructions = "Code not found";
-          break;
-      }
-
-      const additionalMsg = `You were blocked for ***${currentUserMapped.block.type}***, If you ${instructions} you will be blocked for an additonal ***${currentUserMapped.block.maxExpire}*** seconds`;
-      const msg30 = `You are blocked from using ***${client.user.tag}*** until ***${humanDate}***.\n\n${additionalMsg}.\n\nYou will only recieve this message every ***30*** messages.`;
-      if (currentUserMapped.notifiedChannel === false) {
-        sMsg(
-          message.channel,
-          `User ***${infoObj.tag}*** is blocked from commands until ***${humanDate}***, further messages will be sent directly.${additionalMsg}.`
-        );
-      } else {
-        if (select !== "hello" || currentUserMapped.helloBypass) {
-          let count = currentUserMapped.notifiedcount;
-          count++;
-          currentUserMapped.notifiedcount = count;
-          if (currentUserMapped.notifiedcount <= 1) {
-            msgAuth(message, msg30);
-          } else if (currentUserMapped.notifiedcount === 31) {
-            currentUserMapped.notifiedcount = 2;
-            msgAuth(message, msg30);
-          }
-        }
-      }
-      currentUserMapped.notifiedChannel = true;
+      spamMsg(message, select, infoObj, client);
     }
   } catch (e) {
     if (select !== "hello") {

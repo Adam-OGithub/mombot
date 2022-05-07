@@ -1,6 +1,6 @@
 "use strict";
 //in place for to many requests
-const { dateInfo, argToReg } = require("./utils.js");
+const { dateInfo, argToReg, sMsg, msgAuth, getPre } = require("./utils.js");
 const userMap = new Map();
 
 const userSpam = (userName, epTime, helloReg) => {
@@ -94,7 +94,7 @@ const commandSpam = async (message, infoObj, select) => {
         mappedUser.block = {
           type: "COMMAND CHAT SPAM",
           code: 1,
-          maxExpire: expireSecsTime,
+          maxExpire: 600,
         };
       } else {
         //resets counter
@@ -117,4 +117,44 @@ const commandSpam = async (message, infoObj, select) => {
   return userMap.get(userName);
 };
 
+const spamMsg = (message, select, infoObj, client) => {
+  const mappedUser = userMap.get(infoObj.tag);
+  const humanDate = `${new Date(mappedUser.lockExpire * 1000)}`;
+  let instructions = "";
+
+  switch (mappedUser.block.code) {
+    case 1:
+      instructions = `use the commands with ***${getPre()}*** `;
+      break;
+    case 2:
+      instructions = "chat in any channel";
+      break;
+    default:
+      instructions = "Code not found";
+      break;
+  }
+
+  const additionalMsg = `You were blocked for ***${mappedUser.block.type}***, If you ${instructions} you will be blocked for an additonal ***${mappedUser.block.maxExpire}*** seconds`;
+  const msg30 = `You are blocked from using ***${client.user.tag}*** until ***${humanDate}***.\n\n${additionalMsg}.\n\nYou will only recieve this message every ***30*** messages.`;
+  if (mappedUser.notifiedChannel === false) {
+    sMsg(
+      message.channel,
+      `User ***${infoObj.tag}*** is blocked from commands until ***${humanDate}***, further messages will be sent directly.${additionalMsg}.`
+    );
+  } else {
+    if (select !== "hello" || mappedUser.helloBypass) {
+      let count = mappedUser.notifiedcount;
+      count++;
+      mappedUser.notifiedcount = count;
+      if (mappedUser.notifiedcount <= 1) {
+        msgAuth(message, msg30);
+      } else if (mappedUser.notifiedcount === 31) {
+        mappedUser.notifiedcount = 2;
+        msgAuth(message, msg30);
+      }
+    }
+  }
+  mappedUser.notifiedChannel = true;
+};
 exports.commandSpam = commandSpam;
+exports.spamMsg = spamMsg;
