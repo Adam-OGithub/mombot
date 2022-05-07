@@ -15,7 +15,7 @@ const client = new Client({
   ],
 });
 const config = require(`./config.json`);
-const { foodObj } = require(`./custom_nodemods/timers`);
+const { commandSpam } = require(`./custom_nodemods/spamprotect.js`);
 const {
   genInfo,
   getPre,
@@ -30,10 +30,9 @@ const {
   errHandler,
   getChannel,
   argToReg,
-  dateInfo,
   msgAuth,
 } = require("./custom_nodemods/utils.js");
-const { changeAc, reminders } = require("./custom_nodemods/timers.js");
+const { changeAc, reminders, foodObj } = require("./custom_nodemods/timers.js");
 const allComs = getDirFiles("../commands");
 const allMomComs = getDirFiles("../momcommands");
 //Runs commands based on args
@@ -50,77 +49,17 @@ const permCheck = (perms) => {
   return [value, outArr];
 };
 const map = new Map();
-const userMap = new Map();
 const altMusic = ["play", "stop", "repeat", "skip", "queue", "volume", "add"];
 const disabled = ["music", ...altMusic];
 let countNum = 1;
-const TrysPerMinute = 7;
-const maxLockOutSecs = 600;
-const lockAddition = 60;
+
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
   try {
     infoObj.allComs = allComs;
     infoObj.altMusic = altMusic;
     infoObj.helloCount = countNum;
 
-    //in place for to many requests
-    const mappedUser = userMap.get(infoObj.tag);
-    const userName = infoObj.tag;
-    const epTime = dateInfo.sinceEpoc();
-
-    if (message.author.bot !== true) {
-      if (mappedUser === undefined) {
-        userMap.set(userName, {
-          tag: userName,
-          currentSubmitTime: epTime,
-          lastSubmitTime: epTime,
-          submitCount: 1,
-          lockExpire: 0,
-          locked: false,
-          notifiedChannel: false,
-        });
-      } else {
-        mappedUser.lastSubmitTime = mappedUser.currentSubmitTime;
-        mappedUser.currentSubmitTime = epTime;
-        if (mappedUser.submitCount > TrysPerMinute) {
-          if (mappedUser.locked) {
-            //Resets expire time if waited the number of minutes
-            //If not then adds additional minute per command
-            if (
-              mappedUser.lockExpire > 0 &&
-              mappedUser.lockExpire < mappedUser.currentSubmitTime
-            ) {
-              mappedUser.locked = false;
-              mappedUser.lockExpire = 0;
-              mappedUser.count = 1;
-              mappedUser.notifiedChannel = false;
-            } else {
-              if (select !== "hello") {
-                mappedUser.lockExpire = mappedUser.lockExpire + lockAddition;
-              }
-            }
-          } else {
-            mappedUser.locked = true;
-            mappedUser.lockExpire = epTime + maxLockOutSecs;
-          }
-        } else {
-          //resets counter
-          if (mappedUser.lastSubmitTime <= epTime - 60) {
-            mappedUser.count = 1;
-          }
-        }
-
-        if (select !== "hello") {
-          //addes count to user map objecct
-          let count = mappedUser.submitCount;
-          count++;
-          mappedUser.submitCount = count;
-        }
-      }
-    } else {
-      userMap.set(infoObj.tag, { bypass: true });
-    }
-    const currentUserMapped = userMap.get(infoObj.tag);
+    const currentUserMapped = await commandSpam(message, infoObj, select);
 
     if (
       currentUserMapped?.bypass === true ||
