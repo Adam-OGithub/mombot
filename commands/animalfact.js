@@ -21,6 +21,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
           axios
             .get(`https://and-here-is-my-code.glitch.me/img/${animal}`)
             .then((res2) => {
+              console.log("res link", res1.data.Link);
               embed = makeEmbed(
                 `${capFirst(animal)} Fact`,
                 res1.data.Link,
@@ -33,12 +34,15 @@ exports.run = async (client, msg, args, discord, infoObj) => {
             .catch((e) => {
               errHandler(e, infoObj);
             });
+          console.log("hit high");
         } else {
+          console.log("hitlow");
           embed = makeEmbed(`${capFirst(animal)} Fact`, res1.data.Link);
           sMsg(msg.channel, embed);
         }
       })
       .catch((e) => {
+        console.log("error", e);
         errHandler(e, infoObj);
       });
   } catch (e) {

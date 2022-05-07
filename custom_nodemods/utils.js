@@ -248,6 +248,7 @@ const dateInfo = {
   second: () => new Date().getSeconds(),
   milsecond: () => new Date().getMilliseconds(),
   epocSecs: () => Math.floor((new Date() - setTimoutMin(360)) / 1000),
+  sinceEpoc: () => Math.round(new Date() / 1000),
 };
 
 //Gets the channel object
@@ -638,3 +639,4 @@ exports.errHandler = errHandler;
 exports.argToReg = argToReg;
 exports.emObj = emObj;
 exports.getEmbed = getEmbed;
+exports.dateInfo = dateInfo;
