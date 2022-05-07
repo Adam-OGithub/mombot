@@ -66,7 +66,7 @@ const isLockedCheck = (userName, epTime, helloReg, altSecs) => {
 
 const commandSpam = async (message, infoObj, select) => {
   const helloReg = await argToReg(select, ["hello"]);
-  const TrysPerMinute = 7;
+  const TrysPerMinute = 10;
   const inSeconds = 60;
   const mappedUser = userMap.get(infoObj.tag);
   const userName = infoObj.tag;
