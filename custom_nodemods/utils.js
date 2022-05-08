@@ -134,8 +134,9 @@ const msgAuth = (message, infoString) => {
   message.author.send(infoString);
 };
 //Generates client and message information for easieraccess
-const genInfo = (msg, client) => {
+const genInfo = async (msg, client) => {
   const myObj = {};
+  myObj.msgObj = msg;
   myObj.channelId = msg.channel.id;
   myObj.channelName = msg.channel.name;
   myObj.nsfw = msg.channel.nsfw;
@@ -151,7 +152,9 @@ const genInfo = (msg, client) => {
   myObj.userUid = msg.author.discriminator;
   myObj.isBot = msg.author.bot;
   myObj.tag = msg.author.tag;
+  myObj.userRoles = msg.member._roles;
   if (client !== undefined) {
+    myObj.guildRoles = await msg.guild.roles.fetch();
     myObj.currentGuild = client.guilds.cache.get(myObj.guildID);
     myObj.guildMemCount = myObj.currentGuild.memberCount;
     myObj.guildOwner = myObj.currentGuild.ownerID;

@@ -1,10 +1,11 @@
 "use strict";
 //in place for to many requests
 const { dateInfo, argToReg, sMsg, msgAuth, getPre } = require("./utils.js");
+const { mongoInsert, mongoQuery, mongoUpdate } = require("./mongoCon.js");
 const userMap = new Map();
 
-const userSpam = (userName, epTime, helloReg) => {
-  const maxMessages = 50;
+const userSpam = (userName, epTime, helloReg, infoObj) => {
+  const maxMessages = 5;
   const inSeconds = 120;
   const expireSecsTime = 3600;
   const mappedUser = userMap.get(userName);
@@ -13,7 +14,7 @@ const userSpam = (userName, epTime, helloReg) => {
   }
 
   if (mappedUser.helloCount >= maxMessages) {
-    isLockedCheck(userName, epTime, helloReg, expireSecsTime);
+    isLockedCheck(infoObj, userName, epTime, helloReg, expireSecsTime);
     mappedUser.block = {
       type: "USER CHAT SPAM",
       code: 2,
@@ -26,7 +27,7 @@ const userSpam = (userName, epTime, helloReg) => {
   }
 };
 
-const isLockedCheck = (userName, epTime, helloReg, altSecs) => {
+const isLockedCheck = (infoObj, userName, epTime, helloReg, altSecs) => {
   let secs = 600;
   let lockAddition = 60;
   let helloBypass = false;
@@ -59,6 +60,19 @@ const isLockedCheck = (userName, epTime, helloReg, altSecs) => {
       }
     }
   } else {
+    // mongoQuery({ guildId: infoObj.guildID }, "prison").then((res) => {
+    //   if (res.length > 0) {
+    //     const pObj = res[0];
+    //     const prisonRole = infoObj.guildRoles.get(pObj.prisonRole);
+
+    //     infoObj.userRoles.forEach((roleId) => {
+    //       infoObj.msgObj.member.roles.remove(roleId);
+    //     });
+    //     infoObj.msgObj.member.roles.add(prisonRole);
+    //     mongoInsert({ $push: { guildId: infoObj.guildID } });
+    //   }
+    // });
+    //
     mappedUser.locked = true;
     mappedUser.lockExpire = epTime + maxLockOutSecs;
   }
@@ -90,7 +104,7 @@ const commandSpam = async (message, infoObj, select) => {
       mappedUser.lastSubmitTime = mappedUser.currentSubmitTime;
       mappedUser.currentSubmitTime = epTime;
       if (mappedUser.submitCount > TrysPerMinute) {
-        isLockedCheck(userName, epTime, helloReg);
+        isLockedCheck(infoObj, userName, epTime, helloReg);
         mappedUser.block = {
           type: "COMMAND CHAT SPAM",
           code: 1,
@@ -110,7 +124,7 @@ const commandSpam = async (message, infoObj, select) => {
         mappedUser.submitCount = count;
       }
     }
-    userSpam(userName, epTime, helloReg);
+    userSpam(userName, epTime, helloReg, infoObj);
   } else {
     userMap.set(userName, { bypass: true });
   }
