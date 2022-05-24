@@ -10,14 +10,13 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       return;
     });
 
-    let embed = makeEmbed(
-      defin?.word,
-      defin?.definition,
-      undefined,
-      defin?.urbanURL
-    );
-
     if (defin?.word && defin?.definition) {
+      let embed = makeEmbed(
+        defin?.word,
+        defin?.definition,
+        undefined,
+        defin?.urbanURL
+      );
       sMsg(msg.channel, embed);
     }
   } catch (e) {
