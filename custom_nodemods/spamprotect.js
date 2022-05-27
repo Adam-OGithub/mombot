@@ -5,7 +5,7 @@ const { mongoInsert, mongoQuery, mongoUpdate } = require("./mongoCon.js");
 const userMap = new Map();
 
 const userSpam = (userName, epTime, helloReg, infoObj) => {
-  const maxMessages = 5;
+  const maxMessages = 15;
   const inSeconds = 120;
   const expireSecsTime = 3600;
   const mappedUser = userMap.get(userName);
