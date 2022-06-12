@@ -85,21 +85,32 @@ const foodObj = async () => {
     let foodTypes = [];
     let categorys = [];
     let countries = [];
+    let mealTypes = fType?.data?.meals;
+    let mealCat = fCatgory?.data?.meals;
+    let mealCountry = fCountry?.data?.meals;
+    if (
+      mealTypes !== undefined &&
+      mealCat !== undefined &&
+      mealCountry !== undefined &&
+      mealTypes.length > 0 &&
+      mealCat.length > 0 &&
+      mealCountry.length > 0
+    ) {
+      mealTypes.forEach((typeObj) => {
+        foodTypes.push(typeObj?.strIngredient);
+      });
 
-    fType?.data?.meals.forEach((typeObj) => {
-      foodTypes.push(typeObj?.strIngredient);
-    });
+      mealCat.forEach((catObj) => {
+        categorys.push(catObj?.strCategory);
+      });
 
-    fCatgory?.data?.meals.forEach((catObj) => {
-      categorys.push(catObj?.strCategory);
-    });
-
-    fCountry?.data?.meals.forEach((countObj) => {
-      countries.push(countObj?.strArea);
-    });
-    exports.ingredients = foodTypes;
-    exports.category = categorys;
-    exports.country = countries;
+      mealCountry.forEach((countObj) => {
+        countries.push(countObj?.strArea);
+      });
+      exports.ingredients = foodTypes;
+      exports.category = categorys;
+      exports.country = countries;
+    }
   };
 
   await updateFood();

@@ -21,7 +21,7 @@ The best part is mom is opensource!
 
 # Discord
 
-- Using the latest version 13.6.0.
+- Using the latest version 13.8.0.
 
 # API's
 
