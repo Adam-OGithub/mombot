@@ -1,8 +1,6 @@
 "use strict";
 const Discord = require("discord.js");
 const config = require("../config.json");
-const path = require("path");
-const fs = require("fs");
 const axios = require("../node_modules/axios");
 const { mongoInsert, mongoQuery, mongoUpdate } = require("./mongoCon");
 //Gets prefix for command from config
@@ -363,18 +361,6 @@ const errHandler = async (error, infoObj = {}, message, channelObj) => {
 };
 
 //Gets the current files in a directory and removes .js
-const getDirFiles = (dir) => {
-  const comDir = path.join(__dirname, dir);
-  const allComs = [];
-  fs.readdir(comDir, (e, files) => {
-    if (e) throw console.log(e);
-    files.forEach((f) => {
-      allComs.push(f.split(".js")[0]);
-    });
-  });
-  console.log("ALLCOMS", allComs);
-  return allComs;
-};
 
 const makeClean = (theMsg) => {
   const bannedChars = [
@@ -627,7 +613,6 @@ exports.getPre = getPre;
 exports.parseUsrChan = parseUserChannel;
 exports.getIsMom = getIsMom;
 exports.setTimoutMin = setTimoutMin;
-exports.getDirFiles = getDirFiles;
 exports.getCommand = getCommand;
 exports.getToken = getToken;
 exports.getGuild = getGuild;

@@ -1,6 +1,8 @@
 "use strict";
 const { Client, Intents } = require("discord.js");
 const Discord = require("discord.js");
+const path = require("path");
+const fs = require("fs");
 const client = new Client({
   intents: [
     Intents.FLAGS.GUILDS,
@@ -22,7 +24,6 @@ const {
   parseUsrChan,
   getCommand,
   getIsMom,
-  getDirFiles,
   getToken,
   momReact,
   momL,
@@ -33,8 +34,18 @@ const {
   msgAuth,
 } = require("./custom_nodemods/utils.js");
 const { changeAc, reminders, foodObj } = require("./custom_nodemods/timers.js");
-const allComs = getDirFiles("../commands");
-const allMomComs = getDirFiles("../momcommands");
+
+const allComs = [];
+const allMomComs = [];
+const getDirFiles = (dir, commandArray) => {
+  const files = fs.readdirSync(__dirname + "/" + dir);
+  files.forEach((file) => {
+    commandArray.push(file.split(".")[0]);
+  });
+};
+
+getDirFiles("commands", allComs);
+getDirFiles("momcommands", allMomComs);
 //Runs commands based on args
 const permCheck = (perms) => {
   const requiredPerms = ["CONNECT", "SPEAK", "MANAGE_MESSAGES"];
@@ -83,7 +94,6 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
         }
       } else {
         let newSelect = select;
-        console.log("SELECT is", select);
         let altSelectMusic = "";
         if (select.length >= 2) {
           newSelect = await argToReg(select, allComs);
@@ -119,7 +129,6 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
               if (dir !== "momcommands") {
                 momReact(message, client, infoObj);
               }
-              console.log("running command in" + `./${dir}/${newSelect}.js`);
               runCommand.run(client, message, args, Discord, infoObj);
 
               if (countNum === 20) {
