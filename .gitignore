@@ -6,4 +6,5 @@ config.json
 .git
 *.mp4
 newmusic.js
+oldmusic.js
 

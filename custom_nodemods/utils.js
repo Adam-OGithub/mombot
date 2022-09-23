@@ -367,11 +367,12 @@ const getDirFiles = (dir) => {
   const comDir = path.join(__dirname, dir);
   const allComs = [];
   fs.readdir(comDir, (e, files) => {
-    if (e) throw cmsg(e);
+    if (e) throw console.log(e);
     files.forEach((f) => {
       allComs.push(f.split(".js")[0]);
     });
   });
+  console.log("ALLCOMS", allComs);
   return allComs;
 };
 

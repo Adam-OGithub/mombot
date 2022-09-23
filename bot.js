@@ -83,6 +83,7 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
         }
       } else {
         let newSelect = select;
+        console.log("SELECT is", select);
         let altSelectMusic = "";
         if (select.length >= 2) {
           newSelect = await argToReg(select, allComs);
@@ -118,7 +119,7 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
               if (dir !== "momcommands") {
                 momReact(message, client, infoObj);
               }
-
+              console.log("running command in" + `./${dir}/${newSelect}.js`);
               runCommand.run(client, message, args, Discord, infoObj);
 
               if (countNum === 20) {

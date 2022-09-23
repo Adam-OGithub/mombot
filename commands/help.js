@@ -7,6 +7,7 @@ const {
   argToReg,
 } = require("../custom_nodemods/utils.js");
 exports.run = async (client, msg, args, discord, infoObj) => {
+  console.log("hit me");
   try {
     const pre = getPre();
     const codeB = "```";
@@ -170,6 +171,7 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       sMsg(msg.channel, embed);
     }
   } catch (e) {
+    console.log("error", e);
     errHandler(e, infoObj, true, msg.channel);
   }
 };
