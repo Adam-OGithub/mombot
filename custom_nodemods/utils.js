@@ -24,8 +24,8 @@ const round = (myInt) => Math.trunc(myInt);
 const newMarkov = (input) => {
   const markov = new markovJs();
   markov.addStates(input);
-  markov.train();
-  return markov.generateRandom();
+  markov.train(10);
+  return markov.generateRandom(100);
 };
 
 //Capitalises first letter in a string
