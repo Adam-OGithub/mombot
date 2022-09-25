@@ -38,7 +38,7 @@ const addComma = (arr) => {
 
 //Formats the dice to add commas
 const format = (die) => {
-  const dSplit = (die + " ").split("").map((i) => Number(i));
+  const dSplit = (die + "").split("").map((i) => Number(i));
   const len = dSplit.length;
   let bb = true;
   let sub = 3;
@@ -96,7 +96,6 @@ exports.run = async (client, msg, args, discord, infoObj) => {
       const multi = lower[0].split(`${args[0]}`)[1];
       const die = Number.parseInt(lower[1], 10);
       const multiDie = Number.parseInt(multi, 10);
-
       //MAkes sure die is a number and within range
       if (typeof die === "number" && die <= 90071992547409) {
         let str = ``;

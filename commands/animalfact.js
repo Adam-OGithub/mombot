@@ -15,13 +15,9 @@ exports.run = async (client, msg, args, discord, infoObj) => {
     const animal = randomIndex(animalApi);
     let response2 = true;
     let embed;
-    const response1 = await glitchApi(true, "facts/" + animal).catch((e) => {
-      //
-    });
+    const response1 = await glitchApi(true, "facts/" + animal);
     if (animalImageaApi.includes(animal)) {
-      response2 = await glitchApi(true, "img/" + animal).catch((e) => {
-        //
-      });
+      response2 = await glitchApi(true, "img/" + animal);
     }
 
     if (response2?.data?.Link) {

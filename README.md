@@ -1,6 +1,6 @@
 # mombot
 
-Mom is a bot that strives to do everything just like your real mom! From quizzing you at home, show you the weather, teaching you some cool words, playing some sweet tunes, showing you some memes, and much more!
+Mom is a bot that strives to do everything just like your real mom! From quizzing you at home, showing you the weather, teaching you some cool words, playing some sweet tunes, showing you some memes, and much more!
 
 The best part is mom is opensource!
 
@@ -21,7 +21,12 @@ The best part is mom is opensource!
 
 # Discord
 
-- Using the latest version 13.8.0.
+- Version 13.8.0.
+
+# Docker
+
+- Version 20.10.12.
+- Added **Dockerfile** to the project for the option to run mom in a container.
 
 # API's
 
@@ -33,4 +38,3 @@ The best part is mom is opensource!
 # Other
 
 - I am working on this project for fun and will add or remove features when I have time to do so.
-- If you do have any requests or questions please feel free to join this discord: https://discord.gg/PZqTpN9A8n. You can also see mom in action here as well.
