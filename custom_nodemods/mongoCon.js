@@ -13,13 +13,19 @@ const url = `mongodb://${config.database.user}:${config.database.password}@${dbI
 const mongoInsert = async (search, collection, database = databaseName) => {
   const prom = new Promise((result, errors) => {
     mongo.connect(url, (err, db) => {
-      if (err) throw errors(err);
-      const dbo = db.db(database);
-      dbo.collection(collection).insertOne(search, (err, res) => {
-        if (err) throw errors(err);
-        db.close();
-        result(res);
-      });
+      if (err) {
+        console.log(err);
+      } else {
+        const dbo = db.db(database);
+        dbo.collection(collection).insertOne(search, (err, res) => {
+          if (err) {
+            console.log(err);
+          } else {
+            db.close();
+            result(res);
+          }
+        });
+      }
     });
   });
   return prom;
@@ -28,16 +34,22 @@ const mongoInsert = async (search, collection, database = databaseName) => {
 const mongoQuery = async (search, collection, database = databaseName) => {
   const prom = new Promise((result, errors) => {
     mongo.connect(url, (err, db) => {
-      if (err) throw errors(err);
-      const dbo = db.db(database);
-      dbo
-        .collection(collection)
-        .find(search)
-        .toArray((err, res) => {
-          if (err) throw errors(err);
-          db.close();
-          result(res);
-        });
+      if (err) {
+        console.log(err);
+      } else {
+        const dbo = db.db(database);
+        dbo
+          .collection(collection)
+          .find(search)
+          .toArray((err, res) => {
+            if (err) {
+              console.log(err);
+            } else {
+              db.close();
+              result(res);
+            }
+          });
+      }
     });
   });
   return prom;
@@ -51,15 +63,21 @@ const mongoUpdate = async (
 ) => {
   const prom = new Promise((result, errors) => {
     mongo.connect(url, (err, db) => {
-      if (err) throw errors(err);
-      const dbo = db.db(database);
-      dbo
-        .collection(collection)
-        .updateOne(search, updatedSearch, (err, res) => {
-          if (err) throw errors(err);
-          db.close();
-          result(res);
-        });
+      if (err) {
+        console.log(err);
+      } else {
+        const dbo = db.db(database);
+        dbo
+          .collection(collection)
+          .updateOne(search, updatedSearch, (err, res) => {
+            if (err) {
+              console.log(err);
+            } else {
+              db.close();
+              result(res);
+            }
+          });
+      }
     });
   });
   return prom;
@@ -68,13 +86,19 @@ const mongoUpdate = async (
 const mongoDelete = async (search, collection, database = databaseName) => {
   const prom = new Promise((result, errors) => {
     mongo.connect(url, (err, db) => {
-      if (err) throw errors(err);
-      const dbo = db.db(database);
-      dbo.collection(collection).deleteOne(search, (err, res) => {
-        if (err) throw errors(err);
-        db.close();
-        result(res);
-      });
+      if (err) {
+        console.log(err);
+      } else {
+        const dbo = db.db(database);
+        dbo.collection(collection).deleteOne(search, (err, res) => {
+          if (err) {
+            console.log(err);
+          } else {
+            db.close();
+            result(res);
+          }
+        });
+      }
     });
   });
   return prom;

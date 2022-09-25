@@ -82,14 +82,21 @@ exports.run = async (client, msg, args, discord, infoObj) => {
         }
       }
     } else {
-      axios.get("http://www.madsci.org/cgi-bin/lynn/jardin/SCG").then((res) => {
-        const resArr = res.data.split("\n");
+      const response = await axios
+        .get("http://www.madsci.org/cgi-bin/lynn/jardin/SCG")
+        .catch((e) => {
+          //
+        });
+      if (response?.status !== 200) {
+        sMsg(msg.channel, "I love you!");
+      } else {
+        const resArr = response.data.split("\n");
         const content = resArr
           .slice(resArr.indexOf(`<h2>`) + 2, resArr.indexOf(`</h2>`))
           .join(" ");
 
         sMsg(msg.channel, content);
-      });
+      }
     }
   } catch (e) {
     errHandler(e, infoObj, true, msg.channel);

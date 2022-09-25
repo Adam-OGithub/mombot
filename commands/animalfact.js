@@ -6,45 +6,37 @@ const {
   makeEmbed,
   randomIndex,
   capFirst,
+  glitchApi,
   errHandler,
 } = require("../custom_nodemods/utils.js");
 
 exports.run = async (client, msg, args, discord, infoObj) => {
   try {
     const animal = randomIndex(animalApi);
+    let response2 = true;
     let embed;
-    axios
-      .get(`https://and-here-is-my-code.glitch.me/facts/${animal}`)
-      .then((res1) => {
+    const response1 = await glitchApi(true, "facts/" + animal).catch((e) => {
+      //
+    });
+    if (animalImageaApi.includes(animal)) {
+      response2 = await glitchApi(true, "img/" + animal).catch((e) => {
         //
-        if (animalImageaApi.includes(animal)) {
-          axios
-            .get(`https://and-here-is-my-code.glitch.me/img/${animal}`)
-            .then((res2) => {
-              console.log("res link", res1.data.Link);
-              embed = makeEmbed(
-                `${capFirst(animal)} Fact`,
-                res1.data.Link,
-                undefined,
-                undefined,
-                res2.data.Link
-              );
-              sMsg(msg.channel, embed);
-            })
-            .catch((e) => {
-              errHandler(e, infoObj);
-            });
-          console.log("hit high");
-        } else {
-          console.log("hitlow");
-          embed = makeEmbed(`${capFirst(animal)} Fact`, res1.data.Link);
-          sMsg(msg.channel, embed);
-        }
-      })
-      .catch((e) => {
-        console.log("error", e);
-        errHandler(e, infoObj);
       });
+    }
+
+    if (response2?.data?.Link) {
+      embed = makeEmbed(
+        capFirst(animal) + ` Fact`,
+        response1.data.Link,
+        undefined,
+        undefined,
+        response2.data.Link
+      );
+      sMsg(msg.channel, embed);
+    } else {
+      embed = makeEmbed(capFirst(animal) + ` Fact`, response1?.data?.Link);
+      sMsg(msg.channel, embed);
+    }
   } catch (e) {
     errHandler(e, infoObj, true, msg.channel);
   }

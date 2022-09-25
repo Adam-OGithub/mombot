@@ -70,78 +70,78 @@ const alt = async (select, dir, client, message, args, Discord, infoObj) => {
     infoObj.altMusic = altMusic;
     infoObj.helloCount = countNum;
 
-    const currentUserMapped = await commandSpam(message, infoObj, select);
-    if (
-      currentUserMapped?.bypass === true ||
-      currentUserMapped.locked === false
-    ) {
-      const channel = await getChannel(infoObj.channelId, infoObj);
-      const perms = channel.permissionsFor(message.client.user);
-      const [bool, permsFailed] = permCheck(perms);
-      const guildFail = map.get(infoObj.guildID);
+    // const currentUserMapped = await commandSpam(message, infoObj, select);
+    // if (
+    //   currentUserMapped?.bypass === true ||
+    //   currentUserMapped.locked === false
+    // ) {
+    const channel = await getChannel(infoObj.channelId, infoObj);
+    const perms = channel.permissionsFor(message.client.user);
+    const [bool, permsFailed] = permCheck(perms);
+    const guildFail = map.get(infoObj.guildID);
 
-      if (bool) {
-        if (message.author.bot !== true) {
-          if (guildFail === undefined) {
-            map.set(infoObj.guildID, true);
-            sMsg(
-              message.channel,
-              `<@${
-                infoObj.guildOwner
-              }> Permissions required:\n${permsFailed.join("\n")}`
-            );
-          }
-        }
-      } else {
-        let newSelect = select;
-        let altSelectMusic = "";
-        if (select.length >= 2) {
-          newSelect = await argToReg(select, allComs);
-          if (newSelect === true) {
-            newSelect = await argToReg(select, allMomComs);
-          }
-          altSelectMusic = await argToReg(select, altMusic);
-          if (altSelectMusic !== true) {
-            newSelect = "music";
-            args[0] = newSelect;
-            args[2] = args[1];
-            args[1] = altSelectMusic;
-          }
-        }
-
-        if (guildFail) {
-          map.delete(infoObj.guildID);
-        }
-
-        if (newSelect !== true) {
-          if (disabled.includes(newSelect) && config.testing.usedev !== true) {
-            sMsg(message.channel, `${newSelect} is disabled for now.`);
-          } else {
-            const runCommand = require(`./${dir}/${newSelect}.js`);
-
-            if (message.author.bot !== true || allComs.includes(newSelect)) {
-              //Does not log hello as it causes to much spam in logs
-              if (newSelect !== "hello") {
-                message.channel.sendTyping();
-                momL(infoObj, newSelect);
-              }
-
-              if (dir !== "momcommands") {
-                momReact(message, client, infoObj);
-              }
-              runCommand.run(client, message, args, Discord, infoObj);
-
-              if (countNum === 20) {
-                countNum = 1;
-              }
-              countNum++;
-            }
-          }
+    if (bool) {
+      if (message.author.bot !== true) {
+        if (guildFail === undefined) {
+          map.set(infoObj.guildID, true);
+          sMsg(
+            message.channel,
+            `<@${infoObj.guildOwner}> Permissions required:\n${permsFailed.join(
+              "\n"
+            )}`
+          );
         }
       }
     } else {
-      spamMsg(message, select, infoObj, client);
+      let newSelect = select;
+      let altSelectMusic = "";
+      if (select.length >= 2) {
+        newSelect = await argToReg(select, allComs);
+        if (newSelect === true) {
+          newSelect = await argToReg(select, allMomComs);
+        }
+        altSelectMusic = await argToReg(select, altMusic);
+        if (altSelectMusic !== true) {
+          newSelect = "music";
+          args[0] = newSelect;
+          args[2] = args[1];
+          args[1] = altSelectMusic;
+        }
+      }
+
+      if (guildFail) {
+        map.delete(infoObj.guildID);
+      }
+
+      if (newSelect !== true) {
+        if (disabled.includes(newSelect) && config.testing.usedev !== true) {
+          sMsg(message.channel, `${newSelect} is disabled for now.`);
+        } else {
+          const runCommand = require(`./${dir}/${newSelect}.js`);
+
+          if (message.author.bot !== true || allComs.includes(newSelect)) {
+            //Does not log hello as it causes to much spam in logs
+            if (newSelect !== "hello") {
+              message.channel.sendTyping();
+              momL(infoObj, newSelect);
+            }
+
+            if (dir !== "momcommands") {
+              momReact(message, client, infoObj);
+            }
+            runCommand.run(client, message, args, Discord, infoObj);
+
+            if (countNum === 20) {
+              countNum = 1;
+            }
+            countNum++;
+          }
+        }
+      }
     }
+    // } else {
+    //   spamMsg(message, select, infoObj, client);
+    // }
   } catch (e) {
     if (select !== "hello") {
       momL(infoObj, select);

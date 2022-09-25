@@ -458,24 +458,25 @@ const getCommand = (infoObj, allComs) => {
 };
 
 //used for many of the fun functions to interact with the gltichapi website
-const glitchApi = (msg, label, link, image = undefined) => {
-  axios
-    .get(link)
-    .then((res1) => {
-      let out, des;
-      if (image !== undefined) {
-        out = res1.data.Link;
-        des = ``;
-      } else {
-        out = undefined;
-        des = res1.data.Link;
-      }
-      const embed = makeEmbed(label, des, undefined, undefined, out);
-      sMsg(msg.channel, embed);
-    })
-    .catch((e) => {
-      console.log(e);
-    });
+const glitchApi = async (returnResponse, endpoint, msg, label, image) => {
+  const baseurl = "https://and-here-is-my-code.glitch.me/";
+  const response = await axios.get(baseurl + endpoint).catch((e) => {
+    //
+  });
+  let out, des;
+  if (image) {
+    out = response?.data?.Link;
+    des = ``;
+  } else {
+    out = undefined;
+    des = response?.data?.Link;
+  }
+  if (returnResponse) {
+    return response;
+  } else {
+    const embed = makeEmbed(label, des, undefined, undefined, out);
+    sMsg(msg.channel, embed);
+  }
 };
 
 //Parses quote replacing with ^^A^^ for easier manipulation

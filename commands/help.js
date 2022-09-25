@@ -7,7 +7,6 @@ const {
   argToReg,
 } = require("../custom_nodemods/utils.js");
 exports.run = async (client, msg, args, discord, infoObj) => {
-  console.log("hit me");
   try {
     const pre = getPre();
     const codeB = "```";

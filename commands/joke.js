@@ -3,7 +3,7 @@ const { glitchApi, errHandler } = require("../custom_nodemods/utils.js");
 
 exports.run = async (client, msg, args, discord, infoObj) => {
   try {
-    glitchApi(msg, "Jokes", "https://and-here-is-my-code.glitch.me/joke");
+    glitchApi(false, "joke", msg, "Jokes");
   } catch (e) {
     errHandler(e, infoObj, true, msg.channel);
   }
