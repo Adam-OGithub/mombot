@@ -18,6 +18,7 @@
     "discord.js": "^13.8.0",
     "ffmpeg-static": "^4.4.1",
     "js-file-download": "^0.4.12",
+    "js-markov": "^3.0.3",
     "m3u8stream": "^0.8.6",
     "miniget": "^4.2.2",
     "mongodb": "^4.4.0",

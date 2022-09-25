@@ -18,6 +18,6 @@ exports.run = async (client, message, args, discord, infoObj) => {
     content.push(saved.sentence);
   });
 
-  const sentence = `${capFirst(markovChain(content.join(" ")))}.`;
+  const sentence = `${capFirst(markovChain(content))}.`;
   sMsg(message.channel, sentence);
 };

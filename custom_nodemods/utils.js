@@ -2,6 +2,7 @@
 const Discord = require("discord.js");
 const config = require("../config.json");
 const axios = require("../node_modules/axios");
+const markovJs = require("js-markov");
 const { mongoInsert, mongoQuery, mongoUpdate } = require("./mongoCon");
 //Gets prefix for command from config
 const getPre = () => {
@@ -20,31 +21,11 @@ const randomIndex = (arr) => arr[Math.trunc(Math.random() * arr.length)];
 //Rounds intergers
 const round = (myInt) => Math.trunc(myInt);
 
-//Generates a markov chain from a string
-const markovMe = (input) => {
-  const markovChain = {};
-  const textArr = input.split(" ");
-  for (let i = 0; i < textArr.length; i++) {
-    let word = textArr[i].toLowerCase().replace(/[\W_]/, "");
-    if (!markovChain[word]) {
-      markovChain[word] = [];
-    }
-    if (textArr[i + 1]) {
-      markovChain[word].push(textArr[i + 1].toLowerCase().replace(/[\W_]/, ""));
-    }
-  }
-  const words = Object.keys(markovChain);
-  let word = words[Math.floor(Math.random() * words.length)];
-  let result = "";
-  for (let i = 0; i < words.length; i++) {
-    result += word + " ";
-    let newWord =
-      markovChain[word][Math.floor(Math.random() * markovChain[word].length)];
-    word = newWord;
-    if (!word || !markovChain.hasOwnProperty(word))
-      word = words[Math.floor(Math.random() * words.length)];
-  }
-  return result.split(" ").slice(0, 30).join(" ");
+const newMarkov = (input) => {
+  const markov = new markovJs();
+  markov.addStates(input);
+  markov.train();
+  return markov.generateRandom();
 };
 
 //Capitalises first letter in a string
@@ -599,7 +580,7 @@ const argToReg = async (argument, commandArray) => {
 
 exports.randomIndex = randomIndex;
 exports.round = round;
-exports.markovChain = markovMe;
+exports.markovChain = newMarkov;
 exports.capFirst = capFirst;
 exports.emotes = emotes;
 exports.sMsg = sMsg;
