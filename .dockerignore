@@ -1,0 +1,4 @@
+#ignore files/folders
+.git
+node_modules
+README.md
