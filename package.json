@@ -15,7 +15,7 @@
   "dependencies": {
     "@discordjs/voice": "^0.10.0",
     "axios": "^0.24.0",
-    "discord.js": "^13.8.0",
+    "discord.js": "^14.4.0",
     "ffmpeg-static": "^4.4.1",
     "js-file-download": "^0.4.12",
     "js-markov": "^3.0.3",

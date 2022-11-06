@@ -21,7 +21,7 @@ The best part is mom is opensource!
 
 # Discord
 
-- Version 13.8.0.
+- Version 14.4.0
 
 # Docker
 

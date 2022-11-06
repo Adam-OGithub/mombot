@@ -161,7 +161,8 @@ const makeEmbed = (
   mutlifield,
   footer
 ) => {
-  let embed = new Discord.MessageEmbed().setTitle(title).setColor(config.color);
+  const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+  let embed = new Discord.EmbedBuilder().setTitle(title).setColor(randomColor);
 
   if (description !== false) {
     embed.setDescription(description);
@@ -193,7 +194,7 @@ const makeEmbed = (
 };
 
 const getEmbed = (messageWEmbed) =>
-  new Discord.MessageEmbed(messageWEmbed.embeds[0]);
+  new Discord.EmbedBuilder(messageWEmbed.embeds[0]);
 
 const getToken = () => {
   let token = ``;

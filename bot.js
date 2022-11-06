@@ -1,21 +1,25 @@
 "use strict";
-const { Client, Intents } = require("discord.js");
+const { Client, GatewayIntentBits } = require("discord.js");
+const gBits = GatewayIntentBits;
 const Discord = require("discord.js");
 const path = require("path");
 const fs = require("fs");
 const client = new Client({
   intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
-    Intents.FLAGS.GUILD_VOICE_STATES,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-    Intents.FLAGS.GUILD_MESSAGE_TYPING,
-    Intents.FLAGS.GUILD_WEBHOOKS,
-    Intents.FLAGS.DIRECT_MESSAGE_TYPING,
+    gBits.Guilds,
+    gBits.GuildMessages,
+    gBits.MessageContent,
+    gBits.GuildMembers,
+    gBits.GuildEmojisAndStickers,
+    gBits.GuildVoiceStates,
+    gBits.GuildMessageReactions,
+    gBits.GuildMessageTyping,
+    gBits.GuildWebhooks,
+    gBits.DirectMessages,
+    gBits.DirectMessageTyping,
   ],
 });
+
 const config = require(`./config.json`);
 const { commandSpam, spamMsg } = require(`./custom_nodemods/spamprotect.js`);
 const {
@@ -61,7 +65,7 @@ const permCheck = (perms) => {
 };
 const map = new Map();
 const altMusic = ["play", "stop", "repeat", "skip", "queue", "volume", "add"];
-const disabled = ["music", ...altMusic];
+const disabled = ["music", ...altMusic, "getinfo", "set"];
 let countNum = 1;
 
 const alt = async (select, dir, client, message, args, Discord, infoObj) => {
