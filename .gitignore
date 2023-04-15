@@ -1,10 +1,9 @@
-.metadata
-.vs
-node_modules
-test.js
+# Logs
+*.log
 config.json
-.git
-*.mp4
-newmusic.js
-oldmusic.js
-
+appconfig.json
+node_modules
+certs
+testing
+revist
+todo

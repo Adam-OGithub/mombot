@@ -1,10 +1,17 @@
-"use strict";
-const { glitchApi, errHandler } = require("../custom_nodemods/utils.js");
-
-exports.run = async (client, msg, args, discord, infoObj) => {
-  try {
-    glitchApi(false, "quotes", msg, "Quote");
-  } catch (e) {
-    errHandler(e, infoObj, true, msg.channel);
-  }
+'use strict';
+const { SlashCommandBuilder } = require('discord.js');
+const { reply } = require('../custom_node_modules/utils.js');
+const { glitchApi } = require('../custom_node_modules/apis.js');
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName('quote')
+    .setDescription('Provides a random quote!'),
+  async execute(interaction) {
+    try {
+      const embed = await glitchApi(false, 'quotes', 'Quote');
+      await reply(interaction, embed);
+    } catch (e) {
+      //error
+    }
+  },
 };
