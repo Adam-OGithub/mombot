@@ -1,0 +1,44 @@
+{
+  "prefix": "$",
+  "color": "RANDOM",
+  "momBotId": "PROD BOT ID",
+  "testing": {
+    "usedev": true,
+    "prefix": "!",
+    "guildId": "GUILD ID",
+    "devBotId": "DEV BOT ID",
+    "database": {
+      "name": "momdbtest",
+      "ip": "IP ADDRESS"
+    }
+  },
+  "tokens": {
+    "dev": "BOTKEY",
+    "prod": "BOTKEY",
+    "weather": "APIKEY"
+  },
+  "openAi": {
+    "key": "APIKEY"
+  },
+  "oxford": {
+    "appid": "APPID",
+    "key": "APIKEY"
+  },
+  "mealdb": {
+    "key": "APIKEY"
+  },
+  "database": {
+    "name": "momdb",
+    "user": "discord",
+    "password": "PASSWORD",
+    "port": "27017",
+    "ip": "IP ADDRESS",
+    "log": "momlog"
+  },
+  "steam": {
+    "webapikey": "APIKEY"
+  },
+  "webserver": {
+    "certpass": "CERTIFICATE PASSWORD"
+  }
+}
