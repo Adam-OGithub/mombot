@@ -81,10 +81,10 @@ const getWeather = async (location, zip) => {
     } else if (tempF > 40 <= 55) {
       emote = `cold_sweat`;
       mommaInput += weatherWords.kindaCold;
-    } else if (tempF > 55 && tempF <= 75) {
+    } else if (tempF > 55 && tempF <= 68) {
       emote = `smiley`;
       mommaInput += weatherWords.normal;
-    } else if (tempF > 75 && tempF <= 85) {
+    } else if (tempF > 68 && tempF <= 85) {
       emote = `upside_down`;
       mommaInput += weatherWords.kindaHot;
     } else if (tempF > 85 && tempF <= 94) {

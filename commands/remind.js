@@ -6,7 +6,6 @@ const {
   nullToZero,
   dateInfo,
   sendPrivateMessage,
-  getAuthor,
 } = require('../custom_node_modules/utils.js');
 const { mongoInsert } = require('../custom_node_modules/mongoCon.js');
 const { timeInSeconds } = require('../custom_node_modules/conversions.js');
@@ -48,7 +47,6 @@ const makeReminder = async (
 
   if (directMsg === true) {
     //send directly to user
-    console.log(interaction);
     sendPrivateMessage(
       interaction.user,
       `Reminder (${reminderSchema.notes}), set for ${dateInfo.epocToTime(

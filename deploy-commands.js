@@ -1,12 +1,39 @@
 'use strict';
-const { REST, Routes } = require('discord.js');
-const fs = require('node:fs');
-const config = require(`./config.json`);
 const {
-  mongoQuery,
-  mongoInsert,
-} = require('./custom_node_modules/mongoCon.js');
-const commandDeploy = (token, clientId, guildId, comPath) => {
+  REST,
+  Routes,
+  Client,
+  Collection,
+  GatewayIntentBits,
+} = require('discord.js');
+const fs = require('node:fs');
+const config = require('./config.json');
+const {
+  getToken,
+  getCommandPath,
+} = require('./custom_node_modules/security.js');
+
+const gBits = GatewayIntentBits;
+//Permissions for the bot
+const client = new Client({
+  intents: [
+    gBits.Guilds,
+    gBits.GuildMessages,
+    gBits.MessageContent,
+    gBits.GuildMembers,
+    gBits.GuildEmojisAndStickers,
+    gBits.GuildVoiceStates,
+    gBits.GuildMessageReactions,
+    gBits.GuildMessageTyping,
+    gBits.GuildWebhooks,
+    gBits.DirectMessages,
+    gBits.DirectMessageTyping,
+  ],
+});
+
+client.commands = new Collection();
+
+const commandDeploy = (token, clientId, comPath) => {
   const commands = [];
   // Grab all the command files from the commands directory you created earlier
   const commandFiles = fs
@@ -21,7 +48,7 @@ const commandDeploy = (token, clientId, guildId, comPath) => {
   // Construct and prepare an instance of the REST module
   const rest = new REST({ version: '10' }).setToken(token);
 
-  const deleteCommands = () => {
+  const deleteCommands = (clientId, guildId) => {
     // for all guild-based commands
     rest
       .put(Routes.applicationGuildCommands(clientId, guildId), { body: [] })
@@ -34,45 +61,35 @@ const commandDeploy = (token, clientId, guildId, comPath) => {
       .then(() => console.log('Successfully deleted all application commands.'))
       .catch(console.error);
   };
+
+  const setCommands = async (clientId, guildId) => {
+    // Development for one guild
+    console.log(
+      `Setting commands for clientId: ${clientId} in guildId: ${guildId}`
+    );
+    await rest.put(Routes.applicationGuildCommands(clientId, guildId), {
+      body: commands,
+    });
+  };
   // and deploy your commands!
   (async () => {
     try {
-      deleteCommands();
-      let data = '';
       console.log(
         `Started refreshing ${commands.length} application (/) commands.`
       );
 
-      // The put method is used to fully refresh all commands in the guild with the current set
-      // if (config.testing.usedev) {
-      data = await rest.put(
-        Routes.applicationGuildCommands(clientId, guildId),
-        { body: commands }
-      );
-      // } else {
-      //   data = await rest.put(Routes.applicationCommands(clientId), {
-      //     body: commands,
-      //   });
-      // }
-      console.log(
-        `Successfully reloaded ${data.length} application (/) commands.`
-      );
-      //TODO: Later will be used to store id of command and refresh when needed - currently discord does not support getting the uuid of the command.
-      // data.forEach(async el => {
-      //   const insertData = {
-      //     guild_id: el.guild_id,
-      //     command: el.name,
-      //     description: el.description,
-      //     options_length: el.options.length,
-      //   };
-      //   console.log(insertData);
-      //   const res = await mongoInsert(insertData, 'registered_commands');
-      //   if (res.acknowledged) {
-      //     console.log('Command registered to database');
-      //   } else {
-      //     console.log('Command not registered to database');
-      //   }
-      // });
+      if (config.testing.usedev) {
+        // Development for one guild
+        deleteCommands(clientId, config.testing.guildId);
+        setCommands(clientId, config.testing.guildId);
+      } else {
+        //Production sets commaands for all guilds not just test
+        const guildIds = client.guilds.cache.map(guild => guild.id);
+        guildIds.forEach(guildId => {
+          deleteCommands(clientId, guildId);
+          setCommands(clientId, guildId);
+        });
+      }
     } catch (error) {
       // And of course, make sure you catch and log any errors!
       console.error(error);
@@ -80,4 +97,10 @@ const commandDeploy = (token, clientId, guildId, comPath) => {
   })();
 };
 
-exports.commandDeploy = commandDeploy;
+//Deploys commands for the respective bot
+client.on('ready', async () => {
+  commandDeploy(getToken(), client.user.id, getCommandPath());
+});
+
+//Logins the
+client.login(getToken());

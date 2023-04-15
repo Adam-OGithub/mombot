@@ -1,44 +1,19 @@
 'use strict';
-const {
-  REST,
-  Routes,
-  Client,
-  Collection,
-  Events,
-  GatewayIntentBits,
-} = require('discord.js');
+const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 const { checkPolls } = require('./timers/pollcheck.js');
 const { checkReminders } = require('./timers/remindercheck.js');
-const { commandDeploy } = require('./deploy-commands.js');
+const {
+  getToken,
+  getCommandPath,
+} = require('./custom_node_modules/security.js');
 const gBits = GatewayIntentBits;
 const path = require('path');
 const fs = require('fs');
-const config = require(`./config.json`);
 const https = require('https');
 const express = require('express');
 const app = express();
-let comPath = '';
-//Sets token
+const comPath = getCommandPath();
 
-const setup = () => {
-  if (config.testing.usedev) {
-    comPath = 'testing';
-  } else {
-    comPath = 'commands';
-  }
-};
-
-const token = () => {
-  let theToken = null;
-  if (config.testing.usedev) {
-    theToken = config.tokens.dev;
-  } else {
-    theToken = config.tokens.prod;
-  }
-  return theToken;
-};
-
-setup();
 //Sets clients permissions
 const client = new Client({
   intents: [
@@ -79,11 +54,6 @@ for (const file of commandFiles) {
 //On start this runs
 client.on('ready', async () => {
   console.log(client.user.tag + ' is online!');
-  if (config.testing.usedev) {
-    //TODO: Need to seperate this from this file into its own
-    // console.log('client.user.id:', client.user.id);
-    // commandDeploy(token(), client.user.id, config.testing.guildId, comPath);
-  }
 
   //Timers
   checkPolls(client);
@@ -116,7 +86,7 @@ client.on('messageCreate', async msg => {
   // console.log(msg);
 });
 
-client.login(token());
+client.login(getToken());
 
 //=========================================================
 //Internal webserver for mombot
