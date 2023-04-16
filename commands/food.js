@@ -3,11 +3,9 @@ const { SlashCommandBuilder } = require('discord.js');
 const axios = require('../node_modules/axios');
 const {
   sendChannelMsg,
-  getChannelCache,
-  nullToZero,
-  dateInfo,
-  sendPrivateMessage,
+  makeEmbed,
   randomIndex,
+  reply,
 } = require('../custom_node_modules/utils.js');
 const {
   millToOz,
@@ -23,12 +21,93 @@ const getData = async suburl => {
   return response;
 };
 
+const formatEmbed = (parsedData, dataType, subType) => {
+  let embed = '';
+  let ephemeral = false;
+  if (dataType === 'filter' && typeof parsedData !== 'string') {
+    //data type is filter
+    const mealObj = parsedData[0];
+    const mealStr = parsedData[1];
+    embed = makeEmbed(
+      `${mealObj.strMeal} - ${mealObj.strArea} - ${mealObj.strCategory}`,
+      `${mealObj.strInstructions} \n\n__Ingredients__\n ${mealStr}\n\n`,
+      undefined,
+      mealObj.strSource,
+      mealObj.strMealThumb
+    );
+  } else {
+    //datatype is list
+    ephemeral = true;
+    if (typeof parsedData === 'string') {
+      embed = makeEmbed('OOPS! I still love you!', parsedData);
+    } else {
+      let str = '';
+      parsedData.forEach(el => {
+        str += el + '\n';
+      });
+      embed = makeEmbed(subType, str);
+    }
+  }
+  return [embed, ephemeral];
+};
+
 const parseData = async (responseData, dataType) => {
   let outData = '';
   const errorRes = 'Mom could not find anything for this request.';
 
   const detailedParse = detailedData => {
     ///
+    const mealObj = detailedData[0];
+    let i = 1;
+    const ingredients = [];
+    const amount = [];
+    for (const entry in mealObj) {
+      let item = mealObj[entry];
+      if (entry === `strIngredient${i}`) {
+        if (item !== null && item !== '') {
+          ingredients.push(mealObj[entry]);
+        }
+        i++;
+      } else if (entry === `strMeasure${i}`) {
+        if (item !== null && item !== '') {
+          amount.push(mealObj[entry]);
+        }
+        i++;
+      }
+
+      if (i >= 20) {
+        i = 1;
+      }
+    }
+    //puts ingredients and amounts together api fix
+    let str = ``;
+    for (let i = 0; i < ingredients.length; i++) {
+      if (amount[i] !== undefined) {
+        let toStr = amount[i].toString();
+        if (toStr.endsWith('ml') || toStr.endsWith('ml ')) {
+          const oz = millToOz(Number.parseInt(amount[i]));
+          if (oz !== 'NaN') {
+            amount[i] = `${amount[i]} - (${oz} oz)`;
+          }
+        } else if (toStr.endsWith('kg') || toStr.endsWith('kg ')) {
+          const lb = kiloToLb(Number.parseInt(amount[i]));
+          if (lb !== 'NaN') {
+            amount[i] = `${amount[i]}  - (${lb} lb)`;
+          }
+        } else if (
+          toStr.endsWith('g') ||
+          toStr.endsWith('Grams') ||
+          toStr.endsWith('g ')
+        ) {
+          const oz = gramToOz(Number.parseInt(amount[i]));
+          if (oz !== 'NaN') {
+            amount[i] = `${amount[i]} - (${oz} oz)`;
+          }
+        }
+      }
+      str += `${ingredients[i]}: ${amount[i]}\n`;
+    }
+    return [mealObj, str];
   };
 
   const listParse = mealData => {
@@ -41,9 +120,12 @@ const parseData = async (responseData, dataType) => {
   };
 
   const filterParse = async mealData => {
+    if (mealData === undefined || mealData === null) {
+      return errorRes;
+    }
     const selectedMeal = randomIndex(mealData);
     const detailedData = await getData('lookup.php?i=' + selectedMeal.idMeal);
-    if (responseData.status !== 200) {
+    if (detailedData.status !== 200) {
       outData = errorRes;
     } else {
       const detailedMealData = detailedData.data.meals;
@@ -51,12 +133,11 @@ const parseData = async (responseData, dataType) => {
         outData = errorRes;
       } else {
         const [mealObj, str] = detailedParse(detailedMealData);
+        outData = [mealObj, str];
       }
     }
     return outData;
   };
-
-  const searchParse = mealData => {};
 
   if (responseData.status !== 200) {
     outData = errorRes;
@@ -93,9 +174,11 @@ const getFood = async (
 ) => {
   let suburl = '';
   let dataType = '';
+  let subType = '';
   switch (subCmd) {
     case 'random':
       suburl = 'random.php';
+      dataType = 'filter';
       break;
     case 'category':
       suburl = 'filter.php?c=' + foodtype;
@@ -107,7 +190,7 @@ const getFood = async (
       break;
     case 'name':
       suburl = 'search.php?s=' + mealName;
-      dataType = 'search';
+      dataType = 'filter';
       break;
     case 'location':
       suburl = 'filter.php?a=' + location;
@@ -116,17 +199,24 @@ const getFood = async (
     case 'listcategories':
       suburl = 'list.php?c=list';
       dataType = 'list';
+      subType = 'Categories';
       break;
     case 'listlocations':
       suburl = 'list.php?a=list';
       dataType = 'list';
+      subType = 'Locations';
       break;
     default:
       break;
   }
   const response = await getData(suburl);
   const data = await parseData(response, dataType);
-  console.log('data is this:', data);
+  const [embed, isEphemeral] = formatEmbed(data, dataType, subType);
+  if (isEphemeral === true) {
+    reply(interaction, embed, true, true);
+  } else {
+    sendChannelMsg(interaction, embed);
+  }
 };
 
 module.exports = {
