@@ -2,10 +2,11 @@ FROM node:16.15.0-alpine
 
 WORKDIR /app
 
-COPY package* ./
+COPY  package* ./
 
 RUN npm install 
 
-COPY . ./
+COPY . ./ 
 
-CMD node bot.js
+CMD node mombot.js
+

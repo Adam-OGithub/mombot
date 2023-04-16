@@ -1,4 +1,8 @@
-#ignore files/folders
 .git
 node_modules
 README.md
+*.log
+testing
+revist
+todo
+deploy-commands.js

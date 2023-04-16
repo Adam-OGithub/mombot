@@ -1,25 +1,44 @@
-"use strict";
-const ud = require("relevant-urban");
-const { sMsg, makeEmbed, errHandler } = require("../custom_nodemods/utils");
-exports.run = async (client, msg, args, discord, infoObj) => {
-  try {
-    let worder = args[1];
-    if (!worder) return sMsg(msg.channel, `Specify a Word`);
-    let defin = await ud(args.slice(1, args.length).join(" ")).catch((e) => {
-      sMsg(msg.channel, `Word not found`);
-      return;
-    });
+const { SlashCommandBuilder } = require('discord.js');
+const ud = require('relevant-urban');
+const { makeEmbed, reply } = require('../custom_node_modules/utils');
 
-    if (defin?.word && defin?.definition) {
-      let embed = makeEmbed(
-        defin?.word,
-        defin?.definition,
-        undefined,
-        defin?.urbanURL
-      );
-      sMsg(msg.channel, embed);
-    }
-  } catch (e) {
-    errHandler(e, infoObj, true, msg.channel);
+const udDefine = async phrase => {
+  let returnVal = '';
+  let found = true;
+  let defin = await ud(phrase).catch(e => {
+    returnVal = `Word not found!`;
+    found = false;
+  });
+
+  if (defin?.word && defin?.definition) {
+    returnVal = makeEmbed(
+      defin?.word,
+      defin?.definition,
+      undefined,
+      defin?.urbanURL
+    );
   }
+  return [returnVal, found];
+};
+
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName('ud')
+    .setDescription('Gets an urban dictionary definition.')
+    .addStringOption(option =>
+      option
+        .setName('phrase')
+        .setDescription('Add a phrase or word here.')
+        .setRequired(true)
+        .setMinLength(1)
+    ),
+  async execute(interaction) {
+    try {
+      const msg = interaction.options.getString('phrase');
+      const [definition, found] = await udDefine(msg);
+      await reply(interaction, definition, found);
+    } catch (e) {
+      //error
+    }
+  },
 };

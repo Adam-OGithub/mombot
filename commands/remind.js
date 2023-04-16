@@ -1,123 +1,143 @@
-"use strict";
+'use strict';
+const { SlashCommandBuilder } = require('discord.js');
 const {
-  sMsg,
-  getHelp,
-  getChannel,
-  parseUsrChan,
-  makeClean,
-  parseQuote,
-  countQuote,
-  errHandler,
-  getPre,
-} = require("../custom_nodemods/utils.js");
-const { getRoles } = require("../custom_nodemods/permissions.js");
-const { mongoQuery, mongoInsert } = require("../custom_nodemods/mongoCon.js");
+  sendChannelMsg,
+  getChannelCache,
+  nullToZero,
+  dateInfo,
+  sendPrivateMessage,
+} = require('../custom_node_modules/utils.js');
+const { mongoInsert } = require('../custom_node_modules/mongoCon.js');
+const { timeInSeconds } = require('../custom_node_modules/conversions.js');
+const { makeCleanInput } = require('../custom_node_modules/security.js');
 
-exports.run = async (client, msg, args, discord, infoObj) => {
-  try {
-    let isInPrison = false;
-    const roleObj = await getRoles(infoObj.currentGuild, infoObj.userId);
-    const reminder = {};
-    let query;
-    let count = 0;
-    const res1 = await mongoQuery({ guildId: infoObj.guildID }, "prison");
-    if (res1[0]?.prisonRole !== undefined) {
-      roleObj.roles.forEach((role) => {
-        if (role === res1[0].prisonRole) {
-          isInPrison = true;
-        }
-      });
-    }
+const makeReminder = async (
+  interaction,
+  notes,
+  directMsg,
+  seconds,
+  minutes,
+  hours,
+  days,
+  months
+) => {
+  ///TODO: make respond to user
+  const cleanNotes = makeCleanInput(notes);
+  const channelCache = getChannelCache(interaction);
 
-    if (isInPrison) {
-      //
-      sMsg(msg.channel, "Naughty Children do not get reminders!");
-    } else {
-      //check if entry is user or channel
-      const [channels, users, usersF] = parseUsrChan(infoObj.msg);
-      reminder.users = `${usersF.join(" ")}`;
-      const count = countQuote(infoObj);
+  const totalTime =
+    seconds +
+    timeInSeconds('minutes', minutes) +
+    timeInSeconds('hours', hours) +
+    timeInSeconds('days', days) +
+    timeInSeconds('months', months);
 
-      if (count === 4) {
-        const arg0 = args[0].split(`${getPre()}`)[1];
-        const fArgs = parseQuote(infoObj, arg0);
-        reminder.timetemp = fArgs[1];
-        reminder.msg = fArgs[3];
-      }
+  const endTime = dateInfo.sinceEpoc() + totalTime;
+  //send message visable to user created only
+  const reminderSchema = {
+    guild_id: interaction.guildId,
+    user_id: interaction.user.id,
+    channel_id: interaction.channelId,
+    message_id: channelCache.lastMessageId,
+    notes: cleanNotes,
+    direct_message: directMsg,
+    end_time: endTime,
+  };
+  mongoInsert(reminderSchema, 'reminders');
 
-      if (channels.length > 0 && reminder?.timetemp !== " " && count === 4) {
-        const channelArr = [];
-        channels.forEach((entry) => {
-          channelArr.push(getChannel(entry, infoObj));
-        });
-        reminder.channels = channelArr.join(" ");
-
-        const time = reminder.timetemp
-          .split("/")
-          .join("^")
-          .split(" ")
-          .join("^")
-          .split(":")
-          .join("^")
-          .split("^");
-        let hour = 0;
-        if (time[5] !== undefined) {
-          const loc = time[5].toLowerCase();
-          switch (loc) {
-            case "cst":
-              hour = 6;
-              break;
-            case "est":
-              hour = 7;
-              break;
-            case "mnt":
-              hour = 5;
-              break;
-            case "pst":
-              hour = 4;
-              break;
-            default:
-              hour = 100;
-              break;
-          }
-        }
-        //Hour is subtract from central cst
-        if (time[5] !== undefined && hour !== 100) {
-          reminder.future =
-            new Date(
-              +`${time[2]}`, //year
-              +time[0] - 1, //month 0-11
-              +time[1], // day 1-31
-              +time[3] - hour, // hours 0-23 UTC
-              +time[4], // minutes 0-59
-              0, //seconds
-              0 //mil seconds
-            ) / 1000;
-
-          query = {
-            guildId: infoObj.guildID,
-            posterId: infoObj.tag,
-            users: makeClean(reminder.users),
-            channels: makeClean(reminder.channels),
-            message: makeClean(reminder.msg),
-            time: reminder.future,
-          };
-
-          const res2 = await mongoInsert(query, "reminders");
-          if (res2.acknowledged) {
-            sMsg(msg.channel, "Reminder added!");
-          } else {
-            sMsg(msg.channel, "Reminder not added.");
-          }
-        } else {
-          getHelp(msg.channel, "remind");
-        }
-      } else {
-        getHelp(msg.channel, "remind");
-      }
-    }
-  } catch (e) {
-    errHandler(e, infoObj, true, msg.channel);
+  if (directMsg === true) {
+    //send directly to user
+    sendPrivateMessage(
+      interaction.user,
+      `Reminder (${reminderSchema.notes}), set for ${dateInfo.epocToTime(
+        endTime
+      )}`
+    );
+  } else {
+    //send to the main channel
+    sendChannelMsg(
+      interaction,
+      `Reminder (${reminderSchema.notes}), set for ${dateInfo.epocToTime(
+        endTime
+      )}`,
+      false,
+      true
+    );
   }
 };
-//DELETE FROM remind WHERE id = "1";
+
+//add set reminder . remove reminder, list reminders
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName('reminder')
+    .setDescription('Generates a reminder.')
+    .addStringOption(option =>
+      option.setName('notes').setDescription('Reminder notes').setRequired(true)
+    )
+    .addBooleanOption(directBool =>
+      directBool
+        .setName('directmessage')
+        .setDescription('Select true if you want a message to your DMs')
+        .setRequired(true)
+    )
+    .addIntegerOption(option =>
+      option
+        .setName('seconds')
+        .setDescription('Enter a set amount of seconds.')
+        .setMinValue(10)
+        .setMaxValue(216000)
+        .setRequired(true)
+    )
+    .addIntegerOption(option =>
+      option
+        .setName('minutes')
+        .setDescription('Enter a set amount of minutes.')
+        .setMinValue(1)
+        .setMaxValue(1440)
+    )
+    .addIntegerOption(option =>
+      option
+        .setName('hours')
+        .setDescription('Enter a set amount of hours.')
+        .setMinValue(1)
+        .setMaxValue(720)
+    )
+    .addIntegerOption(option =>
+      option
+        .setName('days')
+        .setDescription('Enter a set amount of days.')
+        .setMinValue(1)
+        .setMaxValue(365)
+    )
+    .addIntegerOption(option =>
+      option
+        .setName('months')
+        .setDescription('Enter a set amount of months.')
+        .setMinValue(1)
+        .setMaxValue(12)
+    ),
+  async execute(interaction) {
+    try {
+      const notes = interaction.options.getString('notes');
+      const directMsg = interaction.options.getBoolean('directmessage');
+      const seconds = interaction.options.getInteger('seconds');
+      const minutes = interaction.options.getInteger('minutes');
+      const hours = interaction.options.getInteger('hours');
+      const days = interaction.options.getInteger('days');
+      const months = interaction.options.getInteger('months');
+      makeReminder(
+        interaction,
+        notes,
+        directMsg,
+        nullToZero(seconds),
+        nullToZero(minutes),
+        nullToZero(hours),
+        nullToZero(days),
+        nullToZero(months)
+      );
+    } catch (e) {
+      //error
+      console.log(e);
+    }
+  },
+};

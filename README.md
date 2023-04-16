@@ -1,4 +1,4 @@
-# mombot
+# Mombot
 
 Mom is a bot that strives to do everything just like your real mom! From quizzing you at home, showing you the weather, teaching you some cool words, playing some sweet tunes, showing you some memes, and much more!
 
@@ -10,7 +10,7 @@ The best part is mom is opensource!
 
 # Config file
 
-- Need to rename **config_copy.json** to **config.json** in order for the config to work correctly.
+- Need to rename **config_shadow.json** to **config.json** in order for the config to work correctly.
 - Please reference the API section to locate/sign up for tokens.
 - You do not need all the tokens to run mom, however certain commands will not work and crashes may occur.
 
@@ -21,9 +21,9 @@ The best part is mom is opensource!
 
 # Discord
 
-- Version 13.8.0.
+- Version 14.7.1.
 
-# Docker
+# Docker - TODO
 
 - Version 20.10.12.
 - Added **Dockerfile** to the project for the option to run mom in a container.
