@@ -8,5 +8,5 @@ RUN npm install
 
 COPY . ./ 
 
-CMD mombot.js
+CMD node mombot.js
 

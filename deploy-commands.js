@@ -99,6 +99,7 @@ const commandDeploy = (token, clientId, comPath) => {
 
 //Deploys commands for the respective bot
 client.on('ready', async () => {
+  console.log(client.user.tag + ' is using deploy!');
   commandDeploy(getToken(), client.user.id, getCommandPath());
 });
 
