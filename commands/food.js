@@ -32,7 +32,7 @@ const formatEmbed = (parsedData, dataType, subType) => {
       `${mealObj.strMeal} - ${mealObj.strArea} - ${mealObj.strCategory}`,
       `${mealObj.strInstructions} \n\n__Ingredients__\n ${mealStr}\n\n`,
       undefined,
-      mealObj.strSource,
+      undefined,
       mealObj.strMealThumb
     );
   } else {
@@ -152,9 +152,6 @@ const parseData = async (responseData, dataType) => {
           break;
         case 'filter':
           outData = await filterParse(mealData);
-          break;
-        case 'search':
-          outData = searchParse(mealData);
           break;
         default:
           break;
