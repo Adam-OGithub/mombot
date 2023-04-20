@@ -23,7 +23,7 @@ The best part is mom is opensource!
 
 - Version 14.7.1.
 
-# Docker - TODO
+# Docker
 
 - Version 20.10.12.
 - Added **Dockerfile** to the project for the option to run mom in a container.

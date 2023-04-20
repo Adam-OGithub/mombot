@@ -2,6 +2,7 @@
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 const { checkPolls } = require('./timers/pollcheck.js');
 const { checkReminders } = require('./timers/remindercheck.js');
+const chatMap = new Map();
 const {
   getToken,
   getCommandPath,
@@ -86,8 +87,30 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 client.on('messageCreate', async msg => {
-  // Message of the user
-  // console.log(msg);
+  try {
+    // Message of the user
+    const msgContent = msg.content;
+    const authorId = msg.author.id;
+    const initRegex = new RegExp('hey mom', 'gi');
+    const endRegex = new RegExp('end chat', 'gi');
+    if (endRegex.test(msgContent) && chatMap.has(authorId)) {
+      chatMap.delete();
+    } else if (
+      (initRegex.test(msgContent) && msg.author.bot !== true) ||
+      (chatMap.has(authorId) && msg.author.bot !== true)
+    ) {
+      //Sets authors id so they can chat with mom and not use the keywords
+      if (chatMap.has(authorId) !== true) {
+        chatMap.set(authorId, 'true');
+      }
+      const runChat = require(`./chat_commands/mom.js`);
+      msg.channel.sendTyping();
+      const newMsg = msgContent.replace(/hey mom/gi, '');
+      await runChat.execute(client, msg, newMsg);
+    }
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 client.login(getToken());

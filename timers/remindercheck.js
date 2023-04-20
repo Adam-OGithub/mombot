@@ -8,6 +8,7 @@ const {
   sendChannelMsgNoInteraction,
   getAuthor,
   sendPrivateMessage,
+  getChannelFromClient,
 } = require('../custom_node_modules/utils.js');
 const reminderCheckInterval = 1000 * 10;
 const checkReminders = client => {
@@ -18,8 +19,9 @@ const checkReminders = client => {
         const reminders = await mongoQuery({ guild_id: guild.id }, 'reminders');
         if (reminders.length > 0) {
           reminders.forEach(async reminder => {
-            const currentGuild = client.guilds.cache.get(reminder.guild_id);
-            const currentChannel = currentGuild.channels.cache.get(
+            const currentChannel = getChannelFromClient(
+              client,
+              reminder.guild_id,
               reminder.channel_id
             );
             if (reminder.end_time <= dateInfo.sinceEpoc()) {
