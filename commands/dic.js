@@ -5,7 +5,8 @@ const axios = require('axios');
 const {
   makeEmbed,
   capFirst,
-  reply,
+  deferReply,
+  editReply,
 } = require('../custom_node_modules/utils.js');
 
 const oxDefine = async word => {
@@ -84,9 +85,10 @@ module.exports = {
     ),
   async execute(interaction) {
     try {
+      deferReply(interaction, 'placeholder', true);
       const msg = interaction.options.getString('word');
       const [definition, found] = await oxDefine(msg);
-      await reply(interaction, definition, found);
+      await editReply(interaction, definition, found);
     } catch (e) {
       //error
     }

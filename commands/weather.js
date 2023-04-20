@@ -1,7 +1,12 @@
 const { SlashCommandBuilder } = require('discord.js');
 const axios = require('axios');
 const config = require('../config.json');
-const { reply, makeEmbed, round } = require('../custom_node_modules/utils.js');
+const {
+  deferReply,
+  editReply,
+  makeEmbed,
+  round,
+} = require('../custom_node_modules/utils.js');
 const {
   degToDir,
   convertKToF,
@@ -135,6 +140,7 @@ module.exports = {
     ),
   async execute(interaction) {
     try {
+      deferReply(interaction, 'placeholder', true);
       let useZip = false;
       let location = '';
       const city = interaction.options.getString('city');
@@ -146,7 +152,7 @@ module.exports = {
         location = city;
       }
       const [embed, embedMsgBool] = await getWeather(location, useZip);
-      await reply(interaction, embed, embedMsgBool);
+      await editReply(interaction, embed, embedMsgBool);
     } catch (e) {
       //error
     }
