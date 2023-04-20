@@ -2,10 +2,11 @@
 const { SlashCommandBuilder } = require('discord.js');
 const axios = require('../node_modules/axios');
 const {
-  sendChannelMsg,
   makeEmbed,
   randomIndex,
   reply,
+  deferReply,
+  editReply,
 } = require('../custom_node_modules/utils.js');
 const { millToOz } = require('../custom_node_modules/conversions.js');
 const config = require('../config.json');
@@ -186,13 +187,16 @@ const getDrinks = async (
     default:
       break;
   }
+  if (dataType === 'filter') {
+    deferReply(interaction, 'placeholder', true);
+  }
   const response = await getData(suburl);
   const data = await parseData(response, dataType);
   const [embed, isEphemeral] = formatEmbed(data, dataType, subType);
   if (isEphemeral === true) {
     reply(interaction, embed, true, true);
   } else {
-    sendChannelMsg(interaction, embed);
+    editReply(interaction, embed);
   }
 };
 
