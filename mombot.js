@@ -87,6 +87,7 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 client.on('messageCreate', async msg => {
+  console.log(chatMap);
   try {
     // Message of the user
     const msgContent = msg.content;
@@ -94,7 +95,7 @@ client.on('messageCreate', async msg => {
     const initRegex = new RegExp('hey mom', 'gi');
     const endRegex = new RegExp('end chat', 'gi');
     if (endRegex.test(msgContent) && chatMap.has(authorId)) {
-      chatMap.delete();
+      chatMap.delete(authorId);
       msg.reply('Goodbye and I love you!');
     } else if (
       (initRegex.test(msgContent) && msg.author.bot !== true) ||
