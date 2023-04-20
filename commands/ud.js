@@ -1,6 +1,10 @@
 const { SlashCommandBuilder } = require('discord.js');
 const ud = require('relevant-urban');
-const { makeEmbed, reply } = require('../custom_node_modules/utils');
+const {
+  makeEmbed,
+  deferReply,
+  editReply,
+} = require('../custom_node_modules/utils');
 
 const udDefine = async phrase => {
   let returnVal = '';
@@ -34,9 +38,10 @@ module.exports = {
     ),
   async execute(interaction) {
     try {
+      deferReply(interaction, 'placeholder', true);
       const msg = interaction.options.getString('phrase');
       const [definition, found] = await udDefine(msg);
-      await reply(interaction, definition, found);
+      await editReply(interaction, definition, found);
     } catch (e) {
       //error
     }

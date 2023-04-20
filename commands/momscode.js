@@ -12,7 +12,7 @@ module.exports = {
         'This is the Github for me sweety, I love you!',
         undefined,
         'https://github.com/Adam-OGithub/mombot',
-        'https://lh3.googleusercontent.com/SFIj6M4Tz8koUg9IcZPM4vUl_hilOpiqaBuuudUOOdONVj2doCUFQaAyUiFeSqkzPom0bQ=s88'
+        'https://m.media-amazon.com/images/M/MV5BZDI4MWYzOGQtNjhiZC00ZTQxLWEzMTItOGJlOTYzY2IwOGI0XkEyXkFqcGdeQXRyYW5zY29kZS13b3JrZmxvdw@@._V1_.jpg'
       );
       await reply(interaction, embed);
     } catch (e) {

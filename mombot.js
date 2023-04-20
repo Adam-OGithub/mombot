@@ -87,7 +87,6 @@ client.on(Events.InteractionCreate, async interaction => {
 });
 
 client.on('messageCreate', async msg => {
-  console.log(chatMap);
   try {
     // Message of the user
     const msgContent = msg.content;

@@ -3,7 +3,8 @@ const { SlashCommandBuilder } = require('discord.js');
 const {
   randomInt,
   makeEmbed,
-  reply,
+  deferReply,
+  editReply,
 } = require('../custom_node_modules/utils.js');
 const roll = die => randomInt(0, die);
 const addVals = (pre, cur) => BigInt(pre) + BigInt(cur);
@@ -119,6 +120,7 @@ module.exports = {
     ),
   async execute(interaction) {
     try {
+      deferReply(interaction, 'placeholder', true);
       const cmd = interaction.options.getSubcommand();
       let diceAmount = interaction.options.getInteger('dice');
       let sideAmount = interaction.options.getInteger('sides');
@@ -127,7 +129,7 @@ module.exports = {
         sideAmount = 20;
       }
       const msg = rollDice(diceAmount, sideAmount);
-      await reply(interaction, msg);
+      await editReply(interaction, msg);
     } catch (e) {
       //error
     }
