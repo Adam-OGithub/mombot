@@ -34,6 +34,13 @@ The best part is mom is opensource!
 - Oxford Dictionary: https://developer.oxforddictionaries.com/
 - Steam Web: https://partner.steamgames.com/doc/webapi_overview
 - Weather: https://openweathermap.org/api
+- OpenAI: https://platform.openai.com/docs/api-reference?lang=node.js
+
+# How to use Mom
+
+- You will have to deploy the commands to the respective guilds using the `deploy-commands.js`. This is WIP but should work manually for now.
+- When the commands are deployed you should see the slash `/` commands available for mom in your guild.
+- To use OpenAI just type `hey mom` in chat to start speaking with mom and `end chat` to close the chat.
 
 # Other
 
