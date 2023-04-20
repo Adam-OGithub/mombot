@@ -95,6 +95,7 @@ client.on('messageCreate', async msg => {
     const endRegex = new RegExp('end chat', 'gi');
     if (endRegex.test(msgContent) && chatMap.has(authorId)) {
       chatMap.delete();
+      msg.reply('Goodbye and I love you!');
     } else if (
       (initRegex.test(msgContent) && msg.author.bot !== true) ||
       (chatMap.has(authorId) && msg.author.bot !== true)
