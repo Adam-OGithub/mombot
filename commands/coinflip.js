@@ -1,8 +1,7 @@
 'use strict';
 const { SlashCommandBuilder } = require('discord.js');
 const {
-  editReply,
-  deferReply,
+  reply,
   makeEmbed,
   randomInt,
 } = require('../custom_node_modules/utils.js');
@@ -12,7 +11,6 @@ module.exports = {
     .setDescription('Flips a coin!'),
   async execute(interaction) {
     try {
-      deferReply(interaction, 'placeholder', true);
       const num = randomInt(0, 2);
       let fliped = '';
       const heads =
@@ -26,7 +24,7 @@ module.exports = {
         fliped = tails;
       }
       const embed = makeEmbed('Coin flip', '🪙', undefined, undefined, fliped);
-      await editReply(interaction, embed);
+      reply(interaction, embed);
     } catch (e) {
       //error
     }
