@@ -6,6 +6,7 @@ const {
   makeEmbed,
   randomIndex,
   sendChannelMsg,
+  reply,
   getChannelCache,
   getLastMsg,
   dateInfo,
@@ -15,12 +16,12 @@ const { mongoInsert } = require('../custom_node_modules/mongoCon.js');
 const { timeInSeconds } = require('../custom_node_modules/conversions.js');
 const { makeCleanInput } = require('../custom_node_modules/security.js');
 
-const setEmbed = (optionArr, timeInSeconds) => {
+const setEmbed = optionArr => {
   let str = ``;
   const newEmoteArr = [];
   const optionMsg = [];
   //Sets emotes with options
-  optionArr.forEach((optionStr, i) => {
+  optionArr.forEach(optionStr => {
     const cleanString = makeCleanInput(optionStr);
     const randomEmote = () => {
       const selectArr = emotes.filter(emote => {
@@ -33,7 +34,7 @@ const setEmbed = (optionArr, timeInSeconds) => {
     const currentEmote = randomEmote();
     newEmoteArr.push(currentEmote);
     str += currentEmote + ' - ' + capFirst(cleanString) + '\n\n';
-    optionMsg.push(currentEmote + ' - ' + capFirst(cleanString) + '\n\n');
+    optionMsg.push(currentEmote + ' - ' + capFirst(cleanString));
   });
   return [str, newEmoteArr, optionMsg];
 };
@@ -55,7 +56,7 @@ const makePoll = async (interaction, question, options) => {
   }
 
   if (embedBool) {
-    sendChannelMsg(interaction, returnVal);
+    reply(interaction, returnVal);
     //timeout is set to 500ms after message is sent to make sure laster message id is the poll
     setTimeout(async () => {
       const channelCache = getChannelCache(interaction);
@@ -113,7 +114,7 @@ const makeTimedPoll = async (
   }
 
   if (embedBool) {
-    sendChannelMsg(interaction, returnVal);
+    reply(interaction, returnVal);
     //timeout is set to 500ms after message is sent to make sure laster message id is the poll
     setTimeout(async () => {
       const channelCache = getChannelCache(interaction);
@@ -130,6 +131,7 @@ const makeTimedPoll = async (
         channel_id: interaction.channelId,
         message_id: channelCache.lastMessageId,
         options: pollOptions,
+        emotes: emoteArr,
         total_time_seconds: totalTime,
         end_time: endTime,
       };
@@ -188,6 +190,7 @@ module.exports = {
             .setDescription('Enter a set amount of seconds.')
             .setMinValue(10)
             .setMaxValue(216000)
+            .setRequired(true)
         )
         .addIntegerOption(option =>
           option
