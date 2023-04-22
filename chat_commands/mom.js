@@ -28,7 +28,7 @@ const startChat = async (client, fullMsg, chatMsg) => {
 module.exports = {
   async execute(client, fullMsg, chatMsg) {
     try {
-      startChat(client, fullMsg, chatMsg);
+      await startChat(client, fullMsg, chatMsg);
     } catch (e) {}
   },
 };
