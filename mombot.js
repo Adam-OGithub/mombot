@@ -2,6 +2,7 @@
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 const { checkPolls } = require('./timers/pollcheck.js');
 const { checkReminders } = require('./timers/remindercheck.js');
+const { dateInfo } = require('./custom_node_modules/utils.js');
 const chatMap = new Map();
 const {
   getToken,
@@ -14,7 +15,9 @@ const https = require('https');
 const express = require('express');
 const app = express();
 const comPath = getCommandPath();
-
+const initChatRegex = new RegExp('hey mom', 'gi');
+const endChatRegex = new RegExp('bye mom', 'gi');
+const timeOutMinutes = 60 * 2;
 //Sets clients permissions
 const client = new Client({
   intents: [
@@ -51,6 +54,13 @@ for (const file of commandFiles) {
     );
   }
 }
+
+const getResponseFromMom = async (msg, msgContent) => {
+  const runChat = require(`./chat_commands/mom.js`);
+  msg.channel.sendTyping();
+  // const newMsg = msgContent.replace(/hey mom/gi, '');
+  await runChat.execute(client, msg, msgContent);
+};
 
 //On start this runs
 client.on('ready', async () => {
@@ -91,23 +101,27 @@ client.on('messageCreate', async msg => {
     // Message of the user
     const msgContent = msg.content;
     const authorId = msg.author.id;
-    const initRegex = new RegExp('hey mom', 'gi');
-    const endRegex = new RegExp('end chat', 'gi');
-    if (endRegex.test(msgContent) && chatMap.has(authorId)) {
-      chatMap.delete(authorId);
-      msg.reply('Goodbye and I love you!');
-    } else if (
-      (initRegex.test(msgContent) && msg.author.bot !== true) ||
-      (chatMap.has(authorId) && msg.author.bot !== true)
+    let expireBool = chatMap.get(authorId)?.expireTime <= dateInfo.sinceEpoc();
+    let isBot = msg.author.bot;
+
+    if (
+      expireBool ||
+      (endChatRegex.test(msgContent) && chatMap.has(authorId))
     ) {
-      //Sets authors id so they can chat with mom and not use the keywords
-      if (chatMap.has(authorId) !== true) {
-        chatMap.set(authorId, 'true');
+      //removes user from map so messages do not trigger a response
+      chatMap.delete(authorId);
+      if (!expireBool) {
+        await getResponseFromMom(msg, msgContent);
       }
-      const runChat = require(`./chat_commands/mom.js`);
-      msg.channel.sendTyping();
-      const newMsg = msgContent.replace(/hey mom/gi, '');
-      await runChat.execute(client, msg, newMsg);
+    } else if (
+      (!isBot && initChatRegex.test(msgContent)) ||
+      (!isBot && chatMap.has(authorId))
+    ) {
+      //Sets authors id so they can chat with mom and not use the keywords with an expire time off two minutes if they do not chat with mom.
+      chatMap.set(authorId, {
+        expireTime: dateInfo.sinceEpoc() + timeOutMinutes,
+      });
+      await getResponseFromMom(msg, msgContent);
     }
   } catch (error) {
     console.error(error);

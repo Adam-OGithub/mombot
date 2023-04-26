@@ -39,12 +39,25 @@ const checkPolls = client => {
               let multipleWinners = false;
               let winnerCount = 1;
               react.forEach((value, key) => {
+                let winningSentence = '';
+                poll.options.forEach(el => {
+                  let sentence = el.split(' ');
+                  if (sentence[0] === key) {
+                    winningSentence = sentence
+                      .slice(1, sentence.length)
+                      .join(' ');
+                  }
+                });
                 if (value.count === winnerCount) {
-                  voteCountArr.push(`${key} had ${value.count} votes`);
+                  voteCountArr.push(
+                    `${key} ${winningSentence}, had ${value.count} votes\n`
+                  );
                 } else if (value.count > winnerCount) {
                   voteCountArr = [];
                   winnerCount = value.count;
-                  voteCountArr.push(`${key} had ${value.count} votes`);
+                  voteCountArr.push(
+                    `${key} ${winningSentence}, had ${value.count} votes\n`
+                  );
                 }
               });
               let voteStr = '';
