@@ -21,7 +21,7 @@ The best part is mom is opensource!
 
 # Discord
 
-- Version 14.7.1.
+- Version 14.11.0
 
 # Docker
 
@@ -40,7 +40,7 @@ The best part is mom is opensource!
 
 - You will have to deploy the commands to the respective guilds using the `deploy-commands.js`. This is WIP but should work manually for now.
 - When the commands are deployed you should see the slash `/` commands available for mom in your guild.
-- To use OpenAI just type `hey mom` in chat to start speaking with mom and `end chat` to close the chat.
+- To use OpenAI just type `hey mom` in chat to start speaking with mom and `bye mom` to close the chat.
 
 # Other
 
