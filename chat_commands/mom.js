@@ -1,54 +1,24 @@
 'use strict';
-const { Configuration, OpenAIApi } = require('openai');
+const { OpenAI } = require('openai');
 const config = require('../config.json');
 const {
   sendChannelMsgNoInteraction,
   getChannelFromClient,
 } = require('../custom_node_modules/utils');
-const endings = ['.', '?', '!'];
 
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: config.openAi.key,
 });
 
-const openai = new OpenAIApi(configuration);
-
 const startChat = async (client, fullMsg, chatMsg) => {
-  const completion = await openai.createCompletion({
-    model: 'text-davinci-003',
-    prompt: chatMsg,
+  const chatCompletion = await openai.chat.completions.create({
+    messages: [{ role: 'user', content: chatMsg }],
+    model: 'gpt-3.5-turbo',
   });
-  const chatResponse = completion.data.choices[0].text;
-  let finalResponse = '';
-  let theEnd = '';
-  if (
-    chatResponse.endsWith('.') ||
-    chatResponse.endsWith('?') ||
-    chatResponse.endsWith('!')
-  ) {
-    finalResponse = chatResponse;
-  } else {
-    let currentIndex = 0;
-    // const newChatResponse = chatResponse.replace(/\n/gi, '');
-    const splitSentence = chatResponse.split('');
-    splitSentence.forEach((letter, i) => {
-      if (endings.includes(letter)) {
-        currentIndex = i;
-      }
-    });
-    let newIndex = currentIndex;
-
-    if (currentIndex === 0) {
-      newIndex = splitSentence.length;
-      theEnd = '.';
-    }
-
-    finalResponse = splitSentence.slice(0, newIndex + 1).join('');
-  }
 
   sendChannelMsgNoInteraction(
     getChannelFromClient(client, fullMsg.guildId, fullMsg.channelId),
-    finalResponse + theEnd,
+    chatCompletion.choices[0].message.content,
     false
   );
 };
