@@ -1,5 +1,6 @@
 'use strict';
 const { SlashCommandBuilder } = require('discord.js');
+const config = require('../config.json');
 const {
   emotes,
   capFirst,
@@ -11,10 +12,19 @@ const {
   getLastMsg,
   dateInfo,
   nullToZero,
+  sendPrivateMessage,
+  getAuthor,
+  getEmbed,
+  editEmbed,
 } = require('../custom_node_modules/utils.js');
 const { mongoInsert } = require('../custom_node_modules/mongoCon.js');
 const { timeInSeconds } = require('../custom_node_modules/conversions.js');
 const { makeCleanInput } = require('../custom_node_modules/security.js');
+
+const sendPrivate = async (interaction, userId, message) => {
+  const author = await getAuthor(interaction.client, userId);
+  sendPrivateMessage(author, message);
+};
 
 const setEmbed = optionArr => {
   let str = ``;
@@ -40,7 +50,6 @@ const setEmbed = optionArr => {
 };
 
 const makePoll = async (interaction, question, options) => {
-  //
   let returnVal = '';
   let embedBool = true;
   let emoteArr = '';
@@ -65,6 +74,146 @@ const makePoll = async (interaction, question, options) => {
         lastMsg.react(el);
       });
     }, 500);
+  } else {
+    //need to reply visable to only end user
+  }
+};
+
+const makeAnonPoll = async (interaction, question, options) => {
+  //
+  let returnVal = '';
+  let embedBool = true;
+  let emoteArr = '';
+  let endingWinner = '';
+  const optionArr = options.split(',');
+  if (optionArr.length <= 1) {
+    returnVal =
+      'Only one option provided or not seperated by commas, poll not created.';
+    embedBool = false;
+  } else {
+    let [str, newEmoteArr, optionMsg] = setEmbed(optionArr);
+    returnVal = makeEmbed('Anon Poll: ' + question, str);
+    emoteArr = newEmoteArr;
+  }
+
+  if (embedBool) {
+    // reply(interaction, returnVal);
+    sendChannelMsg(interaction, returnVal);
+    //timeout is set to 500ms after message is sent to make sure laster message id is the poll
+    setTimeout(async () => {
+      let voteCount = 0;
+      // seconds // minutes // hours
+      //60 * 60 * 3;
+      let pollTime = 60 * 60 * 3;
+      let futureEpocTime = dateInfo.sinceEpoc() + pollTime;
+      const collectorEmojis = new Map();
+      const usersVoted = [];
+      const channelCache = getChannelCache(interaction);
+      const lastMsg = await getLastMsg(channelCache);
+      emoteArr.forEach(el => {
+        lastMsg.react(el);
+      });
+
+      reply(
+        interaction,
+        `Your poll has been created and will be active until ${dateInfo.epocToTime(
+          futureEpocTime
+        )}!`,
+        false,
+        true
+      );
+
+      //On poll start * 1000 for milliseconds pollTime * 1000,
+      const collector = lastMsg.createReactionCollector({
+        time: 15000,
+      });
+
+      collector.on('collect', (reaction, user) => {
+        let userId = user.id;
+        let emoji = reaction.emoji.name;
+        let currentWinner = '';
+
+        if (userId !== config.momBotId && userId !== config.testing.devBotId) {
+          //Push user to array to only allow one vote per user
+          usersVoted.push(userId);
+          //removes reaction
+          lastMsg.reactions.resolve(emoji).users.remove(userId);
+          //Sets emoji to array
+          if (collectorEmojis.has(emoji)) {
+            let emojiEntry = collectorEmojis.get(emoji);
+            let newCount = ++emojiEntry.count;
+            collectorEmojis.set(emoji, { count: newCount });
+          } else {
+            collectorEmojis.set(emoji, { count: 1 });
+          }
+
+          const theEmbed = getEmbed(lastMsg);
+          let currentValue = 0;
+          for (let [key, value] of collectorEmojis.entries()) {
+            if (currentValue < value.count) {
+              currentWinner = key;
+              currentValue = value.count;
+            }
+          }
+
+          const sentenceResult = theEmbed.data.description
+            .split('\n')
+            .map(sentence => {
+              let splitSentence = sentence.split(' ');
+              for (let i = 0; i < splitSentence.length; i++) {
+                if (splitSentence[i] == currentWinner) {
+                  return sentence;
+                }
+              }
+            });
+          endingWinner = sentenceResult.join('');
+          const footer = {
+            text: `Total votes: ${++voteCount}, Current winner is "${endingWinner}" with ${currentValue} ${
+              currentValue === 1 ? 'vote' : 'votes'
+            }.`,
+          };
+
+          editEmbed(
+            lastMsg,
+            makeEmbed(
+              theEmbed.data.title,
+              theEmbed.data.description,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              footer
+            )
+          );
+
+          sendPrivate(
+            interaction,
+            userId,
+            `Thank you for voting on the poll "${question}". Your answer ${emoji} has been submitted.`
+          );
+        } else if (usersVoted.includes(userId)) {
+          lastMsg.reactions.resolve(emoji).users.remove(userId);
+
+          sendPrivate(
+            interaction,
+            userId,
+            `You have already voted on the poll "${question}".`
+          );
+        } else {
+          //nothing for now
+        }
+      });
+
+      // On poll end
+      collector.on('end', collected => {
+        //mention the poll
+        sendChannelMsg(
+          interaction,
+          `Poll "${question}" has ended with winner "${endingWinner}".`,
+          false
+        );
+      });
+    }, 600);
   } else {
     //need to reply visable to only end user
   }
@@ -168,6 +317,25 @@ module.exports = {
     )
     .addSubcommand(subCmd =>
       subCmd
+        .setName('anonymous')
+        .setDescription('Generates a poll that is anonymous.')
+        .addStringOption(option =>
+          option
+            .setName('question')
+            .setDescription('Ask a question')
+            .setRequired(true)
+        )
+        .addStringOption(option =>
+          option
+            .setName('options')
+            .setDescription(
+              'Provide options sperated by commas. IE: dog,cow,frog'
+            )
+            .setRequired(true)
+        )
+    )
+    .addSubcommand(subCmd =>
+      subCmd
         .setName('timed')
         .setDescription('Generates a poll a timer.')
         .addStringOption(option =>
@@ -229,6 +397,10 @@ module.exports = {
         const question = interaction.options.getString('question');
         const options = interaction.options.getString('options');
         makePoll(interaction, question, options);
+      } else if (subCmd === 'anonymous') {
+        const question = interaction.options.getString('question');
+        const options = interaction.options.getString('options');
+        makeAnonPoll(interaction, question, options);
       } else {
         const question = interaction.options.getString('questions');
         const options = interaction.options.getString('options');
