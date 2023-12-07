@@ -125,7 +125,7 @@ const makeAnonPoll = async (interaction, question, options) => {
 
       //On poll start * 1000 for milliseconds pollTime * 1000,
       const collector = lastMsg.createReactionCollector({
-        time: 15000,
+        time: pollTime * 1000,
       });
 
       collector.on('collect', (reaction, user) => {
@@ -193,7 +193,7 @@ const makeAnonPoll = async (interaction, question, options) => {
           sendPrivate(
             interaction,
             userId,
-            `Thank you for voting on the poll "${question}". Your answer ${emoji} has been submitted.`
+            `Thank you for voting on the poll "${question}". Your answer ${endingWinner} has been submitted.`
           );
         } else if (usersVoted.includes(userId)) {
           lastMsg.reactions.resolve(emoji).users.remove(userId);
