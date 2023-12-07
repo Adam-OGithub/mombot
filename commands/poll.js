@@ -133,7 +133,11 @@ const makeAnonPoll = async (interaction, question, options) => {
         let emoji = reaction.emoji.name;
         let currentWinner = '';
 
-        if (userId !== config.momBotId && userId !== config.testing.devBotId) {
+        if (
+          userId !== config.momBotId &&
+          userId !== config.testing.devBotId &&
+          !usersVoted.includes(userId)
+        ) {
           //Push user to array to only allow one vote per user
           usersVoted.push(userId);
           //removes reaction
