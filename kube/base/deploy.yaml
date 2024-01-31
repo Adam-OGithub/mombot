@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mom
+  labels:
+    component: mom
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: mom
+  progressDeadlineSeconds: 300
+  template:
+    metadata:
+      labels:
+        component: mom
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                topologyKey: failure-domain.beta.kubernetes.io/zone
+                labelSelector:
+                  matchLabels:
+                    component: mom
+      containers:
+        - name: mombot
+          image: placeholder
+          command: []
+          envFrom:
+            - configMapRef:
+                name: config
+            - secretRef:
+                name: secrets
+          resources:
+            requests:
+              memory: '2000M'
+              cpu: '0.5'
+            limits:
+              memory: '2500M'
+              cpu: '1'

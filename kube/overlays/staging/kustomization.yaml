@@ -1,0 +1,31 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namePrefix: mom-${ENV}-
+
+commonLabels:
+  app: mombot
+  project: mombot
+  stage: stg
+  environment: staging
+
+resources:
+  - ../../base
+
+configMapGenerator:
+  - name: config
+    envs:
+      - config-gen.env
+
+secretGenerator:
+  - name: secrets
+    envs:
+      - secrets-gen.env
+    type: Opaque
+# patches:
+#   - path: patch-deployments.yaml
+#     target:
+#       kind: Deployment
+#       version: v1
+#       group: apps
+#       labelSelector: 'app=mom'
